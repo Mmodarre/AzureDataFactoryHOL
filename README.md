@@ -68,10 +68,10 @@ are property of their respective owners.
 
 [Before the hands-on lab 2](#before-the-hands-on-lab)
 
-[Task 0: Deploy Azure Resource Group
-3](#task-0-deploy-azure-resource-group)
+[Task 1: Deploy Azure Resource Group
+3](#task-1-deploy-azure-resource-group)
 
-[Task 1: Deploy Azure Data Factory 5](#task-1-deploy-azure-data-factory)
+[Task 2: Deploy Azure Data Factory 5](#task-2-deploy-azure-data-factory)
 
 [Task 3: Deploy an Azure Storage Account as below
 6](#task-3-deploy-an-azure-storage-account-as-below)
@@ -250,10 +250,10 @@ pattern:
 
 5.  **Azure SQL DB:** adf-\<your name\>-dev-sqldb
 
-**Important Note: For the purpose of this lab deploy all Services in
-Azure <span class="underline">US West 2</span> Region.**
+## @@@@@@@@@EXMPALIN NAMING CONVENTIONS@@@@@@
 
-#### Task 0: Deploy Azure Resource Group
+
+#### Task 1: Deploy Azure Resource Group
 
 1)  Search for Resource groups from the main search bar in Azure portal
 
@@ -268,7 +268,7 @@ Azure <span class="underline">US West 2</span> Region.**
 
 ![](.//media/image5.png)
 
-#### Task 1: Deploy Azure Data Factory
+#### Task 2: Deploy Azure Data Factory
 
 1)  Similar to Task 0 search for “Azure Data Factory”
 
@@ -611,7 +611,7 @@ advantages
 
 <span id="_Toc31930022" class="anchor"></span>
 
-#### Task 5: Create data sets
+#### Task 5.1: Create data sets
 
 In this step we create a generic data set for WWI full load data in
 Azure Blob Storage which is in Parquet file format. As we are planning
@@ -681,7 +681,7 @@ something like below:
 This way our dataset can be re-used in different pipelines or the same
 pipeline to access different files.
 
-#### Task 6.1 – Create a Delimited text data set on the same Blob linked service
+#### Task 5.2 – Create a Delimited text data set on the same Blob linked service
 
 Follow the same procedure as task 6 and this time instead of parquet
 select delimited text.
