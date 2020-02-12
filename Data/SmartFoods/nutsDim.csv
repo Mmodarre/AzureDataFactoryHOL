@@ -1,0 +1,151 @@
+nut_id,nut_description,nut_units
+612,14:00,g
+629,20:5 n-3 (EPA),g
+608,6:00,g
+610,10:00,g
+627,18:04,g
+645,"Fatty acids, total monounsaturated",g
+617,18:1 undifferentiated,g
+626,16:1 undifferentiated,g
+609,8:00,g
+611,12:00,g
+628,20:01,g
+646,"Fatty acids, total polyunsaturated",g
+614,18:00,g
+630,22:1 undifferentiated,g
+618,18:2 undifferentiated,g
+619,18:3 undifferentiated,g
+620,20:4 undifferentiated,g
+621,22:6 n-3 (DHA),g
+291,"Fiber, total dietary",g
+301,"Calcium, Ca",mg
+312,"Copper, Cu",mg
+415,Vitamin B-6,mg
+431,Folic acid,µg
+508,Phenylalanine,g
+203,Protein,g
+208,Energy,kcal
+304,"Magnesium, Mg",mg
+305,"Phosphorus, P",mg
+401,"Vitamin C, total ascorbic acid",mg
+418,Vitamin B-12,µg
+435,"Folate, DFE",µg
+504,Leucine,g
+601,Cholesterol,mg
+317,"Selenium, Se",µg
+410,Pantothenic acid,mg
+513,Alanine,g
+515,Glutamic acid,g
+607,4:00,g
+204,Total lipid (fat),g
+205,"Carbohydrate, by difference",g
+207,Ash,g
+255,Water,g
+268,Energy,kJ
+306,"Potassium, K",mg
+417,"Folate, total",µg
+503,Isoleucine,g
+506,Methionine,g
+307,"Sodium, Na",mg
+309,"Zinc, Zn",mg
+318,"Vitamin A, IU",IU
+514,Aspartic acid,g
+516,Glycine,g
+221,"Alcohol, ethyl",g
+303,"Iron, Fe",mg
+406,Niacin,mg
+502,Threonine,g
+509,Tyrosine,g
+512,Histidine,g
+517,Proline,g
+606,"Fatty acids, total saturated",g
+405,Riboflavin,mg
+511,Arginine,g
+518,Serine,g
+319,Retinol,µg
+320,"Vitamin A, RAE",µg
+404,Thiamin,mg
+432,"Folate, food",µg
+505,Lysine,g
+510,Valine,g
+613,16:00,g
+631,22:5 n-3 (DPA),g
+328,Vitamin D (D2 + D3),µg
+578,"Vitamin B-12, added",µg
+262,Caffeine,mg
+212,Fructose,g
+269,"Sugars, total",g
+323,Vitamin E (alpha-tocopherol),mg
+338,Lutein + zeaxanthin,µg
+287,Galactose,g
+334,"Cryptoxanthin, beta",µg
+322,"Carotene, alpha",µg
+337,Lycopene,µg
+430,Vitamin K (phylloquinone),µg
+210,Sucrose,g
+211,Glucose (dextrose),g
+214,Maltose,g
+324,Vitamin D,IU
+421,"Choline, total",mg
+213,Lactose,g
+263,Theobromine,mg
+321,"Carotene, beta",µg
+573,"Vitamin E, added",mg
+313,"Fluoride, F",µg
+326,Vitamin D3 (cholecalciferol),µg
+347,"Tocotrienol, delta",mg
+343,"Tocopherol, delta",mg
+344,"Tocotrienol, alpha",mg
+341,"Tocopherol, beta",mg
+342,"Tocopherol, gamma",mg
+345,"Tocotrienol, beta",mg
+346,"Tocotrienol, gamma",mg
+315,"Manganese, Mn",mg
+501,Tryptophan,g
+507,Cystine,g
+671,24:1 c,g
+689,20:3 undifferentiated,g
+858,22:04,g
+428,Menaquinone-4,µg
+454,Betaine,mg
+653,17:00,g
+654,24:00:00,g
+429,Dihydrophylloquinone,µg
+672,"20:2 n-6 c,c",g
+857,21:05,g
+625,14:01,g
+615,20:00,g
+697,15:01,g
+687,17:01,g
+624,22:00,g
+652,15:00,g
+605,"Fatty acids, total trans",g
+638,Stigmasterol,mg
+521,Hydroxyproline,g
+641,Beta-sitosterol,mg
+639,Campesterol,mg
+636,Phytosterols,mg
+696,13:00,g
+209,Starch,g
+663,18:1 t,g
+665,18:2 t not further defined,g
+674,18:1 c,g
+693,"Fatty acids, total trans-monoenoic",g
+325,Vitamin D2 (ergocalciferol),µg
+662,16:1 t,g
+664,22:1 t,g
+852,20:3 n-3,g
+673,16:1 c,g
+675,"18:2 n-6 c,c",g
+685,"18:3 n-6 c,c,c",g
+853,20:3 n-6,g
+676,22:1 c,g
+851,"18:3 n-3 c,c,c (ALA)",g
+670,18:2 CLAs,g
+695,"Fatty acids, total trans-polyenoic",g
+856,18:3i,g
+669,"18:2 t,t",g
+666,18:2 i,g
+257,Adjusted Protein,g
+859,18:1-11 t (18:1t n-7),g
+855,20:4 n-6,g
