@@ -377,7 +377,9 @@ millions of databases.
 
 5)  Under Server click “Create New”
 
-6)  ![](.//media/image12.png) **For Server Name use: adf-\<your
+![](.//media/image12.png) 
+
+6)  **For Server Name use: adf-\<your
     name\>-dev-sqlserver for example : adf-john-dev-sqlserver**
 
 7)  Provide admin user and password of your choice
