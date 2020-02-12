@@ -8,7 +8,7 @@ Mapping Data Flows
 
 Hands-on lab step-by-step
 
-Feb 2020
+February 2020
 
 Information in this document, including URL and other Internet Web site
 references, is subject to change without notice. Unless otherwise noted,
