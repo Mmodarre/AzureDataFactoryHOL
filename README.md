@@ -1050,33 +1050,35 @@ flows Expression Language to calculate it?
 
 **<span class="underline">Table DDL:</span>**
 
-CREATE TABLE \[smartfoods\].\[customer\](
+```
+CREATE TABLE [smartfoods].[customer](
 
-\[CustomerKey\] \[bigint\] NULL,
+[CustomerKey] [bigint] NULL,
 
-\[LoyaltyNum\] \[nvarchar\](max) NULL,
+[LoyaltyNum] [nvarchar](max) NULL,
 
-\[FirstName\] \[nvarchar\](max) NULL,
+[FirstName] [nvarchar](max) NULL,
 
-\[LastName\] \[nvarchar\](max) NULL,
+[LastName] [nvarchar](max) NULL,
 
-\[City\] \[nvarchar\](max) NULL,
+[City] [nvarchar](max) NULL,
 
-\[State\] \[nvarchar\](max) NULL,
+[State] [nvarchar](max) NULL,
 
-\[Email\] \[nvarchar\](max) NULL,
+[Email] [nvarchar](max) NULL,
 
-\[MemberSince\] \[date\] NULL,
+[MemberSince] [date] NULL,
 
-\[Dob\] \[date\] NULL,
+[Dob] [date] NULL,
 
-\[Age\] \[int\] NULL,
+[Age] [int] NULL,
 
-\[RecInsertDt\] \[date\] NULL
+[RecInsertDt] [date] NULL
 
 ) ;
 
 GO
+```
 
 **<span class="underline">Final Data Flow:</span>**
 
@@ -1160,22 +1162,24 @@ pathes
 
 **DDLS for InvoiceLine table:**
 
-CREATE TABLE \[smartfoods\].\[invoiceline\](
+```
+CREATE TABLE [smartfoods].[invoiceline](
 
-\[invoiceNumber\] \[nvarchar\](max) NULL,
+[invoiceNumber] [nvarchar](max) NULL,
 
-\[ItemKey\] \[bigint\] NULL,
+[ItemKey] [bigint] NULL,
 
-\[ItemDescription\] \[nvarchar\](max) NULL,
+[ItemDescription] [nvarchar](max) NULL,
 
-\[UnitPrice\] \[float\] NULL,
+[UnitPrice] [float] NULL,
 
-\[qty\] \[int\] NULL,
+[qty] [int] NULL,
 
-\[Gst\] \[float\] NULL,
+[Gst] [float] NULL,
 
-\[RecInsertDt\] \[date\] NULL
+[RecInsertDt] [date] NULL
 
 );
 
 GO
+```
