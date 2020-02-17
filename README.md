@@ -55,7 +55,7 @@ are property of their respective owners.
 
 # Contents
 
-Azure Data Factory hands-on lab 1
+[Azure Data Factory hands-on lab 1](#azure-data-factory-hands-on-lab)
 
 [Abstract and learning objectives 1](#abstract-and-learning-objectives)
 
@@ -532,11 +532,11 @@ pipeline.
 ![](.//media/image27.png)
 
 Select “Perform data movement and dispatch activities to external
-computes” **@@@@@CHANGE**
+computes”
 
 ![](.//media/image28.png)
 
-Choose “Azure Public” **CHANGE**
+Choose “Azure Public, Self-Hosted”
 
 ![](.//media/image29.png)
 
@@ -706,7 +706,9 @@ container the “folder path” and “file name” remains empty.
 11) Repeat the same steps for file name but instead in the Expression
     Editor enter.
 
-@{dataset().filename}.@{dataset().filetype}
+<!-- end list -->
+
+    @{dataset().filename}.@{dataset().filetype}
 
 Hint: The above expression concatenates the two parameters with a ‘.’ in
 between to make a full file name.
@@ -810,7 +812,7 @@ Here we are creating an HTTP dataset which the query parameters for it
 is parametrized so we can change them at runtime and retrieve different
 data portions from the API
 
-smartfoods?code=@{dataset().authCode}\&trans\_date=@{dataset().date}
+    smartfoods?code=@{dataset().authCode}&trans_date=@{dataset().date}
 
 ![](.//media/image62.png)
 
@@ -852,9 +854,9 @@ smartfoods?code=@{dataset().authCode}\&trans\_date=@{dataset().date}
     
     4.  For “authCode” parameter provide
 
-b3GP8tWecoK3Z42FqEaX5LfwoZwrqMnIpkUJ1bGUBnByFxgfvkpzVQ==
+<!-- end list -->
 
-b3GP8tWecoK3Z42FqEaX5LfwoZwrqMnIpkUJ1bGUBnByFxgfvkpzVQ==
+    b3GP8tWecoK3Z42FqEaX5LfwoZwrqMnIpkUJ1bGUBnByFxgfvkpzVQ==
 
 ![](.//media/image67.png)
 
@@ -892,7 +894,9 @@ b3GP8tWecoK3Z42FqEaX5LfwoZwrqMnIpkUJ1bGUBnByFxgfvkpzVQ==
 1)  Under pipeline create an array variable named “dates” and provide
     default values as:
 
-\["2020-02-01","2020-02-02","2020-02-03","2020-02-04","2020-02-05"\]
+<!-- end list -->
+
+    ["2020-02-01","2020-02-02","2020-02-03","2020-02-04","2020-02-05"]
 
 2)  Put a “ForEach Loop” activity on the canvas and under “Settings
     Items” put in the “dates” array that we just created (Hint: Use the
@@ -963,25 +967,17 @@ Azure SQL DB and create and schema for SmartFoods and a table for items
 **Note:** You may need to add your Client IP Address to your SQL DB
 through “Set Firewall” page.
 
-CREATE SCHEMA smartfoods;
-
-GO
-
-CREATE TABLE \[smartfoods\].\[item\](
-
-\[ItemKey\] \[bigint\] NULL,
-
-\[SourceSKUCode\] \[int\] NULL,
-
-\[ItemDescription\] \[nvarchar\](max) NULL,
-
-\[ItemFoodGroup\] \[nvarchar\](max) NULL,
-
-\[RecInsertDt\] \[date\] NULL
-
-);
-
-GO
+    CREATE SCHEMA smartfoods;
+    GO
+    
+    CREATE TABLE [smartfoods].[item](
+    	[ItemKey] [bigint] NULL,
+    	[SourceSKUCode] [int] NULL,
+    	[ItemDescription] [nvarchar](max) NULL,
+    	[ItemFoodGroup] [nvarchar](max) NULL,
+    	[RecInsertDt] [date] NULL
+    );
+    GO
 
 #### Create Foods Dimension
 
@@ -1101,40 +1097,27 @@ flows Expression Language to calculate it?
 
 **<span class="underline">Table DDL:</span>**
 
-CREATE TABLE \[smartfoods\].\[customer\](
-
-\[CustomerKey\] \[bigint\] NULL,
-
-\[LoyaltyNum\] \[nvarchar\](max) NULL,
-
-\[FirstName\] \[nvarchar\](max) NULL,
-
-\[LastName\] \[nvarchar\](max) NULL,
-
-\[City\] \[nvarchar\](max) NULL,
-
-\[State\] \[nvarchar\](max) NULL,
-
-\[Email\] \[nvarchar\](max) NULL,
-
-\[MemberSince\] \[date\] NULL,
-
-\[Dob\] \[date\] NULL,
-
-\[Age\] \[int\] NULL,
-
-\[RecInsertDt\] \[date\] NULL
-
-) ;
-
-GO
+    CREATE TABLE [smartfoods].[customer](
+    	[CustomerKey] [bigint] NULL,
+    	[LoyaltyNum] [nvarchar](max) NULL,
+    	[FirstName] [nvarchar](max) NULL,
+    	[LastName] [nvarchar](max) NULL,
+    	[City] [nvarchar](max) NULL,
+    	[State] [nvarchar](max) NULL,
+    	[Email] [nvarchar](max) NULL,
+    	[MemberSince] [date] NULL,
+    	[Dob] [date] NULL,
+    	[Age] [int] NULL,
+    	[RecInsertDt] [date] NULL
+    ) ;
+    GO
 
 **<span class="underline">Final Data Flow:</span>**
 
 ![](.//media/image90.png)
 
-**\*\*If you are stuck or want to double check your answer the solution
-for Expression Language and Select transformation is in the next page.  
+**If you are stuck or want to double check your answer the solution for
+Expression Language and Select transformation is in the next page.  
 **
 
 **<span class="underline">Derived column expressions solution:</span>**
@@ -1211,22 +1194,13 @@ pathes
 
 **DDLS for InvoiceLine table:**
 
-CREATE TABLE \[smartfoods\].\[invoiceline\](
-
-\[invoiceNumber\] \[nvarchar\](max) NULL,
-
-\[ItemKey\] \[bigint\] NULL,
-
-\[ItemDescription\] \[nvarchar\](max) NULL,
-
-\[UnitPrice\] \[float\] NULL,
-
-\[qty\] \[int\] NULL,
-
-\[Gst\] \[float\] NULL,
-
-\[RecInsertDt\] \[date\] NULL
-
-);
-
-GO
+    CREATE TABLE [smartfoods].[invoiceline](
+    	[invoiceNumber] [nvarchar](max) NULL,
+    	[ItemKey] [bigint] NULL,
+    	[ItemDescription] [nvarchar](max) NULL,
+    	[UnitPrice] [float] NULL,
+    	[qty] [int] NULL,
+    	[Gst] [float] NULL,
+    	[RecInsertDt] [date] NULL
+    );
+    GO
