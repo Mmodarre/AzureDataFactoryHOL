@@ -55,7 +55,7 @@ are property of their respective owners.
 
 # Contents
 
-[Azure Data Factory hands-on lab 1](#azure-data-factory-hands-on-lab)
+Azure Data Factory hands-on lab 1
 
 [Abstract and learning objectives 1](#abstract-and-learning-objectives)
 
