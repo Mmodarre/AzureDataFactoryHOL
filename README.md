@@ -65,7 +65,8 @@ are property of their respective owners.
 
 [Requirements 2](#requirements)
 
-[Exercise 0 - Before the hands-on lab 3](#before-the-hands-on-lab)
+[Exercise 0 - Before the hands-on lab
+3](#before-the-hands-on-lab-exercise)
 
 [Task 1: Install Azure Storage Explorer
 3](#install-azure-storage-explorer)
@@ -243,7 +244,7 @@ solution as you are working on the various components.
 
 2.  Azure Storage Explorer
 
-## Before the hands-on lab
+## Before the hands-on lab Exercise
 
 Duration: 20 minutes
 
