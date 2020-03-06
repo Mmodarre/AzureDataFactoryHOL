@@ -127,10 +127,9 @@ service 35](#_Toc32847569)
 
 [Task 1: Create a pipeline to get data from the SmartFoods API for the
 past one week
-41](#create-a-pipeline-to-get-data-from-smartfoods-oauth2-token-based-api-for-the-past-one-week)
+41](#create-a-pipeline-and-setup-authentication-to-smartfoods-oauth2-token-based-api)
 
-[Task 2: (Optional challenge) – ForEach Loops and Variables
-44](#optional-challenge-foreach-loops-and-variables)
+[Task 2: (Optional challenge) – ForEach Loops and Variables 44](#here)
 
 [Task 3: How much did this cost? 45](#how-much-did-this-cost)
 
@@ -789,27 +788,27 @@ As mentioned in the solution architecture section the WWI input data is
 extracted in Parquet format from the OLTP RDBMS and stored in an SFTP
 server. So, in this step we create a LS to the SFTP server.
 
-1)  Click new linked services
+1.  Click new linked services
 
-2)  Select SFTP
+2.  Select SFTP
 
 ![](.//media/image42.png)
 
-3)  Connect Via: \<NAME OF YOUR IR\>
+3.  Connect Via: \<NAME OF YOUR IR\>
 
-4)  For name enter WWISftp
+4.  For name enter WWISftp
 
-5)  Host: adflabsftp.westus2.cloudapp.azure.com
+5.  Host: adflabsftp.westus2.cloudapp.azure.com
 
-6)  Port: 22
+6.  Port: 22
 
-7)  Disable SSH host key Validation
+7.  Disable SSH host key Validation
 
-8)  Authentication type: Basic
+8.  Authentication type: Basic
 
-9)  User name: sftpuser
+9.  User name: sftpuser
 
-10) Azure Key Vault
+10. Azure Key Vault
     
     1.  Secret name: WWISftpPassword
 
@@ -861,11 +860,11 @@ access the Parquet files on SFTP server.
 
     @{dataset().filename}.@{dataset().filetype}
 
-Hint: The above expression concatenates the two parameters with a ‘.’ in
-between to make a full file name.
-
-Hint2: Also, we could write the same expression as:
-@concat(dataset().filename,’.’,dataset().filetype)
+> Hint: The above expression concatenates the two parameters with a ‘.’
+> in between to make a full file name.
+> 
+> Hint2: Also, we could write the same expression as:
+> @concat(dataset().filename,’.’,dataset().filetype)
 
 ![](.//media/image47.png)
 
@@ -1100,78 +1099,164 @@ Base URL: <https://smartfoods.azurewebsites.net/api>
 
 ## Copy Activity, Parameters, Debug and Publishing:
 
-#### Create a pipeline to get data from SmartFoods Oauth2 (Token based) API for the past one week
+In this exercise you create a pipeline to ingest data from SmartFoods
+web services. Primary learning objectives:
 
-1)  Click on the plus sing and click on Pipeline to add a new pipeline
+1.  Accessing an OAuth2 API
 
-2)  Rename the pipeline under “general” tab to something meaningful
+2.  Setting up copy activity
+
+3.  Setting up parametrized pipelines
+
+4.  Using parametrized datasets in activities
+
+5.  Creating, setting and reading variables
+
+6.  Using Web Activity
+
+#### Create a pipeline and setup authentication to SmartFoods OAuth2 (Token based) API
+
+In order to access the SmartFoods API we need to first call the endpoint
+with username and password as the HTTP POST body to get a time-based
+OAuth token. This token then can be used in further activities to
+authenticate to the API and retrieve data. The best way to perform this
+is to use a “Web” activity within data factory.
+
+The easy way to do this is by adding a web activity to the canvas and
+hardcoding the credentials in it. but this is a serious security breach
+and as explained before every secret used in ADF should be stored in
+AKV.
+
+As a result, we will require to add two more “Web” activities before
+this web activity to first retrieve the credentials from AKV at runtime
+and pass to the third (main) Web Activity to authenticate to the API and
+retrieve the token.
+
+1.  Click on the plus sing and click on Pipeline to add a new pipeline
+
+2.  Rename the pipeline under “general” tab to
+    CopySmartFoodTransactionsApiToBlob
 
 ![](.//media/image68.png)
 
-3)  From the parameters tab create a pipeline parameter and call it
+3.  From the parameters tab create a pipeline parameter and call it
     “date”
 
 ![](.//media/image69.png)
 
 ![](.//media/image70.png)
 
-4)  From the activities bar under “Move & transform” drag a “Copy data”
-    activity to the canvas
+4.  From the activities bar under “General” drag a “Web” activity to the
+    canvas
 
 ![](.//media/image71.png)
 
-5)  Click on the copy activity and under “General tab” rename the
-    activity to something meaningful
+5.  Rename the activity to AKVUsername
 
-6)  Setup the Copy Activity source:
-    
-    1.  From “Source tab” select the CSV API dataset that created
-        previously
-    
-    2.  As this dataset is parametrized the parameters required will
-        show up under “Dataset properties”
-    
-    3.  Click the “Add dynamic content” for data parameter and select
-        the pipeline “data” parameter as the value
-    
-    4.  For “authCode” parameter provide
-
-<!-- end list -->
-
-    b3GP8tWecoK3Z42FqEaX5LfwoZwrqMnIpkUJ1bGUBnByFxgfvkpzVQ==
+6.  Go to your Azure Key Vault in **Azure Portal** and from secrets
+    select “SmartFoodsApiUsername” (You have created this secret
+    previously)
 
 ![](.//media/image72.png)
 
-7)  Setup Copy activity sink:
-    
-    1.  Select “**SmartFoodsBlobDelText”** as the Sinke Dataset
-    
-    2.  Fill in the parameters as below:
+7.  Select the current version
 
 ![](.//media/image73.png)
 
-8)  click “Debug” to make sure your pipeline runs correctly
+8.  Copy the “Secret Identifier”
 
 ![](.//media/image74.png)
 
-9)  As soon as we click Debug it will ask us to supply the pipeline
-    parameter “Date” enter 2020-02-03 and click “Finish”
+9.  Paste it in a code editor or Notepad
 
-10) Under “Output” tab you should see the pipeline being in progress
+10. At the end of the URI add
 
-11) Click on the eyeglasses icon to see the progress of the pipeline
+<!-- end list -->
+
+    ?api-version=7.0
+
+So, it will look something like this:
+
+    https://adf-mehdi-dev-kv.vault.azure.net/secrets/SmartFoodsApiUsername/a35670dbbf19471eac4f8390e3c31882?api-version=7.0
+
+11. Repeat the same steps for “SmartFoodsApiPassword” secret
+
+12. Now back in ADF under the web activity and
+    
+    1.  paste the URI with api version added to it in the URL box
+    
+    2.  Change Authentication to MSI (This indicates we have give this
+        instance of ADF access to out AKV so no other auth is necessary)
+    
+    3.  For resource enter:
+
+<!-- end list -->
+
+    https://vault.azure.net
 
 ![](.//media/image75.png)
 
-12) Once the “Debug” run finishes successfully check your Azure Storage
-    account and try to locate the file.
+13. Go back to General tab and tick “Secure Output”
 
-13) **Finally,** when you are satisfied the pipeline is working as
-    expected click “Publish” to save your changes to ADF permanently.
+14. Now click “Debug” to test the activity
 
 ![](.//media/image76.png)
 
-#### (Optional challenge) – ForEach Loops and Variables
+15. Under output tab click the output button to see the activity output
+
+![](.//media/image77.png)
+
+The out put should be in form of:
+
+    { "SecureOutput": "**********" }
+
+This is the effect of setting secure output setting
+
+> **Try it:** Try removing the “secure output” tick and re-run debug and
+> see how the output will differ.
+
+16. **Repeat the same steps and add “AKVPassword” Web activity.**
+
+![](.//media/image78.png)
+
+17. Add another “Web activity” to the canvas. Rename it to
+    “SmartFoodsLogin” and attach the success connectors from the
+    AKVUsername and AKVPassword to it as below:
+
+![](.//media/image79.png)
+
+18. Setup the web activity as below
+
+URL:
+
+    https://smartfoods.azurewebsites.net/api/SmartFoodsOauth
+
+Method: POST
+
+Body:
+
+    @json(concat('{"username":"',activity('AKVUsername').output.value,'","password":"',activity('AKVPassword').output.value,'"'))
+
+> Note1: you need to click on “Add Dynamic Content” to enter the
+> “Expression Editor” before pasting the value
+> 
+> Note2: Expression explanation: For HTTP POST body we need to compose a
+> JSON document and pass the username and password attribute to it. So
+> we use the “Concat” function to add the static and dynamic parts
+> together to compose a JSON document and then pass it to the “JSON”
+> function to format it correctly as a JSON. The resulting JSON will
+> look like below.
+
+    {
+    	“Username”: “<value coming from AKVUsername web activity>”,
+    	“password”: “<value coming from AKVPassword web activity>”
+    }
+
+![](.//media/image80.png)
+
+#### HERE@@@@@@@@@@
+
+####  (Optional challenge) – ForEach Loops and Variables
 
 1)  Under pipeline create an array variable named “dates” and provide
     default values as:
@@ -1198,13 +1283,13 @@ Base URL: <https://smartfoods.azurewebsites.net/api>
 
 7)  Run Debug and check the “output” tab
 
-![](.//media/image77.png)
+![](.//media/image81.png)
 
-![](.//media/image78.png)
+![](.//media/image82.png)
 
-![](.//media/image79.png)
+![](.//media/image83.png)
 
-![](.//media/image80.png)
+![](.//media/image84.png)
 
 #### How much did this cost?
 
@@ -1215,7 +1300,7 @@ consuming.
 The important parts are number of “activity runs” and consumption of
 “DIU-hour” of “Data movement activities”
 
-![](.//media/image81.png)
+![](.//media/image85.png)
 
 ## ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer dimensions
 
@@ -1232,16 +1317,16 @@ Similar to the task 6 in Exercise 2 create a **Parquet** Dataset on
 “wwidatawarhouse” container (we created previously) and make sure you
 parametrized the “file” and “directory” fields as before.
 
-![](.//media/image82.png)
+![](.//media/image86.png)
 
-![](.//media/image83.png)
+![](.//media/image87.png)
 
 #### Create SQL Database Dataset
 
 Create a SQL Database Dataset using the Linked Service created
 previously and parametrize the schema name and table name as below:
 
-![](.//media/image84.png)Pre-Task C: Create and Schema in your SQL DB
+![](.//media/image88.png)Pre-Task C: Create and Schema in your SQL DB
 
 Either using Query Editor in Azure Portal or using SSMS connect to your
 Azure SQL DB and create and schema for SmartFoods and a table for items
@@ -1278,11 +1363,11 @@ We would like to create a dimension table for this data source as below:
 
 1.  Create a mapping Dataflow by clicking on new Data flow button
 
-![](.//media/image85.png)
+![](.//media/image89.png)
 
 2.  At the top of the page turn on the “data flow debug”
 
-![](.//media/image86.png)
+![](.//media/image90.png)
 
 3.  Click “Add Source” on canvas
 
@@ -1311,41 +1396,41 @@ We would like to create a dimension table for this data source as below:
 9.  Add a derived column transformation by clicking the plus sing on the
     bottom right hand of the source transformation
 
-![](.//media/image87.png)
+![](.//media/image91.png)
 
-![](.//media/image88.png)
+![](.//media/image92.png)
 
 10. For Column name use “RecInsertDt” and go into expression editor and
     find “currentDate()
 
-![](.//media/image89.png)
+![](.//media/image93.png)
 
-> *Note: Inside the expression editor click the “Refresh” button* *to
-> get the result of the expression instantly*
+> *Note: Inside the expression editor click the “Refresh” button to get
+> the result of the expression instantly*
 
 11. Next add a “surrogate key” transformation and configure it as below:
 
-![](.//media/image90.png)
+![](.//media/image94.png)
 
 12. Add a “Select” transformation and configure it as below. (Pay
     attention that we are renaming and re-ordering columns\!)
 
-![](.//media/image91.png)
+![](.//media/image95.png)
 
 13. Add a “Sink” transformation and select the SQL DB Dataset you
     created in the pre-tasks as the sink dataset.
 
 14. Set the settings for the sink transformation as:
 
-![](.//media/image92.png)
+![](.//media/image96.png)
 
 > Note: For brevity in this exercise we are setting up our pipeline to
 > truncate the table on every load but in real world scenarios we
-> commonly don not do this\!
+> commonly do not do this\!
 
 The finale Data flow:
 
-![](.//media/image93.png)
+![](.//media/image97.png)
 
 15. Create a pipeline place
     
@@ -1396,7 +1481,7 @@ flows Expression Language to calculate it?
 
 **<span class="underline">Final Data Flow:</span>**
 
-![](.//media/image94.png)
+![](.//media/image98.png)
 
 **If you are stuck or want to double check your answer the solution for
 Expression Language and Select transformation is in the next page.  
@@ -1404,11 +1489,11 @@ Expression Language and Select transformation is in the next page.
 
 **<span class="underline">Derived column expressions solution:</span>**
 
-![](.//media/image95.png)
+![](.//media/image99.png)
 
 **<span class="underline">Select transformation:</span>**
 
-![](.//media/image96.png)
+![](.//media/image100.png)
 
 #### Create SmartFoods Invoice fact tables
 
@@ -1418,7 +1503,7 @@ invoice data has an invoice header and an invoice item lines but for the
 case of SmartFoods the API is only capable of providing the data in form
 of line items with repeated invoice header information.
 
-![](.//media/image97.png)
+![](.//media/image101.png)
 
 The requirement is to create two separate tables in following form:
 
@@ -1436,19 +1521,19 @@ InvoiceLine
 
 1.  **For Invoice Table Overall Data flow looks:**
 
-![](.//media/image98.png)
+![](.//media/image102.png)
 
 Aggregate transformation:
 
-![](.//media/image99.png)
+![](.//media/image103.png)
 
 Join transformation:
 
-![](.//media/image100.png)
+![](.//media/image104.png)
 
 Select Transformation:
 
-![](.//media/image101.png)
+![](.//media/image105.png)
 
 2.  **For Invoice Lines:**
 
@@ -1456,23 +1541,23 @@ In the **same** data flow after your source CSV add a new branch
 transformation. This will branch the same data source to two different
 pathes
 
-![](.//media/image102.png)
+![](.//media/image106.png)
 
 **Final Data flow for invoice and invoice line:**
 
-![](.//media/image103.png)
+![](.//media/image107.png)
 
 **Derived Column Transformation:**
 
-![](.//media/image104.png)
+![](.//media/image108.png)
 
 **Join transformation:**
 
-![](.//media/image105.png)
+![](.//media/image109.png)
 
 **Select Transformation:**
 
-![](.//media/image106.png)
+![](.//media/image110.png)
 
 **DDLS for InvoiceLine table:**
 
