@@ -63,92 +63,107 @@ are property of their respective owners.
 
 [Solution architecture 2](#solution-architecture)
 
-[Requirements 2](#requirements)
+[Requirements 3](#requirements)
 
-[Exercise 0 - Before the hands-on lab
-3](#before-the-hands-on-lab-exercise)
+[Before the hands-on lab Exercise 4](#before-the-hands-on-lab-exercise)
 
 [Task 1: Install Azure Storage Explorer
-3](#install-azure-storage-explorer)
+4](#install-azure-storage-explorer)
 
-[Task 2: Clone the GitHub repository 5](#clone-the-github-repository)
+[Task 2: Clone the GitHub repository 6](#clone-the-github-repository)
 
-[Task 3: Deploy Azure Resource Group 6](#deploy-azure-resource-group)
+[Task 3: Deploy Azure Resource Group 7](#deploy-azure-resource-group)
 
-[Task 4: Deploy Azure Data Factory 7](#deploy-azure-data-factory)
+[Task 4: Deploy Azure Data Factory 8](#deploy-azure-data-factory)
 
 [Task 5: Deploy an Azure Storage Account as below
-8](#deploy-an-azure-storage-account-as-below)
+9](#deploy-an-azure-storage-account-as-below)
 
-[Task 6: Deploy Azure Key Vault 9](#deploy-azure-key-vault)
+[Task 6: Deploy Azure Key Vault 10](#deploy-azure-key-vault)
 
-[Task 7: Deploy Azure SQL Database 12](#deploy-azure-sql-database)
+[Task 7: Deploy Azure SQL Database 13](#deploy-azure-sql-database)
 
-[Task 8: Create a container for WideWorldImporters and upload the files
-16](#_Toc32847560)
-
-[Task 9: Create a container for SmartFoods and upload the files
-16](#create-a-container-for-smartfoods-staging-input-files)
-
-[Task 10: Create a Blob Storage Container for the Data Warehouse.
+[Task 8: Create Blob Storage Containers for the Data Warehouse Output
+and staging
 17](#create-blob-storage-containers-for-the-data-warehouse-output-and-staging)
 
-[Exercise 1 - Linked Services, Datasets and Integration Runtimes:
-18](#_Toc32847563)
+[Task 9: Create a container for WideWorldImporters Staging Input files
+18](#create-a-container-for-wideworldimporters-staging-input-files)
 
-[Task 1: Create Azure Data Factory Integration Runtime.
-18](#create-azure-data-factory-integration-runtime)
+[Task 10: Create a container for SmartFoods Staging Input files
+18](#create-a-container-for-smartfoods-staging-input-files)
+
+[Linked Services, Datasets and Integration Runtimes:
+19](#linked-services-datasets-and-integration-runtimes)
+
+[Task 1: Create Azure Data Factory Integration Runtime
+19](#create-azure-data-factory-integration-runtime)
 
 [Task 2: Create a new ADF Key Vault Linked Service
-21](#create-a-new-adf-key-vault-linked-service)
+22](#create-a-new-adf-key-vault-linked-service)
 
 [Task 3: Add blob Storage credentials to AKV
-27](#add-blob-storage-credentials-to-akv)
+29](#add-blob-storage-credentials-to-akv)
 
-[Task 4: Create Azure Blob Storage Linked Service
-29](#add-other-credentials-to-azure-key-vault)
+[Task 4: Add other credentials to Azure Key Vault
+31](#add-other-credentials-to-azure-key-vault)
 
-[Task 5: Create data sets 31](#create-sftp-linked-service)
+[Task 5: Create SFTP Linked Service 31](#create-sftp-linked-service)
 
-[Task 6: Create a Delimited text data set on the same Blob linked
-service 35](#_Toc32847569)
+[Task 6: Create datasets for WWI SFTP data
+32](#create-datasets-for-wwi-sftp-data)
 
-[Task 7: Create a SQL Database Linked Service and Dataset
-35](#create-a-sql-database-linked-service-and-dataset)
+[Task 7: Create Azure Blob Storage Linked Service
+37](#create-azure-blob-storage-linked-service)
 
-[Task 8: Create an HTTP Linked Service:
-38](#create-an-http-linked-service)
+[Task 8: Create Blob Storage Datasets 40](#create-blob-storage-datasets)
 
-[Task 9: Create a CSV Dataset on the HTTP Linked Service
-39](#create-a-csv-dataset-on-the-http-linked-service)
+[Task 9: Create a SQL Database Linked Service and Dataset
+41](#create-a-sql-database-linked-service-and-dataset)
 
-[Exercise 2 - Copy Activity, Parameters, Debug and Publishing:
-41](#create-a-rest-linked-service-for-smartfoods-customer-json)
+[Task 10: Create an HTTP Linked Service:
+44](#create-an-http-linked-service)
 
-[Task 1: Create a pipeline to get data from the SmartFoods API for the
-past one week
-41](#create-a-pipeline-and-setup-authentication-to-smartfoods-oauth2-token-based-api)
+[Task 11: Create a CSV Dataset on the HTTP Linked Service
+45](#create-a-csv-dataset-on-the-http-linked-service)
 
-[Task 2: (Optional challenge) – ForEach Loops and Variables 44](#here)
+[Task 12: Create a REST Linked Service for SmartFoods Customer JSON
+47](#create-a-rest-linked-service-for-smartfoods-customer-json)
 
-[Task 3: How much did this cost? 45](#how-much-did-this-cost)
+[Task 13: Create a REST Dataset for SmartFoods Customer JSON
+50](#create-a-rest-dataset-for-smartfoods-customer-json)
 
-[Exercise 3 - ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and
-Customer dimensions
-46](#elt-with-mapping-dataflows-smartfoods-itemsfoods-and-customer-dimensions)
+[Copy Activity, Parameters, Debug and Publishing:
+53](#copy-activity-parameters-debug-and-publishing)
+
+[Task 1: Create a pipeline and setup authentication to SmartFoods OAuth2
+(Token based) API
+53](#create-a-pipeline-and-setup-authentication-to-smartfoods-oauth2-token-based-api)
+
+[Task 2: Copy Data from SmartFoods Transactions API to Blob Storage
+61](#_Toc36638568)
+
+[Task 3: (Optional challenge) – ForEach Loops and Variables
+63](#retrieve-data-from-api-and-store-in-blob-storage)
+
+[Task 4: How much did this cost? 64](#how-much-did-this-cost)
+
+[ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer
+dimensions
+66](#elt-with-mapping-dataflows-smartfoods-itemsfoods-and-customer-dimensions)
 
 [Task 1: Create a Parquet dataset to write SmartFoods DW Blob container
-46](#create-a-parquet-dataset-to-write-smartfoods-dw-blob-container)
+66](#create-a-parquet-dataset-to-write-smartfoods-dw-blob-container)
 
-[Task 2: Create SQL Database Dataset 47](#create-sql-database-dataset)
+[Task 2: Create SQL Database Dataset 67](#create-sql-database-dataset)
 
-[Task 3: Create Foods Dimension 48](#create-foods-dimension)
+[Task 3: Create Foods Dimension 68](#create-foods-dimension)
 
 [Task 4: (Challenge Task) Create customer dimension
-52](#challenge-task-create-customer-dimension)
+72](#challenge-task-create-customer-dimension)
 
 [Task 5: Create SmartFoods Invoice fact tables
-54](#create-smartfoods-invoice-fact-tables)
+75](#create-smartfoods-invoice-fact-tables)
 
 # Azure Data Factory hands-on lab
 
@@ -579,8 +594,6 @@ millions of databases.
 
 ![](.//media/image22.png)
 
-<span id="_Toc32847560" class="anchor"></span>
-
 #### Create a container for WideWorldImporters Staging Input files
 
 Repeat the steps above and create a container called “***wwistaging***”
@@ -599,8 +612,6 @@ Repeat the steps above and create a container called
 > **wwistaging**
 > 
 > **smartfoodsstagin**
-
-<span id="_Toc32847563" class="anchor"></span>
 
 ## Linked Services, Datasets and Integration Runtimes: 
 
@@ -1254,9 +1265,54 @@ Body:
 
 ![](.//media/image80.png)
 
-#### HERE@@@@@@@@@@
+19. Under general tab tick the “Secure Output” to make sure the tokens
+    are not getting revealed in ADF logs.
 
-####  (Optional challenge) – ForEach Loops and Variables
+20. Debug you pipeline to make sure all activities are successful.
+
+#### Store the access token in a variable
+
+Now we have the token to access the API we need to store the token in a
+variable to be passed to our copy activity in order to access the API
+securely.
+
+1.  Under variables in the pipeline create a new variable “token”
+
+> ![](.//media/image81.png)
+
+2.  Add a “Set Variable” activity to canvas
+
+![](.//media/image82.png)
+
+1.  add “Set variable” activity.
+
+2.  connect to “SmartFoodsLogin” using “Success”.
+
+3.  click on variables.
+
+4.  For “Name” select “token”.
+
+5.  go to Expression Editor for “Value” and set it to:
+
+<!-- end list -->
+
+    @activity('SmartFoodsLogin').output.token
+
+6.  Rename the activity to “SetAccessToken”.
+
+7.  (Optional) Debug to test your pipeline.
+
+#### Retrieve data from API and store in Blob Storage
+
+1.  Drag a copy activity to canvas and connect to “SetAccessToken”
+    activity
+
+2.  Rename it to “SmartFoodsCustomersToBlob”
+
+![](.//media/image83.png)
+
+3.  
+#### (Optional challenge) – ForEach Loops and Variables
 
 1)  Under pipeline create an array variable named “dates” and provide
     default values as:
@@ -1283,13 +1339,13 @@ Body:
 
 7)  Run Debug and check the “output” tab
 
-![](.//media/image81.png)
-
-![](.//media/image82.png)
-
-![](.//media/image83.png)
-
 ![](.//media/image84.png)
+
+![](.//media/image85.png)
+
+![](.//media/image86.png)
+
+![](.//media/image87.png)
 
 #### How much did this cost?
 
@@ -1300,7 +1356,7 @@ consuming.
 The important parts are number of “activity runs” and consumption of
 “DIU-hour” of “Data movement activities”
 
-![](.//media/image85.png)
+![](.//media/image88.png)
 
 ## ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer dimensions
 
@@ -1317,16 +1373,16 @@ Similar to the task 6 in Exercise 2 create a **Parquet** Dataset on
 “wwidatawarhouse” container (we created previously) and make sure you
 parametrized the “file” and “directory” fields as before.
 
-![](.//media/image86.png)
+![](.//media/image89.png)
 
-![](.//media/image87.png)
+![](.//media/image90.png)
 
 #### Create SQL Database Dataset
 
 Create a SQL Database Dataset using the Linked Service created
 previously and parametrize the schema name and table name as below:
 
-![](.//media/image88.png)Pre-Task C: Create and Schema in your SQL DB
+![](.//media/image91.png)Pre-Task C: Create and Schema in your SQL DB
 
 Either using Query Editor in Azure Portal or using SSMS connect to your
 Azure SQL DB and create and schema for SmartFoods and a table for items
@@ -1363,11 +1419,11 @@ We would like to create a dimension table for this data source as below:
 
 1.  Create a mapping Dataflow by clicking on new Data flow button
 
-![](.//media/image89.png)
+![](.//media/image92.png)
 
 2.  At the top of the page turn on the “data flow debug”
 
-![](.//media/image90.png)
+![](.//media/image93.png)
 
 3.  Click “Add Source” on canvas
 
@@ -1396,33 +1452,33 @@ We would like to create a dimension table for this data source as below:
 9.  Add a derived column transformation by clicking the plus sing on the
     bottom right hand of the source transformation
 
-![](.//media/image91.png)
+![](.//media/image94.png)
 
-![](.//media/image92.png)
+![](.//media/image95.png)
 
 10. For Column name use “RecInsertDt” and go into expression editor and
     find “currentDate()
 
-![](.//media/image93.png)
+![](.//media/image96.png)
 
 > *Note: Inside the expression editor click the “Refresh” button to get
 > the result of the expression instantly*
 
 11. Next add a “surrogate key” transformation and configure it as below:
 
-![](.//media/image94.png)
+![](.//media/image97.png)
 
 12. Add a “Select” transformation and configure it as below. (Pay
     attention that we are renaming and re-ordering columns\!)
 
-![](.//media/image95.png)
+![](.//media/image98.png)
 
 13. Add a “Sink” transformation and select the SQL DB Dataset you
     created in the pre-tasks as the sink dataset.
 
 14. Set the settings for the sink transformation as:
 
-![](.//media/image96.png)
+![](.//media/image99.png)
 
 > Note: For brevity in this exercise we are setting up our pipeline to
 > truncate the table on every load but in real world scenarios we
@@ -1430,7 +1486,7 @@ We would like to create a dimension table for this data source as below:
 
 The finale Data flow:
 
-![](.//media/image97.png)
+![](.//media/image100.png)
 
 15. Create a pipeline place
     
@@ -1481,7 +1537,7 @@ flows Expression Language to calculate it?
 
 **<span class="underline">Final Data Flow:</span>**
 
-![](.//media/image98.png)
+![](.//media/image101.png)
 
 **If you are stuck or want to double check your answer the solution for
 Expression Language and Select transformation is in the next page.  
@@ -1489,11 +1545,11 @@ Expression Language and Select transformation is in the next page.
 
 **<span class="underline">Derived column expressions solution:</span>**
 
-![](.//media/image99.png)
+![](.//media/image102.png)
 
 **<span class="underline">Select transformation:</span>**
 
-![](.//media/image100.png)
+![](.//media/image103.png)
 
 #### Create SmartFoods Invoice fact tables
 
@@ -1503,7 +1559,7 @@ invoice data has an invoice header and an invoice item lines but for the
 case of SmartFoods the API is only capable of providing the data in form
 of line items with repeated invoice header information.
 
-![](.//media/image101.png)
+![](.//media/image104.png)
 
 The requirement is to create two separate tables in following form:
 
@@ -1521,19 +1577,19 @@ InvoiceLine
 
 1.  **For Invoice Table Overall Data flow looks:**
 
-![](.//media/image102.png)
+![](.//media/image105.png)
 
 Aggregate transformation:
 
-![](.//media/image103.png)
+![](.//media/image106.png)
 
 Join transformation:
 
-![](.//media/image104.png)
+![](.//media/image107.png)
 
 Select Transformation:
 
-![](.//media/image105.png)
+![](.//media/image108.png)
 
 2.  **For Invoice Lines:**
 
@@ -1541,23 +1597,23 @@ In the **same** data flow after your source CSV add a new branch
 transformation. This will branch the same data source to two different
 pathes
 
-![](.//media/image106.png)
+![](.//media/image109.png)
 
 **Final Data flow for invoice and invoice line:**
 
-![](.//media/image107.png)
+![](.//media/image110.png)
 
 **Derived Column Transformation:**
 
-![](.//media/image108.png)
+![](.//media/image111.png)
 
 **Join transformation:**
 
-![](.//media/image109.png)
+![](.//media/image112.png)
 
 **Select Transformation:**
 
-![](.//media/image110.png)
+![](.//media/image113.png)
 
 **DDLS for InvoiceLine table:**
 
