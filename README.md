@@ -1474,8 +1474,8 @@ transform and analyze it.
 
 2.  Provide 2020-02-10 as the value for “date” parameter
 
-3.  Go to Azure Storage Explorer find the respective storage account,
-    container and directory Locate the
+3.  Go to Azure Storage Explorer -\> find the respective storage
+    account, container and directory -\> Locate the
     “smartfoods\_customers\_20200201.csv” file and open it to make
     sure the data is copied correctly.
 
