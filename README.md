@@ -147,7 +147,8 @@ and staging
 [Task 3: (Optional challenge) – ForEach Loops and Variables
 63](#retrieve-data-from-api-and-store-in-blob-storage)
 
-[Task 4: How much did this cost? 64](#how-much-did-this-cost)
+[Task 4: How much did this cost?
+64](#expand-the-pipeline-using-lookup-activity)
 
 [ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer
 dimensions
@@ -612,7 +613,7 @@ Repeat the steps above and create a container called
 > 
 > **wwistaging**
 > 
-> **smartfoodsstagin**
+> **smartfoodsstaging**
 
 ## Linked Services, Datasets and Integration Runtimes: 
 
@@ -1551,16 +1552,108 @@ we modify the pipeline and load the array from a text file using
 
 ![](.//media/image90.png)
 
+#### Expand the pipeline using Lookup activity
+
+Now that we have a pipeline that can iterate over an array of dates and
+invoke the main pipeline we want to expand it further with a
+***Lookup*** activity to read the list of dates from a text file (it can
+be a SQL database as well) and perform the loading automatically.
+
+This is how our pipeline looks like right now:
+
+![](.//media/image91.png)
+
+First, we need to place the file with list of dates on Azure Blob
+Storage so ADF can access it.
+
+1.  On your computer browse to the location that you cloned the GitHub
+    repo. Under Data/SmartFoods/ there is a file ***dates.csv***. Open
+    this file and inspect the contents.
+
+2.  Open Azure Storage Explorer and go to *smartfoodsstaging* container.
+    Create a new folder called *ref\_data* and upload the *dates.csv*
+    file there.
+
+![](.//media/image92.png)
+
+Now lets start developing the pipeline
+
+1.  Drag a ***Lookup*** activity on the canvas and rename it to
+    ***LookupDates***
+
+2.  Connect from **Success** of the Lookup activity to *ForEach*
+    activity.
+
+3.  Under Settings
+    
+    1.  Source dataset: SmartFoodsDelimitedTextBlob
+    
+    2.  Folder: *ref\_data*
+    
+    3.  File: *dates*
+    
+    4.  Filetype: *csv*
+    
+    5.  ***<span class="underline">Untick</span>** First row only*
+    
+    6.  Click Preview data to make sure it is working as expected.
+
+![](.//media/image93.png)
+
+![](.//media/image94.png)
+
+4.  Click on the ForEach under *Settings*
+    
+    1.  For *Items* go to Expression Editor and change it to the below
+        to receive it from the *Lookup* activity instead of the
+        hard-coded variable:
+
+<!-- end list -->
+
+    @activity('LookupDates').output.value
+
+![](.//media/image95.png)
+
+5.  Double click on the ForEach loop to open its canvas and then click
+    on *Execute Pipeline* activity. Under *Settings:*
+    
+    1.  For *date* change the value to below:
+
+<!-- end list -->
+
+    @item().date
+
+![](.//media/image96.png)
+
+#### Test your pipeline
+
+1.  Click *Debug* to start the pipeline
+
+2.  Inspect the output
+
+![](.//media/image97.png)
+
+3.  Once finished successfully go to *Azure Storage Explorer* to make
+    sure all files in the dates.csv are created.
+
+![](.//media/image98.png)
+
 #### How much did this cost?
 
 Once a debug run is finished, you can examine the “debug run
 consumption” to measure how much resource the pipeline you designed is
 consuming.
 
-The important parts are number of “activity runs” and consumption of
-“DIU-hour” of “Data movement activities”
+> **Note:** The important parts are number of “activity runs” and
+> consumption of “DIU-hour” of “Data movement activities”
+> 
+> **Important Note:** Since we used the **Execute Pipeline,** there is a
+> cost for both the outer pipeline and inner pipeline. The cost showing
+> here is only for the outer pipeline. If you’d like to see the resource
+> consumption of inner pipelines click on output and go to the actual
+> pipeline run of the inner pipeline.
 
-![](.//media/image91.png)
+![](.//media/image99.png)
 
 ## ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer dimensions
 
@@ -1577,16 +1670,16 @@ Similar to the task 6 in Exercise 2 create a **Parquet** Dataset on
 “wwidatawarhouse” container (we created previously) and make sure you
 parametrized the “file” and “directory” fields as before.
 
-![](.//media/image92.png)
+![](.//media/image100.png)
 
-![](.//media/image93.png)
+![](.//media/image101.png)
 
 #### Create SQL Database Dataset
 
 Create a SQL Database Dataset using the Linked Service created
 previously and parametrize the schema name and table name as below:
 
-![](.//media/image94.png)Pre-Task C: Create and Schema in your SQL DB
+![](.//media/image102.png)Pre-Task C: Create and Schema in your SQL DB
 
 Either using Query Editor in Azure Portal or using SSMS connect to your
 Azure SQL DB and create and schema for SmartFoods and a table for items
@@ -1623,11 +1716,11 @@ We would like to create a dimension table for this data source as below:
 
 1.  Create a mapping Dataflow by clicking on new Data flow button
 
-![](.//media/image95.png)
+![](.//media/image103.png)
 
 2.  At the top of the page turn on the “data flow debug”
 
-![](.//media/image96.png)
+![](.//media/image104.png)
 
 3.  Click “Add Source” on canvas
 
@@ -1656,33 +1749,33 @@ We would like to create a dimension table for this data source as below:
 9.  Add a derived column transformation by clicking the plus sing on the
     bottom right hand of the source transformation
 
-![](.//media/image97.png)
+![](.//media/image105.png)
 
-![](.//media/image98.png)
+![](.//media/image106.png)
 
 10. For Column name use “RecInsertDt” and go into expression editor and
     find “currentDate()
 
-![](.//media/image99.png)
+![](.//media/image107.png)
 
 > *Note: Inside the expression editor click the “Refresh” button to get
 > the result of the expression instantly*
 
 11. Next add a “surrogate key” transformation and configure it as below:
 
-![](.//media/image100.png)
+![](.//media/image108.png)
 
 12. Add a “Select” transformation and configure it as below. (Pay
     attention that we are renaming and re-ordering columns\!)
 
-![](.//media/image101.png)
+![](.//media/image109.png)
 
 13. Add a “Sink” transformation and select the SQL DB Dataset you
     created in the pre-tasks as the sink dataset.
 
 14. Set the settings for the sink transformation as:
 
-![](.//media/image102.png)
+![](.//media/image110.png)
 
 > Note: For brevity in this exercise we are setting up our pipeline to
 > truncate the table on every load but in real world scenarios we
@@ -1690,7 +1783,7 @@ We would like to create a dimension table for this data source as below:
 
 The finale Data flow:
 
-![](.//media/image103.png)
+![](.//media/image111.png)
 
 15. Create a pipeline place
     
@@ -1741,7 +1834,7 @@ flows Expression Language to calculate it?
 
 **<span class="underline">Final Data Flow:</span>**
 
-![](.//media/image104.png)
+![](.//media/image112.png)
 
 **If you are stuck or want to double check your answer the solution for
 Expression Language and Select transformation is in the next page.  
@@ -1749,11 +1842,11 @@ Expression Language and Select transformation is in the next page.
 
 **<span class="underline">Derived column expressions solution:</span>**
 
-![](.//media/image105.png)
+![](.//media/image113.png)
 
 **<span class="underline">Select transformation:</span>**
 
-![](.//media/image106.png)
+![](.//media/image114.png)
 
 #### Create SmartFoods Invoice fact tables
 
@@ -1763,7 +1856,7 @@ invoice data has an invoice header and an invoice item lines but for the
 case of SmartFoods the API is only capable of providing the data in form
 of line items with repeated invoice header information.
 
-![](.//media/image107.png)
+![](.//media/image115.png)
 
 The requirement is to create two separate tables in following form:
 
@@ -1781,19 +1874,19 @@ InvoiceLine
 
 1.  **For Invoice Table Overall Data flow looks:**
 
-![](.//media/image108.png)
+![](.//media/image116.png)
 
 Aggregate transformation:
 
-![](.//media/image109.png)
+![](.//media/image117.png)
 
 Join transformation:
 
-![](.//media/image110.png)
+![](.//media/image118.png)
 
 Select Transformation:
 
-![](.//media/image111.png)
+![](.//media/image119.png)
 
 2.  **For Invoice Lines:**
 
@@ -1801,23 +1894,23 @@ In the **same** data flow after your source CSV add a new branch
 transformation. This will branch the same data source to two different
 pathes
 
-![](.//media/image112.png)
+![](.//media/image120.png)
 
 **Final Data flow for invoice and invoice line:**
 
-![](.//media/image113.png)
+![](.//media/image121.png)
 
 **Derived Column Transformation:**
 
-![](.//media/image114.png)
+![](.//media/image122.png)
 
 **Join transformation:**
 
-![](.//media/image115.png)
+![](.//media/image123.png)
 
 **Select Transformation:**
 
-![](.//media/image116.png)
+![](.//media/image124.png)
 
 **DDLS for InvoiceLine table:**
 
