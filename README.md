@@ -1811,8 +1811,7 @@ Orders* and *Orderlines* data from WWI STFP.
     
     2.  **folder**: *customer*
     
-    3.  **Filename**:
-        [*customers\_@{pipeline().parameters.date}*](mailto:customers_@%7bpipeline\(\).parameters.date%7d)
+    3.  **Filename**: *customers\_@{pipeline().parameters.date}*
     
     4.  **Filetype**: *parquet*
 
@@ -1821,8 +1820,11 @@ Orders* and *Orderlines* data from WWI STFP.
 
 7.  Inspect Blob Storage to make sure the file has been created.
 
-> Note: With Parquet files unlike delimited text files, you cannot open
-> in with a text editor to inspect the content\!
+> **Note1**: With Parquet files unlike delimited text files, you cannot
+> open in with a text editor to inspect the content\!
+> 
+> **Note2**: Take advantage of pipeline cloning feature to save time and
+> reduce error.
 
 **Orders:**
 
@@ -1863,8 +1865,6 @@ Orders* and *Orderlines* data from WWI STFP.
 
 **OrderLines:**
 
-**Customers:**
-
 1.  Create a new pipeline
     
     1.  Name: ‘*WWIOrderlinesSftpToBlob’*
@@ -1900,7 +1900,17 @@ Orders* and *Orderlines* data from WWI STFP.
 
 7.  Inspect Blob Storage to make sure the file has been created.
 
+> **Note3:** Another way of achieving the same result was to use 3 copy
+> activities within a single pipeline. They are both valid methods. The
+> only important thing is consistency. You created two separate
+> pipelines for SmartFoods, so it is consistent to create three separate
+> pipelines for WWI.
+
 #### Setup Initial Load for WWI data
+
+Now that we have individual pipelines for WWI source systems, we need to
+setup an Initial Load pipeline similar to we have done for SmartFoods to
+iterate over an array and automatically load the data.
 
 ## ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer dimensions
 
