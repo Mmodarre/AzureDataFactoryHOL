@@ -1909,8 +1909,29 @@ Orders* and *Orderlines* data from WWI STFP.
 #### Setup Initial Load for WWI data
 
 Now that we have individual pipelines for WWI source systems, we need to
-setup an Initial Load pipeline similar to we have done for SmartFoods to
-iterate over an array and automatically load the data.
+setup an Initial Load pipeline similar to the one you created for
+SmartFoods to iterate over an array and automatically load the data. For
+SmartFoods, since we were accessing an API we needed to provide the list
+of dates but when access a file system like SFTP (or Azure Blob storage,
+local file system or etc.) we can use another type of activity called
+‘***Get Metadata***’. ‘Get Metadata’ activity can perform a lookup
+(list) of a file system and retrieve the list of files available on it.
+In summary the pipeline will look like this:
+
+*Get Metadata(List of files) -\> ForEach loop \[ Execute pipeline \[
+Copy pipeline\] \]*
+
+But if you inspect the files available on the SFTP server you’ll notice
+not all files on the server are correct files to be loaded. Hence our
+pipeline needs to have another type of activity, called ‘*Filter’*
+activity, to filter out incorrect files. So, the pipeline will look like
+this:
+
+*Get Metadata(List of files) -\> Filter(filter files not matching the
+expected patter) -\> ForEach loop \[ Execute pipeline \[ Copy pipeline\]
+\]*
+
+![](.//media/image105.png)
 
 ## ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer dimensions
 
@@ -1927,16 +1948,16 @@ Similar to the task 6 in Exercise 2 create a **Parquet** Dataset on
 “wwidatawarhouse” container (we created previously) and make sure you
 parametrized the “file” and “directory” fields as before.
 
-![](.//media/image105.png)
-
 ![](.//media/image106.png)
+
+![](.//media/image107.png)
 
 #### Create SQL Database Dataset
 
 Create a SQL Database Dataset using the Linked Service created
 previously and parametrize the schema name and table name as below:
 
-![](.//media/image107.png)Pre-Task C: Create and Schema in your SQL DB
+![](.//media/image108.png)Pre-Task C: Create and Schema in your SQL DB
 
 Either using Query Editor in Azure Portal or using SSMS connect to your
 Azure SQL DB and create and schema for SmartFoods and a table for items
@@ -1973,11 +1994,11 @@ We would like to create a dimension table for this data source as below:
 
 1.  Create a mapping Dataflow by clicking on new Data flow button
 
-![](.//media/image108.png)
+![](.//media/image109.png)
 
 2.  At the top of the page turn on the “data flow debug”
 
-![](.//media/image109.png)
+![](.//media/image110.png)
 
 3.  Click “Add Source” on canvas
 
@@ -2006,33 +2027,33 @@ We would like to create a dimension table for this data source as below:
 9.  Add a derived column transformation by clicking the plus sing on the
     bottom right hand of the source transformation
 
-![](.//media/image110.png)
-
 ![](.//media/image111.png)
+
+![](.//media/image112.png)
 
 10. For Column name use “RecInsertDt” and go into expression editor and
     find “currentDate()
 
-![](.//media/image112.png)
+![](.//media/image113.png)
 
 > *Note: Inside the expression editor click the “Refresh” button to get
 > the result of the expression instantly*
 
 11. Next add a “surrogate key” transformation and configure it as below:
 
-![](.//media/image113.png)
+![](.//media/image114.png)
 
 12. Add a “Select” transformation and configure it as below. (Pay
     attention that we are renaming and re-ordering columns\!)
 
-![](.//media/image114.png)
+![](.//media/image115.png)
 
 13. Add a “Sink” transformation and select the SQL DB Dataset you
     created in the pre-tasks as the sink dataset.
 
 14. Set the settings for the sink transformation as:
 
-![](.//media/image115.png)
+![](.//media/image116.png)
 
 > Note: For brevity in this exercise we are setting up our pipeline to
 > truncate the table on every load but in real world scenarios we
@@ -2040,7 +2061,7 @@ We would like to create a dimension table for this data source as below:
 
 The finale Data flow:
 
-![](.//media/image116.png)
+![](.//media/image117.png)
 
 15. Create a pipeline place
     
@@ -2091,7 +2112,7 @@ flows Expression Language to calculate it?
 
 **<span class="underline">Final Data Flow:</span>**
 
-![](.//media/image117.png)
+![](.//media/image118.png)
 
 **If you are stuck or want to double check your answer the solution for
 Expression Language and Select transformation is in the next page.  
@@ -2099,11 +2120,11 @@ Expression Language and Select transformation is in the next page.
 
 **<span class="underline">Derived column expressions solution:</span>**
 
-![](.//media/image118.png)
+![](.//media/image119.png)
 
 **<span class="underline">Select transformation:</span>**
 
-![](.//media/image119.png)
+![](.//media/image120.png)
 
 #### Create SmartFoods Invoice fact tables
 
@@ -2113,7 +2134,7 @@ invoice data has an invoice header and an invoice item lines but for the
 case of SmartFoods the API is only capable of providing the data in form
 of line items with repeated invoice header information.
 
-![](.//media/image120.png)
+![](.//media/image121.png)
 
 The requirement is to create two separate tables in following form:
 
@@ -2131,19 +2152,19 @@ InvoiceLine
 
 1.  **For Invoice Table Overall Data flow looks:**
 
-![](.//media/image121.png)
+![](.//media/image122.png)
 
 Aggregate transformation:
 
-![](.//media/image122.png)
+![](.//media/image123.png)
 
 Join transformation:
 
-![](.//media/image123.png)
+![](.//media/image124.png)
 
 Select Transformation:
 
-![](.//media/image124.png)
+![](.//media/image125.png)
 
 2.  **For Invoice Lines:**
 
@@ -2151,23 +2172,23 @@ In the **same** data flow after your source CSV add a new branch
 transformation. This will branch the same data source to two different
 pathes
 
-![](.//media/image125.png)
+![](.//media/image126.png)
 
 **Final Data flow for invoice and invoice line:**
 
-![](.//media/image126.png)
+![](.//media/image127.png)
 
 **Derived Column Transformation:**
 
-![](.//media/image127.png)
+![](.//media/image128.png)
 
 **Join transformation:**
 
-![](.//media/image128.png)
+![](.//media/image129.png)
 
 **Select Transformation:**
 
-![](.//media/image129.png)
+![](.//media/image130.png)
 
 **DDLS for InvoiceLine table:**
 
