@@ -1777,6 +1777,131 @@ are using Data Factory mode it is better practice to frequently
 
 ![](.//media/image104.png)
 
+#### Load WWI Data
+
+Now that we have setup pipelines to load SmartFoods data from API we
+need to repeat the process and create pipelines to load *customers,
+Orders* and *Orderlines* data from WWI STFP.
+
+**Customers:**
+
+1.  Create a new pipeline
+    
+    1.  Name: ‘*WWICustomersSftpToBlob’*
+
+2.  Create a new parameter called *‘date’*
+
+3.  Drag a ‘Copy’ activity on the canvas
+    
+    1.  Name: *‘CopyWWICustomerSFTPtoBlob’*
+
+4.  Setup ‘Copy’ activity source
+    
+    1.  **source dataset**: *WWISftpParquet*
+    
+    2.  **folder**: *WorldWideImporters/customers*
+    
+    3.  **Filename**: *customers\_@{pipeline().parameters.date}*
+    
+    4.  **Filetype**: *parquet*
+
+5.  Setup ‘Copy’ activity source
+    
+    1.  **source dataset**: *WWISftpParquet*
+    
+    2.  **folder**: *customer*
+    
+    3.  **Filename**:
+        [*customers\_@{pipeline().parameters.date}*](mailto:customers_@%7bpipeline\(\).parameters.date%7d)
+    
+    4.  **Filetype**: *parquet*
+
+6.  Debug the pipeline with ‘date’ parameter as
+    *<span class="underline">‘2019-02-01’</span>*
+
+7.  Inspect Blob Storage to make sure the file has been created.
+
+> Note: With Parquet files unlike delimited text files, you cannot open
+> in with a text editor to inspect the content\!
+
+**Orders:**
+
+1.  Create a new pipeline
+    
+    1.  Name: ‘*WWICustomersSftpToBlob’*
+
+2.  Create a new parameter called *‘date’*
+
+3.  Drag a ‘Copy’ activity on the canvas
+    
+    1.  Name: *‘CopyWWIOrderSFTPtoBlob’*
+
+4.  Setup ‘Copy’ activity source
+    
+    1.  **source dataset**: *WWISftpParquet*
+    
+    2.  **folder**: *WorldWideImporters/orders*
+    
+    3.  **Filename**: *orders\_@{pipeline().parameters.date}*
+    
+    4.  **Filetype**: *parquet*
+
+5.  Setup ‘Copy’ activity source
+    
+    1.  **source dataset**: *WWISftpParquet*
+    
+    2.  **folder**: *order*
+    
+    3.  **Filename**: *orders\_@{pipeline().parameters.date}*
+    
+    4.  **Filetype**: *parquet*
+
+6.  Debug the pipeline with ‘date’ parameter as
+    *<span class="underline">‘2019-02-01’</span>*
+
+7.  Inspect Blob Storage to make sure the file has been created.
+
+**OrderLines:**
+
+**Customers:**
+
+1.  Create a new pipeline
+    
+    1.  Name: ‘*WWIOrderlinesSftpToBlob’*
+
+2.  Create a new parameter called *‘date’*
+
+3.  Drag a ‘Copy’ activity on the canvas
+    
+    1.  Name: *‘CopyWWIOrderlineSFTPtoBlob’*
+
+4.  Setup ‘Copy’ activity source
+    
+    1.  **source dataset**: *WWISftpParquet*
+    
+    2.  **folder**: *WorldWideImporters/orderlines*
+    
+    3.  **Filename**: *orderlines\_@{pipeline().parameters.date}*
+    
+    4.  **Filetype**: *parquet*
+
+5.  Setup ‘Copy’ activity source
+    
+    1.  **source dataset**: *WWISftpParquet*
+    
+    2.  **folder**: *orderline*
+    
+    3.  **Filename**: *orderlines\_@{pipeline().parameters.date}*
+    
+    4.  **Filetype**: *parquet*
+
+6.  Debug the pipeline with ‘date’ parameter as
+    *<span class="underline">‘2019-02-01’</span>*
+
+7.  Inspect Blob Storage to make sure the file has been created.
+
+#### Setup Initial Load for WWI data
+
 ## ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer dimensions
 
 Data Flow is a new feature of Azure Data Factory that allows you to
