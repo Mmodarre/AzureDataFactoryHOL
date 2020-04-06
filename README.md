@@ -2043,20 +2043,11 @@ the filter activity removed from the results.
     @substring(
     item().name,
     add(
-
-> 
-> 
->     indexof(
-> 
->     item().name,
-> 
->     '_'),
-> 
-> ``` 
-> 1)
-> ```
-
-    ,10)
+    	indexof(item().name,'_'),					
+           1
+    ),
+    10
+    )
 
 ## ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer dimensions
 
