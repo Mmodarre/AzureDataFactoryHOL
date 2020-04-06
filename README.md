@@ -2030,8 +2030,8 @@ the filter activity removed from the results.
 
     @substring(item().name,add(indexof(item().name,'_'),1),10)
 
-> Expression explanation: Remember that the pipeline we are invoking is
-> expecting a ‘date’ parameter but the ‘Get Metadata’ and ‘Filter’
+> **Expression explanation:** Remember that the pipeline we are invoking
+> is expecting a ‘date’ parameter but the ‘Get Metadata’ and ‘Filter’
 > activities are passing on file names in the form of
 > ‘Customer\_\<date\>.parquet’. In order to retrieve the date part
 > from the file name we need to use a ‘Substring’ function and within
@@ -2048,6 +2048,67 @@ the filter activity removed from the results.
     		),
     		10)
 
+11. Finally debug your pipeline and confirm that it copies all 54 files
+    successfully.
+
+12. Publish your changes.
+
+#### Create Initial load pipelines for WWI ‘Orders’ and ‘Orderlines’
+
+Now that we created the pipelines for loading all customer files from
+SFTP, we need to create similar pipelines for WWI Orders and Orderlines
+feeds.
+
+Option 1: Clone the WWI Customer Initial load pipeline and modify it for
+orders and orderlines.
+
+Option 2(Further practice): Create pipelines from scratch following the
+same instructions as above.
+
+> Once you finish this task this is the pipelines you should have
+> created in your ADF
+
+![](.//media/image114.png)
+
+## Part 1 Learning Summary:
+
+**Congratulations\!** You have reached the end of first part of Azure
+Data Factory Hands-On Lab. Here is a summary of all learning objectives
+that was covered so far.
+
+1.  Creating and renaming pipelines.
+
+2.  Adding activities and chaining them.
+
+3.  Look up activity using a Text file.
+
+4.  Web activity.
+
+5.  Accessing Oauth2 APIs using HTTP activity (composing request body
+    JSON).
+
+6.  Linked Services and setting them up using Azure Key Vault.
+
+7.  Datasets and parameterization.
+
+8.  Variables and using Set Variable activity.
+
+9.  Pipeline and Dataset parameters.
+
+10. Copy activity (Source and Sink Dataset).
+
+11. ForEach loop activity.
+
+12. Execute pipeline activity.
+
+13. Get Metadata activity for listing files.
+
+14. Filter activity.
+
+15. Cloning pipelines.
+
+16. ADF publishing (saving changes).
+
 ## ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer dimensions
 
 Data Flow is a new feature of Azure Data Factory that allows you to
@@ -2063,16 +2124,16 @@ Similar to the task 6 in Exercise 2 create a **Parquet** Dataset on
 “wwidatawarhouse” container (we created previously) and make sure you
 parametrized the “file” and “directory” fields as before.
 
-![](.//media/image114.png)
-
 ![](.//media/image115.png)
+
+![](.//media/image116.png)
 
 #### Create SQL Database Dataset
 
 Create a SQL Database Dataset using the Linked Service created
 previously and parametrize the schema name and table name as below:
 
-![](.//media/image116.png)Pre-Task C: Create and Schema in your SQL DB
+![](.//media/image117.png)Pre-Task C: Create and Schema in your SQL DB
 
 Either using Query Editor in Azure Portal or using SSMS connect to your
 Azure SQL DB and create and schema for SmartFoods and a table for items
@@ -2109,11 +2170,11 @@ We would like to create a dimension table for this data source as below:
 
 1.  Create a mapping Dataflow by clicking on new Data flow button
 
-![](.//media/image117.png)
+![](.//media/image118.png)
 
 2.  At the top of the page turn on the “data flow debug”
 
-![](.//media/image118.png)
+![](.//media/image119.png)
 
 3.  Click “Add Source” on canvas
 
@@ -2142,33 +2203,33 @@ We would like to create a dimension table for this data source as below:
 9.  Add a derived column transformation by clicking the plus sing on the
     bottom right hand of the source transformation
 
-![](.//media/image119.png)
-
 ![](.//media/image120.png)
+
+![](.//media/image121.png)
 
 10. For Column name use “RecInsertDt” and go into expression editor and
     find “currentDate()
 
-![](.//media/image121.png)
+![](.//media/image122.png)
 
 > *Note: Inside the expression editor click the “Refresh” button to get
 > the result of the expression instantly*
 
 11. Next add a “surrogate key” transformation and configure it as below:
 
-![](.//media/image122.png)
+![](.//media/image123.png)
 
 12. Add a “Select” transformation and configure it as below. (Pay
     attention that we are renaming and re-ordering columns\!)
 
-![](.//media/image123.png)
+![](.//media/image124.png)
 
 13. Add a “Sink” transformation and select the SQL DB Dataset you
     created in the pre-tasks as the sink dataset.
 
 14. Set the settings for the sink transformation as:
 
-![](.//media/image124.png)
+![](.//media/image125.png)
 
 > Note: For brevity in this exercise we are setting up our pipeline to
 > truncate the table on every load but in real world scenarios we
@@ -2176,7 +2237,7 @@ We would like to create a dimension table for this data source as below:
 
 The finale Data flow:
 
-![](.//media/image125.png)
+![](.//media/image126.png)
 
 15. Create a pipeline place
     
@@ -2227,7 +2288,7 @@ flows Expression Language to calculate it?
 
 **<span class="underline">Final Data Flow:</span>**
 
-![](.//media/image126.png)
+![](.//media/image127.png)
 
 **If you are stuck or want to double check your answer the solution for
 Expression Language and Select transformation is in the next page.  
@@ -2235,11 +2296,11 @@ Expression Language and Select transformation is in the next page.
 
 **<span class="underline">Derived column expressions solution:</span>**
 
-![](.//media/image127.png)
+![](.//media/image128.png)
 
 **<span class="underline">Select transformation:</span>**
 
-![](.//media/image128.png)
+![](.//media/image129.png)
 
 #### Create SmartFoods Invoice fact tables
 
@@ -2249,7 +2310,7 @@ invoice data has an invoice header and an invoice item lines but for the
 case of SmartFoods the API is only capable of providing the data in form
 of line items with repeated invoice header information.
 
-![](.//media/image129.png)
+![](.//media/image130.png)
 
 The requirement is to create two separate tables in following form:
 
@@ -2267,19 +2328,19 @@ InvoiceLine
 
 1.  **For Invoice Table Overall Data flow looks:**
 
-![](.//media/image130.png)
+![](.//media/image131.png)
 
 Aggregate transformation:
 
-![](.//media/image131.png)
+![](.//media/image132.png)
 
 Join transformation:
 
-![](.//media/image132.png)
+![](.//media/image133.png)
 
 Select Transformation:
 
-![](.//media/image133.png)
+![](.//media/image134.png)
 
 2.  **For Invoice Lines:**
 
@@ -2287,23 +2348,23 @@ In the **same** data flow after your source CSV add a new branch
 transformation. This will branch the same data source to two different
 pathes
 
-![](.//media/image134.png)
+![](.//media/image135.png)
 
 **Final Data flow for invoice and invoice line:**
 
-![](.//media/image135.png)
+![](.//media/image136.png)
 
 **Derived Column Transformation:**
 
-![](.//media/image136.png)
+![](.//media/image137.png)
 
 **Join transformation:**
 
-![](.//media/image137.png)
+![](.//media/image138.png)
 
 **Select Transformation:**
 
-![](.//media/image138.png)
+![](.//media/image139.png)
 
 **DDLS for InvoiceLine table:**
 
