@@ -1933,6 +1933,131 @@ expected patter) -\> ForEach loop \[ Execute pipeline \[ Copy pipeline\]
 
 ![](.//media/image105.png)
 
+1.  Create a new pipeline and rename it to
+    ‘*InitialLoadWWICustomerSftpToBlob’*
+
+2.  Drag a ‘Get Metadata’ activity to the canvas and rename it to
+    *‘GetWWICustomerFileListSFTP’*
+
+3.  Under Dataset
+    
+    1.  Dateset: WWISftpParquet
+    
+    2.  Folder: WorldWideImporters/customers
+    
+    3.  File: \*
+    
+    4.  Filetype: parquet
+    
+    5.  Field list -\> New -\> Child Items
+
+![](.//media/image106.png)
+
+4.  Click Debug to inspect the output of the activity
+
+> Output format of the Get Metadata activity: Output of Get Metadata
+> activity is a **JSON** document. At the root of the document is
+> **‘childitems’** and for <span class="underline">each file</span>
+> there is a sub-document with **‘name’** and **‘type’** attributes.
+
+![](.//media/image107.png)
+
+![](.//media/image108.png)
+
+5.  Drag a filter activity and rename it to
+    *‘FilterWWISFTPCustomerFileNames’* and connect it to get metadata
+    with success connector.
+
+![](.//media/image109.png)
+
+6.  Under Settings of ‘Filter’ activity
+
+**Items**
+
+> items: Accept an array of items that we want the filter activity to
+> apply to. So, in this case it is the root document ‘childitems’
+
+    @activity('GetWWICustomerFileListSFTP').output.childitems
+
+**Condition**
+
+> Condition: Requires a logical expression to filter the input on and
+> since the array has already been passed in ‘Items’ field we need to
+> use the @item in our expression
+
+    @not(or(contains(item().name,'testing'),contains(item().name,'old')))
+
+This expression is checking if the ‘name’ attribute with in the item has
+“*old*” **<span class="underline">or</span>** “*testing*” words in it
+and then uses ‘or’ function to reverse it.
+
+![](.//media/image110.png)
+
+7.  Debug and inspect the ‘filter’ activity output.
+
+> Output of ‘filter’ activity: The output of filter activity is again a
+> JSON document with ‘Output’ document being the most important part.
+> Within that there is an ‘ItemsCount’ and ‘FilterItemsCount’ and an
+> array called ‘Value’
+
+![](.//media/image111.png)
+
+There were 5 items with ‘testing’ and ‘old’ words in the file name that
+the filter activity removed from the results.
+
+8.  drag ‘ForEach’ loop activity and connect to success of ‘filter’
+    activity and rename it to *‘LoopWWISftpCustomerFiles’*
+    
+    1.  Under ‘settings’ -\> Items:
+
+<!-- end list -->
+
+    @activity('FilterWWISFTPCustomerFileNames').output.Value
+
+![](.//media/image112.png)
+
+![](.//media/image113.png)
+
+9.  Rename ‘Execute Pipeline’ to *‘ExecuteWWICustomersSftpToBlob’*
+
+10. Add and ‘Execute Pipeline’ activity to ‘ForEach’ loop
+    
+    1.  Invoked pipeline: *WWICustomersSftpToBlob*
+    
+    2.  Parameters -\> date :
+
+<!-- end list -->
+
+    @substring(item().name,add(indexof(item().name,'_'),1),10)
+
+> Expression explanation: Remember that the pipeline we are invoking is
+> expecting a ‘date’ parameter but the ‘Get Metadata’ and ‘Filter’
+> activities are passing on file names in the form of
+> ‘Customer\_\<date\>.parquet’. In order to retrieve the date part
+> from the file name we need to use a ‘Substring’ function and within
+> that we pass the original string, the starting position and then
+> number of characters. To find the starting position we use the
+> ‘indexof’ function and add 1 to it. Here is the same expression in
+> better formatting:
+
+    @substring(
+    item().name,
+    add(
+
+> 
+> 
+>     indexof(
+> 
+>     item().name,
+> 
+>     '_'),
+> 
+> ``` 
+> 1)
+> ```
+
+    ,10)
+
 ## ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer dimensions
 
 Data Flow is a new feature of Azure Data Factory that allows you to
@@ -1948,16 +2073,16 @@ Similar to the task 6 in Exercise 2 create a **Parquet** Dataset on
 “wwidatawarhouse” container (we created previously) and make sure you
 parametrized the “file” and “directory” fields as before.
 
-![](.//media/image106.png)
+![](.//media/image114.png)
 
-![](.//media/image107.png)
+![](.//media/image115.png)
 
 #### Create SQL Database Dataset
 
 Create a SQL Database Dataset using the Linked Service created
 previously and parametrize the schema name and table name as below:
 
-![](.//media/image108.png)Pre-Task C: Create and Schema in your SQL DB
+![](.//media/image116.png)Pre-Task C: Create and Schema in your SQL DB
 
 Either using Query Editor in Azure Portal or using SSMS connect to your
 Azure SQL DB and create and schema for SmartFoods and a table for items
@@ -1994,11 +2119,11 @@ We would like to create a dimension table for this data source as below:
 
 1.  Create a mapping Dataflow by clicking on new Data flow button
 
-![](.//media/image109.png)
+![](.//media/image117.png)
 
 2.  At the top of the page turn on the “data flow debug”
 
-![](.//media/image110.png)
+![](.//media/image118.png)
 
 3.  Click “Add Source” on canvas
 
@@ -2027,33 +2152,33 @@ We would like to create a dimension table for this data source as below:
 9.  Add a derived column transformation by clicking the plus sing on the
     bottom right hand of the source transformation
 
-![](.//media/image111.png)
+![](.//media/image119.png)
 
-![](.//media/image112.png)
+![](.//media/image120.png)
 
 10. For Column name use “RecInsertDt” and go into expression editor and
     find “currentDate()
 
-![](.//media/image113.png)
+![](.//media/image121.png)
 
 > *Note: Inside the expression editor click the “Refresh” button to get
 > the result of the expression instantly*
 
 11. Next add a “surrogate key” transformation and configure it as below:
 
-![](.//media/image114.png)
+![](.//media/image122.png)
 
 12. Add a “Select” transformation and configure it as below. (Pay
     attention that we are renaming and re-ordering columns\!)
 
-![](.//media/image115.png)
+![](.//media/image123.png)
 
 13. Add a “Sink” transformation and select the SQL DB Dataset you
     created in the pre-tasks as the sink dataset.
 
 14. Set the settings for the sink transformation as:
 
-![](.//media/image116.png)
+![](.//media/image124.png)
 
 > Note: For brevity in this exercise we are setting up our pipeline to
 > truncate the table on every load but in real world scenarios we
@@ -2061,7 +2186,7 @@ We would like to create a dimension table for this data source as below:
 
 The finale Data flow:
 
-![](.//media/image117.png)
+![](.//media/image125.png)
 
 15. Create a pipeline place
     
@@ -2112,7 +2237,7 @@ flows Expression Language to calculate it?
 
 **<span class="underline">Final Data Flow:</span>**
 
-![](.//media/image118.png)
+![](.//media/image126.png)
 
 **If you are stuck or want to double check your answer the solution for
 Expression Language and Select transformation is in the next page.  
@@ -2120,11 +2245,11 @@ Expression Language and Select transformation is in the next page.
 
 **<span class="underline">Derived column expressions solution:</span>**
 
-![](.//media/image119.png)
+![](.//media/image127.png)
 
 **<span class="underline">Select transformation:</span>**
 
-![](.//media/image120.png)
+![](.//media/image128.png)
 
 #### Create SmartFoods Invoice fact tables
 
@@ -2134,7 +2259,7 @@ invoice data has an invoice header and an invoice item lines but for the
 case of SmartFoods the API is only capable of providing the data in form
 of line items with repeated invoice header information.
 
-![](.//media/image121.png)
+![](.//media/image129.png)
 
 The requirement is to create two separate tables in following form:
 
@@ -2152,19 +2277,19 @@ InvoiceLine
 
 1.  **For Invoice Table Overall Data flow looks:**
 
-![](.//media/image122.png)
+![](.//media/image130.png)
 
 Aggregate transformation:
 
-![](.//media/image123.png)
+![](.//media/image131.png)
 
 Join transformation:
 
-![](.//media/image124.png)
+![](.//media/image132.png)
 
 Select Transformation:
 
-![](.//media/image125.png)
+![](.//media/image133.png)
 
 2.  **For Invoice Lines:**
 
@@ -2172,23 +2297,23 @@ In the **same** data flow after your source CSV add a new branch
 transformation. This will branch the same data source to two different
 pathes
 
-![](.//media/image126.png)
+![](.//media/image134.png)
 
 **Final Data flow for invoice and invoice line:**
 
-![](.//media/image127.png)
+![](.//media/image135.png)
 
 **Derived Column Transformation:**
 
-![](.//media/image128.png)
+![](.//media/image136.png)
 
 **Join transformation:**
 
-![](.//media/image129.png)
+![](.//media/image137.png)
 
 **Select Transformation:**
 
-![](.//media/image130.png)
+![](.//media/image138.png)
 
 **DDLS for InvoiceLine table:**
 
