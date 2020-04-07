@@ -55,7 +55,7 @@ are property of their respective owners.
 
 # Contents
 
-Azure Data Factory hands-on lab 1
+[Azure Data Factory hands-on lab 1](#azure-data-factory-hands-on-lab)
 
 [Abstract and learning objectives 1](#abstract-and-learning-objectives)
 
@@ -186,7 +186,8 @@ Input data
 [Task 3: Create Initial load pipelines for WWI ‘Orders’ and ‘Orderlines’
 93](#create-initial-load-pipelines-for-wwi-orders-and-orderlines)
 
-[Part 1 Learning Summary: 93](#part-1-learning-summary)
+[Part 1 Learning Summary:
+93](#self-hosted-integration-runtime-decompress-files)
 
 [ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer
 dimensions
@@ -2095,6 +2096,88 @@ same instructions as above.
 
 ![](.//media/image114.png)
 
+## Self-hosted Integration Runtime, decompress files
+
+> **Note:** This exercise requires a MS Windows workstation. You can use
+> your own machine if you are working from a PC, alternatively you can
+> deploy a small VM in Azure.
+
+The integration runtime (IR) is the compute infrastructure that Azure
+Data Factory uses to provide data-integration capabilities across
+different network environments.
+
+A self-hosted integration runtime can run copy activities between a
+cloud data store and a data store in a private network. It also can
+dispatch transform activities against compute resources in an
+on-premises network or an Azure virtual network. The installation of a
+self-hosted integration runtime needs an on-premises machine or a
+virtual machine inside a private network.
+
+If you want to learn more on how to create and configure a self-hosted
+IR check [This
+article](https://docs.microsoft.com/en-us/azure/data-factory/create-self-hosted-integration-runtime).
+
+#### Create a self-hosted IR to access SmartFoods reference data from local file system.
+
+1.  Go to connections tab of ADF
+
+![](.//media/image115.png)
+
+2.  Under ‘Integration runtimes’ click ‘New’
+
+![](.//media/image116.png)
+
+3.  Select ‘Azure, Self-Hosted’
+
+![](.//media/image117.png)
+
+4.  Choose Self-Hosted
+
+![](.//media/image118.png)
+
+5.  For name enter ‘*OnPremisesIR’*
+
+6.  click ‘Create’
+
+Now to install the IR engine you have two options
+
+1.  Express Setup: With this option you can download a pre-configured
+    executable file (exe) and after finishing installation the IR engine
+    is configured and connected to your ADF instance.
+
+2.  Manual Setup: You can download the generic version of Azure IR and
+    install on a MS Windows machine and then you need to register it to
+    your instance of ADF using the on screen provided keys.
+
+<!-- end list -->
+
+7.  Choose your preferred installation method and install the IR on your
+    Windows machine.
+
+> **Note1**: Azure data factory allows clustering self-hosted (SH) IR
+> for availability and DR. Refer to the linked document above for
+> further details on clustering and nodes.
+> 
+> **Note2:** You can enable/disable auto update of the SHIR (default
+> enabled) or set time window for it from them ‘Auto Update’ tab
+> 
+> **Note3**: A single installation of SHIR can be shared with multiple
+> ADF instances using ‘Linked Self-Hosted IR’ option.
+> 
+> **Note4**: One of the main capabilities of SHIR is to access on-prem
+> systems behind firewall and as such the IR needs to be installed on a
+> machine that is located within the firewall of the data system you
+> intend to access. This could be an on-prem SQL Server, on-prem SFTP or
+> on-prem local file system (or NAS storage).
+
+8.  Once installation completes and the IR starts successfully the
+    ‘*OnPremisesIR*’ status on the list changes to ‘*Running’*
+
+![](.//media/image119.png)
+
+Now that we have a running On-prem IR we can go ahead and create
+LinkedServices and datasets to access on-prem files.
+
 ## Part 1 Learning Summary:
 
 **Congratulations\!** You have reached the end of first part of Azure
@@ -2149,16 +2232,16 @@ Similar to the task 6 in Exercise 2 create a **Parquet** Dataset on
 “wwidatawarhouse” container (we created previously) and make sure you
 parametrized the “file” and “directory” fields as before.
 
-![](.//media/image115.png)
+![](.//media/image120.png)
 
-![](.//media/image116.png)
+![](.//media/image121.png)
 
 #### Create SQL Database Dataset
 
 Create a SQL Database Dataset using the Linked Service created
 previously and parametrize the schema name and table name as below:
 
-![](.//media/image117.png)Pre-Task C: Create and Schema in your SQL DB
+![](.//media/image122.png)Pre-Task C: Create and Schema in your SQL DB
 
 Either using Query Editor in Azure Portal or using SSMS connect to your
 Azure SQL DB and create and schema for SmartFoods and a table for items
@@ -2195,11 +2278,11 @@ We would like to create a dimension table for this data source as below:
 
 1.  Create a mapping Dataflow by clicking on new Data flow button
 
-![](.//media/image118.png)
+![](.//media/image123.png)
 
 2.  At the top of the page turn on the “data flow debug”
 
-![](.//media/image119.png)
+![](.//media/image124.png)
 
 3.  Click “Add Source” on canvas
 
@@ -2228,33 +2311,33 @@ We would like to create a dimension table for this data source as below:
 9.  Add a derived column transformation by clicking the plus sing on the
     bottom right hand of the source transformation
 
-![](.//media/image120.png)
+![](.//media/image125.png)
 
-![](.//media/image121.png)
+![](.//media/image126.png)
 
 10. For Column name use “RecInsertDt” and go into expression editor and
     find “currentDate()
 
-![](.//media/image122.png)
+![](.//media/image127.png)
 
 > *Note: Inside the expression editor click the “Refresh” button to get
 > the result of the expression instantly*
 
 11. Next add a “surrogate key” transformation and configure it as below:
 
-![](.//media/image123.png)
+![](.//media/image128.png)
 
 12. Add a “Select” transformation and configure it as below. (Pay
     attention that we are renaming and re-ordering columns\!)
 
-![](.//media/image124.png)
+![](.//media/image129.png)
 
 13. Add a “Sink” transformation and select the SQL DB Dataset you
     created in the pre-tasks as the sink dataset.
 
 14. Set the settings for the sink transformation as:
 
-![](.//media/image125.png)
+![](.//media/image130.png)
 
 > Note: For brevity in this exercise we are setting up our pipeline to
 > truncate the table on every load but in real world scenarios we
@@ -2262,7 +2345,7 @@ We would like to create a dimension table for this data source as below:
 
 The finale Data flow:
 
-![](.//media/image126.png)
+![](.//media/image131.png)
 
 15. Create a pipeline place
     
@@ -2313,7 +2396,7 @@ flows Expression Language to calculate it?
 
 **<span class="underline">Final Data Flow:</span>**
 
-![](.//media/image127.png)
+![](.//media/image132.png)
 
 **If you are stuck or want to double check your answer the solution for
 Expression Language and Select transformation is in the next page.  
@@ -2321,11 +2404,11 @@ Expression Language and Select transformation is in the next page.
 
 **<span class="underline">Derived column expressions solution:</span>**
 
-![](.//media/image128.png)
+![](.//media/image133.png)
 
 **<span class="underline">Select transformation:</span>**
 
-![](.//media/image129.png)
+![](.//media/image134.png)
 
 #### Create SmartFoods Invoice fact tables
 
@@ -2335,7 +2418,7 @@ invoice data has an invoice header and an invoice item lines but for the
 case of SmartFoods the API is only capable of providing the data in form
 of line items with repeated invoice header information.
 
-![](.//media/image130.png)
+![](.//media/image135.png)
 
 The requirement is to create two separate tables in following form:
 
@@ -2353,19 +2436,19 @@ InvoiceLine
 
 1.  **For Invoice Table Overall Data flow looks:**
 
-![](.//media/image131.png)
+![](.//media/image136.png)
 
 Aggregate transformation:
 
-![](.//media/image132.png)
+![](.//media/image137.png)
 
 Join transformation:
 
-![](.//media/image133.png)
+![](.//media/image138.png)
 
 Select Transformation:
 
-![](.//media/image134.png)
+![](.//media/image139.png)
 
 2.  **For Invoice Lines:**
 
@@ -2373,23 +2456,23 @@ In the **same** data flow after your source CSV add a new branch
 transformation. This will branch the same data source to two different
 pathes
 
-![](.//media/image135.png)
+![](.//media/image140.png)
 
 **Final Data flow for invoice and invoice line:**
 
-![](.//media/image136.png)
+![](.//media/image141.png)
 
 **Derived Column Transformation:**
 
-![](.//media/image137.png)
+![](.//media/image142.png)
 
 **Join transformation:**
 
-![](.//media/image138.png)
+![](.//media/image143.png)
 
 **Select Transformation:**
 
-![](.//media/image139.png)
+![](.//media/image144.png)
 
 **DDLS for InvoiceLine table:**
 
