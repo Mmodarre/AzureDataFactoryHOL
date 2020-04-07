@@ -2178,6 +2178,97 @@ Now to install the IR engine you have two options
 Now that we have a running On-prem IR we can go ahead and create
 LinkedServices and datasets to access on-prem files.
 
+#### Prepare the local machine
+
+For the SH IR to access the local machine securely we need to create a
+local user on the machine and copy the data from the GitHub repo to a
+directory this user can access:
+
+1.  On the Windows machine go to Settings -\> Accounts -\> Other users
+    -\> ‘Add someone else to this PC’
+
+2.  Click ‘I don’t have this person’s sing-in information’
+
+3.  Click ‘Add a user without a Microsoft account’
+
+4.  For username enter ‘adf\_ir’
+
+5.  Enter a password
+
+6.  Answer the security questions
+
+7.  Go to C:\\Users and create a directory called ‘adf\_ir’
+
+8.  Browse to the location that you clone the GitHub repo on your
+    machine and under \\Data\\SmartFoods copy the file
+    SmartFoodsRefData.zip to C:\\Users\\adf\_ir
+
+#### Create local file system Linked Service
+
+1.  In ADF start creating a new Linked Service
+
+2.  For Data Store select “File System”
+
+![](.//media/image120.png)
+
+3.  Now configure the new Linked service:
+    
+    1.  Name: *SmartFoodsLocalFileSystem*
+    
+    2.  Connect via: **<span class="underline">OnPremisesIR</span>**
+    
+    3.  Host: C:\\Users\\adf\_ir
+    
+    4.  Username: adf\_ir
+    
+    5.  Password: \<The password you created the adf\_ir account with\>
+    
+    6.  Click “Test connection”
+    
+    7.  If successful click “Create”
+
+![](.//media/image121.png)
+
+#### Create Dataset for file system
+
+1.  Create a new dataset
+
+2.  For data store choose : *File System*
+
+3.  For Format choose: *Delimited Text*
+
+4.  name: *SmartFoodsRefDataLocalFileSystem*
+
+5.  Linked Service: *SmartFoodsLocalFileSystem*
+
+6.  “First Row as header” ticked
+
+7.  Leave directory and file blank
+
+8.  Import Schema: None
+
+![](.//media/image122.png)
+
+#### (Challenge Task) Parametrize the dataset with 
+
+> Configure the dataset (Use below figure as reference and if you need a
+> refresher on how to create datasets go back to first part of the lab)
+
+![](.//media/image123.png)
+
+Click “Preview data” to make sure the dataset is working correctly.
+
+File: SmartFoodsRefData
+
+Filetype: zip
+
+![](.//media/image124.png)
+
+![](.//media/image125.png)
+
+> Note: The zip file contains 3 CSV files. The preview randomly shows
+> part of one of the files within the compressed file.
+
 ## Part 1 Learning Summary:
 
 **Congratulations\!** You have reached the end of first part of Azure
@@ -2232,16 +2323,16 @@ Similar to the task 6 in Exercise 2 create a **Parquet** Dataset on
 “wwidatawarhouse” container (we created previously) and make sure you
 parametrized the “file” and “directory” fields as before.
 
-![](.//media/image120.png)
+![](.//media/image126.png)
 
-![](.//media/image121.png)
+![](.//media/image127.png)
 
 #### Create SQL Database Dataset
 
 Create a SQL Database Dataset using the Linked Service created
 previously and parametrize the schema name and table name as below:
 
-![](.//media/image122.png)Pre-Task C: Create and Schema in your SQL DB
+![](.//media/image128.png)Pre-Task C: Create and Schema in your SQL DB
 
 Either using Query Editor in Azure Portal or using SSMS connect to your
 Azure SQL DB and create and schema for SmartFoods and a table for items
@@ -2278,11 +2369,11 @@ We would like to create a dimension table for this data source as below:
 
 1.  Create a mapping Dataflow by clicking on new Data flow button
 
-![](.//media/image123.png)
+![](.//media/image129.png)
 
 2.  At the top of the page turn on the “data flow debug”
 
-![](.//media/image124.png)
+![](.//media/image130.png)
 
 3.  Click “Add Source” on canvas
 
@@ -2311,33 +2402,33 @@ We would like to create a dimension table for this data source as below:
 9.  Add a derived column transformation by clicking the plus sing on the
     bottom right hand of the source transformation
 
-![](.//media/image125.png)
+![](.//media/image131.png)
 
-![](.//media/image126.png)
+![](.//media/image132.png)
 
 10. For Column name use “RecInsertDt” and go into expression editor and
     find “currentDate()
 
-![](.//media/image127.png)
+![](.//media/image133.png)
 
 > *Note: Inside the expression editor click the “Refresh” button to get
 > the result of the expression instantly*
 
 11. Next add a “surrogate key” transformation and configure it as below:
 
-![](.//media/image128.png)
+![](.//media/image134.png)
 
 12. Add a “Select” transformation and configure it as below. (Pay
     attention that we are renaming and re-ordering columns\!)
 
-![](.//media/image129.png)
+![](.//media/image135.png)
 
 13. Add a “Sink” transformation and select the SQL DB Dataset you
     created in the pre-tasks as the sink dataset.
 
 14. Set the settings for the sink transformation as:
 
-![](.//media/image130.png)
+![](.//media/image136.png)
 
 > Note: For brevity in this exercise we are setting up our pipeline to
 > truncate the table on every load but in real world scenarios we
@@ -2345,7 +2436,7 @@ We would like to create a dimension table for this data source as below:
 
 The finale Data flow:
 
-![](.//media/image131.png)
+![](.//media/image137.png)
 
 15. Create a pipeline place
     
@@ -2396,7 +2487,7 @@ flows Expression Language to calculate it?
 
 **<span class="underline">Final Data Flow:</span>**
 
-![](.//media/image132.png)
+![](.//media/image138.png)
 
 **If you are stuck or want to double check your answer the solution for
 Expression Language and Select transformation is in the next page.  
@@ -2404,11 +2495,11 @@ Expression Language and Select transformation is in the next page.
 
 **<span class="underline">Derived column expressions solution:</span>**
 
-![](.//media/image133.png)
+![](.//media/image139.png)
 
 **<span class="underline">Select transformation:</span>**
 
-![](.//media/image134.png)
+![](.//media/image140.png)
 
 #### Create SmartFoods Invoice fact tables
 
@@ -2418,7 +2509,7 @@ invoice data has an invoice header and an invoice item lines but for the
 case of SmartFoods the API is only capable of providing the data in form
 of line items with repeated invoice header information.
 
-![](.//media/image135.png)
+![](.//media/image141.png)
 
 The requirement is to create two separate tables in following form:
 
@@ -2436,19 +2527,19 @@ InvoiceLine
 
 1.  **For Invoice Table Overall Data flow looks:**
 
-![](.//media/image136.png)
+![](.//media/image142.png)
 
 Aggregate transformation:
 
-![](.//media/image137.png)
+![](.//media/image143.png)
 
 Join transformation:
 
-![](.//media/image138.png)
+![](.//media/image144.png)
 
 Select Transformation:
 
-![](.//media/image139.png)
+![](.//media/image145.png)
 
 2.  **For Invoice Lines:**
 
@@ -2456,23 +2547,23 @@ In the **same** data flow after your source CSV add a new branch
 transformation. This will branch the same data source to two different
 pathes
 
-![](.//media/image140.png)
+![](.//media/image146.png)
 
 **Final Data flow for invoice and invoice line:**
 
-![](.//media/image141.png)
+![](.//media/image147.png)
 
 **Derived Column Transformation:**
 
-![](.//media/image142.png)
+![](.//media/image148.png)
 
 **Join transformation:**
 
-![](.//media/image143.png)
+![](.//media/image149.png)
 
 **Select Transformation:**
 
-![](.//media/image144.png)
+![](.//media/image150.png)
 
 **DDLS for InvoiceLine table:**
 
