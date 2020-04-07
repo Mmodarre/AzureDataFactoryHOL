@@ -55,7 +55,7 @@ are property of their respective owners.
 
 # Contents
 
-[Azure Data Factory hands-on lab 1](#azure-data-factory-hands-on-lab)
+Azure Data Factory hands-on lab 1
 
 [Abstract and learning objectives 1](#abstract-and-learning-objectives)
 
@@ -153,36 +153,57 @@ Input data
 
 [Task 4: Test your pipeline 66](#test-your-pipeline)
 
-[Task 5: Extend the pipeline with Lookup activity and ForEach Loops
+[Lookup activity, ForEach loop and Execute Pipeline activity
+67](#lookup-activity-foreach-loop-and-execute-pipeline-activity)
+
+[Task 1: Extend the pipeline with Lookup activity and ForEach Loops
 67](#extend-the-pipeline-with-lookup-activity-and-foreach-loops)
 
-[Task 6: Expand the pipeline using Lookup activity
+[Task 2: Expand the pipeline using Lookup activity
 72](#expand-the-pipeline-using-lookup-activity)
 
-[Task 7: Test your pipeline 76](#test-your-pipeline-1)
+[Task 3: Test your pipeline 76](#test-your-pipeline-1)
 
-[Task 8: How much did this cost? 77](#how-much-did-this-cost)
+[Task 4: How much did this cost? 77](#how-much-did-this-cost)
 
-[Task 9: Clone and modify SmartFoods customer pipeline for
+[Task 5: Clone and modify SmartFoods customer pipeline for
 ***transactions***
 78](#clone-and-modify-smartfoods-customer-pipeline-for-transactions)
 
+[Task 6: Add ‘Transaction’ pipeline to the ‘InitialLoad’ pipeline
+80](#add-transaction-pipeline-to-the-initialload-pipeline)
+
+[Task 7: Publishing 82](#publishing)
+
+[Get Metadata activity, filter activity and complex expressions
+83](#get-metadata-activity-filter-activity-and-complex-expressions)
+
+[Task 1: Load WWI Data 83](#load-wwi-data)
+
+[Task 2: Setup Initial Load for WWI data
+84](#setup-initial-load-for-wwi-data)
+
+[Task 3: Create Initial load pipelines for WWI ‘Orders’ and ‘Orderlines’
+93](#create-initial-load-pipelines-for-wwi-orders-and-orderlines)
+
+[Part 1 Learning Summary: 93](#part-1-learning-summary)
+
 [ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer
 dimensions
-81](#elt-with-mapping-dataflows-smartfoods-itemsfoods-and-customer-dimensions)
+95](#elt-with-mapping-dataflows-smartfoods-itemsfoods-and-customer-dimensions)
 
 [Task 1: Create a Parquet dataset to write SmartFoods DW Blob container
-81](#create-a-parquet-dataset-to-write-smartfoods-dw-blob-container)
+95](#create-a-parquet-dataset-to-write-smartfoods-dw-blob-container)
 
-[Task 2: Create SQL Database Dataset 82](#create-sql-database-dataset)
+[Task 2: Create SQL Database Dataset 96](#create-sql-database-dataset)
 
-[Task 3: Create Foods Dimension 83](#create-foods-dimension)
+[Task 3: Create Foods Dimension 97](#create-foods-dimension)
 
 [Task 4: (Challenge Task) Create customer dimension
-86](#challenge-task-create-customer-dimension)
+101](#challenge-task-create-customer-dimension)
 
 [Task 5: Create SmartFoods Invoice fact tables
-89](#create-smartfoods-invoice-fact-tables)
+104](#create-smartfoods-invoice-fact-tables)
 
 # Azure Data Factory hands-on lab
 
@@ -1499,6 +1520,8 @@ transform and analyze it.
 
 ![](.//media/image84.png)
 
+## Lookup activity, ForEach loop and Execute Pipeline activity
+
 #### Extend the pipeline with Lookup activity and ForEach Loops
 
 The current pipeline works fine for daily loading of the data (single
@@ -1776,6 +1799,8 @@ are using Data Factory mode it is better practice to frequently
 ‘Validate’ and ‘Publish’ your changes save your work.
 
 ![](.//media/image104.png)
+
+## Get Metadata activity, filter activity and complex expressions
 
 #### Load WWI Data
 
