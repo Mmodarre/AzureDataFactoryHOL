@@ -187,7 +187,7 @@ Input data
 93](#create-initial-load-pipelines-for-wwi-orders-and-orderlines)
 
 [Part 1 Learning Summary:
-93](#self-hosted-integration-runtime-decompress-files)
+93](#self-hosted-integration-runtime-decompress-files-and-delete-activity)
 
 [ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer
 dimensions
@@ -2096,7 +2096,7 @@ same instructions as above.
 
 ![](.//media/image114.png)
 
-## Self-hosted Integration Runtime, decompress files
+## Self-hosted Integration Runtime, decompress files and Delete activity
 
 > **Note:** This exercise requires a MS Windows workstation. You can use
 > your own machine if you are working from a PC, alternatively you can
@@ -2368,6 +2368,19 @@ from any file system.
 1.  After the ‘Copy’ activity add a ‘Delete’ activity (in activities
     list under General) and connect to success of the Copy activity.
 
+2.  Rename it to ‘DeleteSmartFoodsRefDataLocalFS’
+
+3.  For source set it up exactly same as the source of ‘Copy’ activity
+
+> ![](.//media/image132.png)
+
+4.  Debug your pipeline to make sure it is working correctly.
+
+> **Note:** Delete activity may run successfully but if you check the
+> directory the file may still be in there. The primary reason for this
+> would access/security settings applied to the file. (if adf\_ir user
+> has the right access to perform deleting the file or not)
+
 ## Part 1 Learning Summary:
 
 **Congratulations\!** You have reached the end of first part of Azure
@@ -2407,6 +2420,14 @@ that was covered so far.
 
 16. ADF publishing (saving changes).
 
+17. Setting up a self-hosted integration runtime
+
+18. Accessing local file system using SHIR
+
+19. Copying activity with compression/decompression
+
+20. Delete activity
+
 ## ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer dimensions
 
 Data Flow is a new feature of Azure Data Factory that allows you to
@@ -2422,16 +2443,16 @@ Similar to the task 6 in Exercise 2 create a **Parquet** Dataset on
 “wwidatawarhouse” container (we created previously) and make sure you
 parametrized the “file” and “directory” fields as before.
 
-![](.//media/image132.png)
-
 ![](.//media/image133.png)
+
+![](.//media/image134.png)
 
 #### Create SQL Database Dataset
 
 Create a SQL Database Dataset using the Linked Service created
 previously and parametrize the schema name and table name as below:
 
-![](.//media/image134.png)Pre-Task C: Create and Schema in your SQL DB
+![](.//media/image135.png)Pre-Task C: Create and Schema in your SQL DB
 
 Either using Query Editor in Azure Portal or using SSMS connect to your
 Azure SQL DB and create and schema for SmartFoods and a table for items
@@ -2468,11 +2489,11 @@ We would like to create a dimension table for this data source as below:
 
 1.  Create a mapping Dataflow by clicking on new Data flow button
 
-![](.//media/image135.png)
+![](.//media/image136.png)
 
 2.  At the top of the page turn on the “data flow debug”
 
-![](.//media/image136.png)
+![](.//media/image137.png)
 
 3.  Click “Add Source” on canvas
 
@@ -2501,33 +2522,33 @@ We would like to create a dimension table for this data source as below:
 9.  Add a derived column transformation by clicking the plus sing on the
     bottom right hand of the source transformation
 
-![](.//media/image137.png)
-
 ![](.//media/image138.png)
+
+![](.//media/image139.png)
 
 10. For Column name use “RecInsertDt” and go into expression editor and
     find “currentDate()
 
-![](.//media/image139.png)
+![](.//media/image140.png)
 
 > *Note: Inside the expression editor click the “Refresh” button to get
 > the result of the expression instantly*
 
 11. Next add a “surrogate key” transformation and configure it as below:
 
-![](.//media/image140.png)
+![](.//media/image141.png)
 
 12. Add a “Select” transformation and configure it as below. (Pay
     attention that we are renaming and re-ordering columns\!)
 
-![](.//media/image141.png)
+![](.//media/image142.png)
 
 13. Add a “Sink” transformation and select the SQL DB Dataset you
     created in the pre-tasks as the sink dataset.
 
 14. Set the settings for the sink transformation as:
 
-![](.//media/image142.png)
+![](.//media/image143.png)
 
 > Note: For brevity in this exercise we are setting up our pipeline to
 > truncate the table on every load but in real world scenarios we
@@ -2535,7 +2556,7 @@ We would like to create a dimension table for this data source as below:
 
 The finale Data flow:
 
-![](.//media/image143.png)
+![](.//media/image144.png)
 
 15. Create a pipeline place
     
@@ -2586,7 +2607,7 @@ flows Expression Language to calculate it?
 
 **<span class="underline">Final Data Flow:</span>**
 
-![](.//media/image144.png)
+![](.//media/image145.png)
 
 **If you are stuck or want to double check your answer the solution for
 Expression Language and Select transformation is in the next page.  
@@ -2594,11 +2615,11 @@ Expression Language and Select transformation is in the next page.
 
 **<span class="underline">Derived column expressions solution:</span>**
 
-![](.//media/image145.png)
+![](.//media/image146.png)
 
 **<span class="underline">Select transformation:</span>**
 
-![](.//media/image146.png)
+![](.//media/image147.png)
 
 #### Create SmartFoods Invoice fact tables
 
@@ -2608,7 +2629,7 @@ invoice data has an invoice header and an invoice item lines but for the
 case of SmartFoods the API is only capable of providing the data in form
 of line items with repeated invoice header information.
 
-![](.//media/image147.png)
+![](.//media/image148.png)
 
 The requirement is to create two separate tables in following form:
 
@@ -2626,19 +2647,19 @@ InvoiceLine
 
 1.  **For Invoice Table Overall Data flow looks:**
 
-![](.//media/image148.png)
+![](.//media/image149.png)
 
 Aggregate transformation:
 
-![](.//media/image149.png)
+![](.//media/image150.png)
 
 Join transformation:
 
-![](.//media/image150.png)
+![](.//media/image151.png)
 
 Select Transformation:
 
-![](.//media/image151.png)
+![](.//media/image152.png)
 
 2.  **For Invoice Lines:**
 
@@ -2646,23 +2667,23 @@ In the **same** data flow after your source CSV add a new branch
 transformation. This will branch the same data source to two different
 pathes
 
-![](.//media/image152.png)
+![](.//media/image153.png)
 
 **Final Data flow for invoice and invoice line:**
 
-![](.//media/image153.png)
+![](.//media/image154.png)
 
 **Derived Column Transformation:**
 
-![](.//media/image154.png)
+![](.//media/image155.png)
 
 **Join transformation:**
 
-![](.//media/image155.png)
+![](.//media/image156.png)
 
 **Select Transformation:**
 
-![](.//media/image156.png)
+![](.//media/image157.png)
 
 **DDLS for InvoiceLine table:**
 
