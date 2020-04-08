@@ -120,8 +120,7 @@ and staging
 40](#create-blob-storage-datasets-for-wwi-input-data)
 
 [Task 9: Create Blob Storage Datasets for SmartFoods customer(JSON)
-Input data
-40](#create-blob-storage-datasets-for-smartfoods-customerjson-input-data)
+Input data 40](#create-blob-storage-datasets-for-smartfoods-input-data)
 
 [Task 10: Create Blob Storage Datasets for WWI Data Warehouse output
 42](#create-blob-storage-datasets-for-wwi-data-warehouse-output)
@@ -166,8 +165,7 @@ Input data
 
 [Task 4: How much did this cost? 77](#how-much-did-this-cost)
 
-[Task 5: Clone and modify SmartFoods customer pipeline for
-***transactions***
+[Task 5: Clone and modify SmartFoods customer pipeline for transactions
 78](#clone-and-modify-smartfoods-customer-pipeline-for-transactions)
 
 [Task 6: Add ‘Transaction’ pipeline to the ‘InitialLoad’ pipeline
@@ -1040,13 +1038,12 @@ parametrized.
     
     3.  filetype
 
-#### Create Blob Storage Datasets for SmartFoods customer(JSON) Input data
+#### Create Blob Storage Datasets for SmartFoods Input data
 
 SmartFoods data is available to an API. Customer data is in JSON format
-and Transactions are in CSV format. As such our solution requires to
-have a separate “dataset” for each data domain.
-
-**- For Transactions CSV**
+and Transactions are in CSV format. But we are using Azure Data
+Factory’s Copy activity to convert customer data to CSV so we have the
+same file format for both feeds from SmartFoods API source.
 
 1)  Click the plus sign on the left top hand of ADF and select Dataset.
 
@@ -1060,44 +1057,6 @@ have a separate “dataset” for each data domain.
     in previous task
 
 5)  For name provide “**SmartFoodsDelimitedTextBlob**”
-
-6)  Click “Browse” and select ***smartfoodsstaging*** container (created
-    in previous steps)
-
-7)  Leave “Directory” and “File” Blank (We are going to parametrize
-    these)
-
-8)  Change “Import Schema to None”
-
-9)  Click OK
-
-10) Parametrize the Dataset like the SFTP data set with following
-    parameters:
-    
-    1.  folder
-    
-    2.  filename
-    
-    3.  filetype
-
-<!-- end list -->
-
-  - **For customer JSON**
-
-<!-- end list -->
-
-1)  Click the plus sign on the left top hand of ADF and select Dataset.
-
-![](.//media/image43.png)
-
-2)  Select Blob
-
-3)  Select “JSON” for format
-
-4)  From Drop down select the Azure Blob Storage linked service created
-    in previous task
-
-5)  For name provide “**SmartFoodsJsonBlob**”
 
 6)  Click “Browse” and select ***smartfoodsstaging*** container (created
     in previous steps)
