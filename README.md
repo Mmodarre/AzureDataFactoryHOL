@@ -119,14 +119,14 @@ and staging
 [Task 8: Create Blob Storage Datasets for WWI Input data
 40](#create-blob-storage-datasets-for-wwi-input-data)
 
-[Task 9: Create Blob Storage Datasets for SmartFoods customer(JSON)
-Input data 40](#create-blob-storage-datasets-for-smartfoods-input-data)
+[Task 9: Create Blob Storage Datasets for SmartFoods Input data
+40](#create-blob-storage-datasets-for-smartfoods-input-data)
 
 [Task 10: Create Blob Storage Datasets for WWI Data Warehouse output
-42](#create-blob-storage-datasets-for-wwi-data-warehouse-output)
+41](#create-blob-storage-datasets-for-wwi-data-warehouse-output)
 
 [Task 11: Create a SQL Database Linked Service and Dataset
-43](#create-a-sql-database-linked-service-and-dataset)
+42](#create-a-sql-database-linked-service-and-dataset)
 
 [Task 12: Create an HTTP Linked Service:
 46](#create-an-http-linked-service)
