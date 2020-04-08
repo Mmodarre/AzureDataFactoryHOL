@@ -186,25 +186,48 @@ Input data
 [Task 3: Create Initial load pipelines for WWI ‘Orders’ and ‘Orderlines’
 93](#create-initial-load-pipelines-for-wwi-orders-and-orderlines)
 
-[Part 1 Learning Summary:
+[Self-hosted Integration Runtime, decompress files and Delete activity
 93](#self-hosted-integration-runtime-decompress-files-and-delete-activity)
+
+[Task 1: Create a self-hosted IR to access SmartFoods reference data
+from local file system.
+94](#create-a-self-hosted-ir-to-access-smartfoods-reference-data-from-local-file-system.)
+
+[Task 2: Prepare the local machine 98](#prepare-the-local-machine)
+
+[Task 3: Create local file system Linked Service
+98](#create-local-file-system-linked-service)
+
+[Task 4: Create Dataset for file system
+101](#create-dataset-for-file-system)
+
+[Task 5: (Challenge Task) Parametrize the dataset with
+101](#challenge-task-parametrize-the-dataset-with)
+
+[Task 6: Copy the data from on-prem to cloud
+103](#copy-the-data-from-on-prem-to-cloud)
+
+[Task 7: Delete the zip file from local file system
+108](#delete-the-zip-file-from-local-file-system)
+
+[Part 1 Learning Summary: 109](#part-1-learning-summary)
 
 [ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer
 dimensions
-95](#elt-with-mapping-dataflows-smartfoods-itemsfoods-and-customer-dimensions)
+111](#elt-with-mapping-dataflows-smartfoods-itemsfoods-and-customer-dimensions)
 
 [Task 1: Create a Parquet dataset to write SmartFoods DW Blob container
-95](#create-a-parquet-dataset-to-write-smartfoods-dw-blob-container)
+111](#create-a-parquet-dataset-to-write-smartfoods-dw-blob-container)
 
-[Task 2: Create SQL Database Dataset 96](#create-sql-database-dataset)
+[Task 2: Create SQL Database Dataset 112](#create-sql-database-dataset)
 
-[Task 3: Create Foods Dimension 97](#create-foods-dimension)
+[Task 3: Create Foods Dimension 113](#create-foods-dimension)
 
 [Task 4: (Challenge Task) Create customer dimension
-101](#challenge-task-create-customer-dimension)
+117](#challenge-task-create-customer-dimension)
 
 [Task 5: Create SmartFoods Invoice fact tables
-104](#create-smartfoods-invoice-fact-tables)
+120](#create-smartfoods-invoice-fact-tables)
 
 # Azure Data Factory hands-on lab
 
@@ -1696,7 +1719,7 @@ consuming.
 
 ![](.//media/image99.png)
 
-#### Clone and modify SmartFoods customer pipeline for ***<span class="underline">transactions</span>***
+#### Clone and modify SmartFoods customer pipeline for transactions
 
 A great feature of ADF is the ability to clone different objects, and if
 the underlying objects are sufficiently with minimal modification the
