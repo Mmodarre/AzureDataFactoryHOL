@@ -2311,6 +2311,15 @@ system)
 6.  Go inside “ForEach” activity canvas and add a “Copy” activity and
     rename it to “*CopySmartFoodsRefDataLocalFStoBlob*”
 
+7.  Setup source
+    
+    1.  Source dataset: *SmartFoodsRefDataLocalFileSystem*
+    
+    2.  File*:* @first(split(item().name,'.'))
+    
+    3.  Filetype: @last(split(item().name,'.'))
+    
+    4.  
 ## Part 1 Learning Summary:
 
 **Congratulations\!** You have reached the end of first part of Azure
