@@ -63,94 +63,171 @@ are property of their respective owners.
 
 [Solution architecture 2](#solution-architecture)
 
-[Requirements 2](#requirements)
+[Requirements 3](#requirements)
 
-[Exercise 0 - Before the hands-on lab
-3](#before-the-hands-on-lab-exercise)
+[Before the hands-on lab Exercise 4](#before-the-hands-on-lab-exercise)
 
 [Task 1: Install Azure Storage Explorer
-3](#install-azure-storage-explorer)
+4](#install-azure-storage-explorer)
 
-[Task 2: Clone the GitHub repository 5](#clone-the-github-repository)
+[Task 2: Clone the GitHub repository 6](#clone-the-github-repository)
 
-[Task 3: Deploy Azure Resource Group 6](#deploy-azure-resource-group)
+[Task 3: Deploy Azure Resource Group 7](#deploy-azure-resource-group)
 
-[Task 4: Deploy Azure Data Factory 7](#deploy-azure-data-factory)
+[Task 4: Deploy Azure Data Factory 8](#deploy-azure-data-factory)
 
 [Task 5: Deploy an Azure Storage Account as below
-8](#deploy-an-azure-storage-account-as-below)
+9](#deploy-an-azure-storage-account-as-below)
 
-[Task 6: Deploy Azure Key Vault 9](#deploy-azure-key-vault)
+[Task 6: Deploy Azure Key Vault 10](#deploy-azure-key-vault)
 
-[Task 7: Deploy Azure SQL Database 12](#deploy-azure-sql-database)
+[Task 7: Deploy Azure SQL Database 13](#deploy-azure-sql-database)
 
-[Task 8: Create a container for WideWorldImporters and upload the files
-16](#create-a-container-for-wideworldimporters-and-upload-the-files)
+[Task 8: Create Blob Storage Containers for the Data Warehouse Output
+and staging
+17](#create-blob-storage-containers-for-the-data-warehouse-output-and-staging)
 
-[Task 9: Create a container for SmartFoods and upload the files
-16](#create-a-container-for-smartfoods-and-upload-the-files)
+[Task 9: Create a container for WideWorldImporters Staging Input files
+18](#create-a-container-for-wideworldimporters-staging-input-files)
 
-[Task 10: Create a Blob Storage Container for the Data Warehouse.
-17](#create-a-blob-storage-container-for-the-data-warehouse.)
+[Task 10: Create a container for SmartFoods Staging Input files
+18](#create-a-container-for-smartfoods-staging-input-files)
 
-[Exercise 1 - Linked Services, Datasets and Integration Runtimes:
-18](#linked-services-datasets-and-integration-runtimes)
+[Linked Services, Datasets and Integration Runtimes:
+19](#linked-services-datasets-and-integration-runtimes)
 
-[Task 1: Create Azure Data Factory Integration Runtime.
-18](#create-azure-data-factory-integration-runtime.)
+[Task 1: Create Azure Data Factory Integration Runtime
+19](#create-azure-data-factory-integration-runtime)
 
 [Task 2: Create a new ADF Key Vault Linked Service
-21](#create-a-new-adf-key-vault-linked-service)
+22](#create-a-new-adf-key-vault-linked-service)
 
 [Task 3: Add blob Storage credentials to AKV
-27](#add-blob-storage-credentials-to-akv)
+29](#add-blob-storage-credentials-to-akv)
 
-[Task 4: Create Azure Blob Storage Linked Service
-29](#create-azure-blob-storage-linked-service)
+[Task 4: Add other credentials to Azure Key Vault
+31](#add-other-credentials-to-azure-key-vault)
 
-[Task 5: Create data sets 31](#create-data-sets)
+[Task 5: Create SFTP Linked Service 31](#create-sftp-linked-service)
 
-[Task 6: Create a Delimited text data set on the same Blob linked
-service
-35](#create-a-delimited-text-data-set-on-the-same-blob-linked-service)
+[Task 6: Create datasets for WWI SFTP data
+32](#create-datasets-for-wwi-sftp-data)
 
-[Task 7: Create a SQL Database Linked Service and Dataset
-35](#create-a-sql-database-linked-service-and-dataset)
+[Task 7: Create Azure Blob Storage Linked Service
+37](#create-azure-blob-storage-linked-service)
 
-[Task 8: Create an HTTP Linked Service:
-38](#create-an-http-linked-service)
+[Task 8: Create Blob Storage Datasets for WWI Input data
+40](#create-blob-storage-datasets-for-wwi-input-data)
 
-[Task 9: Create a CSV Dataset on the HTTP Linked Service
-39](#create-a-csv-dataset-on-the-http-linked-service)
+[Task 9: Create Blob Storage Datasets for SmartFoods customer(JSON)
+Input data
+40](#create-blob-storage-datasets-for-smartfoods-customerjson-input-data)
 
-[Exercise 2 - Copy Activity, Parameters, Debug and Publishing:
-41](#copy-activity-parameters-debug-and-publishing)
+[Task 10: Create Blob Storage Datasets for WWI Data Warehouse output
+42](#create-blob-storage-datasets-for-wwi-data-warehouse-output)
 
-[Task 1: Create a pipeline to get data from the SmartFoods API for the
-past one week
-41](#create-a-pipeline-to-get-data-from-the-smartfoods-api-for-the-past-one-week)
+[Task 11: Create a SQL Database Linked Service and Dataset
+43](#create-a-sql-database-linked-service-and-dataset)
 
-[Task 2: (Optional challenge) – ForEach Loops and Variables
-44](#optional-challenge-foreach-loops-and-variables)
+[Task 12: Create an HTTP Linked Service:
+46](#create-an-http-linked-service)
 
-[Task 3: How much did this cost? 45](#how-much-did-this-cost)
+[Task 13: Create a CSV Dataset on the HTTP Linked Service
+47](#create-a-csv-dataset-on-the-http-linked-service)
 
-[Exercise 3 - ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and
-Customer dimensions
-46](#elt-with-mapping-dataflows-smartfoods-itemsfoods-and-customer-dimensions)
+[Task 14: Create a JSON Dataset on the HTTP Linked Service
+49](#create-a-json-dataset-on-the-http-linked-service)
+
+[Copy Activity, Parameters, Debug and Publishing:
+51](#copy-activity-parameters-debug-and-publishing)
+
+[Task 1: Create a pipeline and setup authentication to SmartFoods OAuth2
+(Token based) API
+51](#create-a-pipeline-and-setup-authentication-to-smartfoods-oauth2-token-based-api)
+
+[Task 2: Store the access token in a variable
+60](#store-the-access-token-in-a-variable)
+
+[Task 3: Retrieve data from API and store in Blob Storage
+62](#retrieve-data-from-api-and-store-in-blob-storage)
+
+[Task 4: Test your pipeline 66](#test-your-pipeline)
+
+[Lookup activity, ForEach loop and Execute Pipeline activity
+67](#lookup-activity-foreach-loop-and-execute-pipeline-activity)
+
+[Task 1: Extend the pipeline with Lookup activity and ForEach Loops
+67](#extend-the-pipeline-with-lookup-activity-and-foreach-loops)
+
+[Task 2: Expand the pipeline using Lookup activity
+72](#expand-the-pipeline-using-lookup-activity)
+
+[Task 3: Test your pipeline 76](#test-your-pipeline-1)
+
+[Task 4: How much did this cost? 77](#how-much-did-this-cost)
+
+[Task 5: Clone and modify SmartFoods customer pipeline for
+***transactions***
+78](#clone-and-modify-smartfoods-customer-pipeline-for-transactions)
+
+[Task 6: Add ‘Transaction’ pipeline to the ‘InitialLoad’ pipeline
+80](#add-transaction-pipeline-to-the-initialload-pipeline)
+
+[Task 7: Publishing 82](#publishing)
+
+[Get Metadata activity, filter activity and complex expressions
+83](#get-metadata-activity-filter-activity-and-complex-expressions)
+
+[Task 1: Load WWI Data 83](#load-wwi-data)
+
+[Task 2: Setup Initial Load for WWI data
+84](#setup-initial-load-for-wwi-data)
+
+[Task 3: Create Initial load pipelines for WWI ‘Orders’ and ‘Orderlines’
+93](#create-initial-load-pipelines-for-wwi-orders-and-orderlines)
+
+[Self-hosted Integration Runtime, decompress files and Delete activity
+93](#self-hosted-integration-runtime-decompress-files-and-delete-activity)
+
+[Task 1: Create a self-hosted IR to access SmartFoods reference data
+from local file system.
+94](#create-a-self-hosted-ir-to-access-smartfoods-reference-data-from-local-file-system.)
+
+[Task 2: Prepare the local machine 98](#prepare-the-local-machine)
+
+[Task 3: Create local file system Linked Service
+98](#create-local-file-system-linked-service)
+
+[Task 4: Create Dataset for file system
+101](#create-dataset-for-file-system)
+
+[Task 5: (Challenge Task) Parametrize the dataset with
+101](#challenge-task-parametrize-the-dataset-with)
+
+[Task 6: Copy the data from on-prem to cloud
+103](#copy-the-data-from-on-prem-to-cloud)
+
+[Task 7: Delete the zip file from local file system
+108](#delete-the-zip-file-from-local-file-system)
+
+[Part 1 Learning Summary: 109](#part-1-learning-summary)
+
+[ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer
+dimensions
+111](#elt-with-mapping-dataflows-smartfoods-itemsfoods-and-customer-dimensions)
 
 [Task 1: Create a Parquet dataset to write SmartFoods DW Blob container
-46](#create-a-parquet-dataset-to-write-smartfoods-dw-blob-container)
+111](#create-a-parquet-dataset-to-write-smartfoods-dw-blob-container)
 
-[Task 2: Create SQL Database Dataset 47](#create-sql-database-dataset)
+[Task 2: Create SQL Database Dataset 112](#create-sql-database-dataset)
 
-[Task 3: Create Foods Dimension 48](#create-foods-dimension)
+[Task 3: Create Foods Dimension 113](#create-foods-dimension)
 
 [Task 4: (Challenge Task) Create customer dimension
-52](#challenge-task-create-customer-dimension)
+117](#challenge-task-create-customer-dimension)
 
 [Task 5: Create SmartFoods Invoice fact tables
-54](#create-smartfoods-invoice-fact-tables)
+120](#create-smartfoods-invoice-fact-tables)
 
 # Azure Data Factory hands-on lab
 
@@ -237,12 +314,120 @@ solution as you are working on the various components.
 
 ![](.//media/image2.png)
 
+**  
+**
+
+**Data sources:**
+
+1.  SmartFoods Rest API:
+
+<table>
+<thead>
+<tr class="header">
+<th><strong>Type</strong></th>
+<th>Rest API</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Authentication</strong></td>
+<td>Oauth2</td>
+</tr>
+<tr class="even">
+<td><strong>Data Endpoints</strong></td>
+<td><ol type="1">
+<li><p>Order line Transactions (CSV)</p></li>
+<li><p>Customers (JSON)</p></li>
+<li><p>Auth Token (JSON)</p></li>
+</ol></td>
+</tr>
+<tr class="odd">
+<td><strong>Frequency</strong></td>
+<td>Daily</td>
+</tr>
+<tr class="even">
+<td><strong>Documentation</strong></td>
+<td><a href="https://github.com/Mmodarre/retailDataGeneratorAzureFunction">https://github.com/Mmodarre/retailDataGeneratorAzureFunction</a></td>
+</tr>
+</tbody>
+</table>
+
+2.  SmartFoods Items
+
+<table>
+<thead>
+<tr class="header">
+<th><strong>Type</strong></th>
+<th>On premises Local file system</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Authentication</strong></td>
+<td>NA</td>
+</tr>
+<tr class="even">
+<td><strong>Data Endpoints</strong></td>
+<td><ol type="1">
+<li><p>Food (CSV)</p></li>
+<li><p>Food-Nutrition (CSV)</p></li>
+<li><p>Nutrition (CSV)</p></li>
+</ol></td>
+</tr>
+<tr class="odd">
+<td><strong>Frequency</strong></td>
+<td>NA – One Off</td>
+</tr>
+<tr class="even">
+<td><strong>Documentation</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+3.  WWI OLTP
+
+<table>
+<thead>
+<tr class="header">
+<th><strong>Type</strong></th>
+<th>SFTP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Authentication</strong></td>
+<td>Username/Password</td>
+</tr>
+<tr class="even">
+<td><strong>Data Endpoints</strong></td>
+<td><ol type="1">
+<li><p>Orderline Transactions (Parquet)</p></li>
+<li><p>Orders Transactions (Parquet)</p></li>
+<li><p>Customers (Parquet)</p></li>
+</ol></td>
+</tr>
+<tr class="odd">
+<td><strong>Frequency</strong></td>
+<td>Daily</td>
+</tr>
+<tr class="even">
+<td><strong>Documentation</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
 ## Requirements
 
 1.  Microsoft Azure subscription Free Trial or pay-as-you-go (Credit
     Card) or MSDN subscription.
 
-2.  Azure Storage Explorer
+2.  MS Windows development Environment (Only a requirement for Azure
+    Self Hosted IR – If you are using a Linux or Mac OS workstation you
+    can achieve the same by running a Windows VM locally or in Azure)
+
+3.  Azure Storage Explorer
 
 ## Before the hands-on lab Exercise
 
@@ -460,51 +645,37 @@ millions of databases.
 
 ![](.//media/image20.png)
 
-#### Create a container for WideWorldImporters and upload the files
-
-1)  Right click on the storage account created on previous step and
-    select create container
-
-2)  Name the container “***wwifullload***”
-
-![](.//media/image21.png)
-
-3)  Double click the newly created container and Select “Upload” from
-    the tool bar of Storage Explorer and select “Upload Folder”
-
-![](.//media/image22.png)
-
-4)  From where you clone the GitHub repo under
-    “Data\\WideWorldImporters” upload following folders
-    
-    1.  Customers
-    
-    2.  Orders
-    
-    3.  Orderlines
-
-#### Create a container for SmartFoods and upload the files
-
-Repeat the steps above and create a container called “smartfoods” and
-upload the all the CSV files under “Data\\SmartFoods”
-
-#### Create a Blob Storage Container for the Data Warehouse.
+#### Create Blob Storage Containers for the Data Warehouse Output and staging
 
 1)  From Azure Storage Explorer right click on “Blob Containers” under
     your Storage Account
 
 2)  Click “Create Blob Container”
 
-![](.//media/image23.png)
+![](.//media/image21.png)
 
 3)  Provide “wwidatawarhouse” as container name
 
-![](.//media/image24.png)
+![](.//media/image22.png)
 
-***<span class="underline">Note:</span>*** If you follow all the steps
-you should now have a total of **3** Blob containers within your Storage
-Account.***<span class="underline">  
-</span>***
+#### Create a container for WideWorldImporters Staging Input files
+
+Repeat the steps above and create a container called “***wwistaging***”
+
+#### Create a container for SmartFoods Staging Input files
+
+Repeat the steps above and create a container called
+“**smartfoodsstaging**”
+
+> **<span class="underline">Note:</span>** If you follow all the steps
+> you should now have a total of **3** Blob containers within your
+> Storage Account as:
+> 
+> **wwidatawarehouse**
+> 
+> **wwistaging**
+> 
+> **smartfoodsstaging**
 
 ## Linked Services, Datasets and Integration Runtimes: 
 
@@ -514,44 +685,78 @@ In this exercise, attendees will create multiple Azure data factory
 pipelines and related component including ADF IR, LinkedServices and
 Datasets.
 
-#### Create Azure Data Factory Integration Runtime.
+#### Create Azure Data Factory Integration Runtime
+
+**Azure Integration Runtime**
+
+The Integration Runtime (IR) is the compute infrastructure used by Azure
+Data Factory. Data Factory offers three types of Integration Runtime,
+and you should choose the type that best serve the data integration
+capabilities and network environment needs you are looking for. These
+three types are:
+
+**Azure**: In a serverless fashion runs in the cloud.
+
+  - **Auto Resolve:** Azure finds the closest region depending on
+    Source/Target Dataset to run this activity
+
+  - **Fixed Region:** Developer setup the runtime in one of Azure
+    regions and the IR always gets deployed in that region.
+
+<!-- end list -->
+
+  - **Self-hosted:** Developer installs on On-premises infrastructure
+    (MS Windows only) or an Azure VM. SHIR is most useful for accessing
+    resources within private networks (either in the Cloud Vnet or
+    behind on-prem firewall) or for accessing “File” on file system.
+
+  - **Azure-SSIS:** Special IR used for running SSIS packages in the
+    cloud within ADF.
+
+In this task we create a “Fixed Region Azure IR”.
 
 1.  Open Azure Data Factory resource in Azure Portal
 
-![](.//media/image25.png)
+![](.//media/image23.png)
 
 Click on Author and Monitor and it should be taking you to ADF UI like
 below. This is the main ADF UI. On the left-hand side there is Author
 and Monitor tabs. click on author tab to start building the first
 pipeline.
 
-> ![](.//media/image26.png)
+> ![](.//media/image24.png)
 
-2.  Create a new Integration run time in a particular Azure Region: go
-    to Author tab Connections (at the bottom of the screen) click New
+2.  Create a new Integration run time in a specific Azure Region: go to
+    Author tab Connections (at the bottom of the screen) click New
 
-![](.//media/image27.png)
+![](.//media/image25.png)
 
 Select “Perform data movement and dispatch activities to external
 computes”
 
-![](.//media/image28.png)
+![](.//media/image26.png)
 
 Choose “Azure Public, Self-Hosted”
 
-![](.//media/image29.png)
+![](.//media/image27.png)
 
 Give your new IR a name and Choose the preferred region
 
-![](.//media/image30.png)
+![](.//media/image28.png)
 
 #### Create a new ADF Key Vault Linked Service
 
-Process summary: In order to add an Azure Key Vault LS to ADF apart from
-adding it in ADF you need to authorize ADF to access the secrets in KV
-as well. So, After
+Process summary: For ADF to be able to access different services it will
+require credentials and the recommended approach is to store the secrets
+in Azure Key Vault and give ADF permissions to retrieve these
+credentials at runtime.
 
-![](.//media/image31.png)
+To add an Azure Key Vault Linked Service to ADF apart from adding it in
+ADF you also need to authorize ADF to access the secrets in KV as well.
+So, after creating the linked service there is some further steps(Step E
+and further) to be completed on Azure portal.
+
+![](.//media/image29.png)
 
 1)  Create a new Linked Service: go to Author tab Connections (at the
     bottom of the screen) click New
@@ -561,28 +766,28 @@ as well. So, After
 3)  Give you linked service a name, select subscription and the Key
     Vault created in previous steps
 
-4)  Copy the managed identity object id and click on “Edit Key Vault”
-    link
+4)  Copy the managed identity object id and click on “**Edit Key
+    Vault**” link
+
+![](.//media/image30.png)
+
+![](.//media/image31.png)
+
+5)  On the key vault page (In Azure Portal) select access policies
 
 ![](.//media/image32.png)
 
 ![](.//media/image33.png)
 
-5)  On the key vault page select access policies
-
 ![](.//media/image34.png)
-
-![](.//media/image35.png)
-
-![](.//media/image36.png)
 
 6)  from secrets permissions drop down select “Get” and “List”
 
-![](.//media/image37.png)
+![](.//media/image35.png)
 
 7)  Click on Select principle
 
-![](.//media/image38.png)
+![](.//media/image36.png)
 
 8)  paste the “managed identity object id” which will then show your ADF
     and select it
@@ -591,16 +796,16 @@ as well. So, After
 
 10) If all looks good click “Save”
 
-**Note: Leave the browser tab of Azure Key Vault open as we will need it
-soon.**
+> **Note:** Leave the browser tab of Azure Key Vault open as we will
+> need it soon.
 
-![](.//media/image39.png)
+![](.//media/image37.png)
 
 11) Go back to ADF where we left of and click on “Test Connection” if
     connection was successful click “Create” to create the linked
     Service.
 
-![](.//media/image40.png)
+![](.//media/image38.png)
 
 #### Add blob Storage credentials to AKV
 
@@ -621,7 +826,7 @@ advantages
 
 1)  From Azure portal go to your Storage account
 
-![](.//media/image41.png)
+![](.//media/image39.png)
 
 2)  Copy the Connection string
 
@@ -631,7 +836,7 @@ advantages
 
 5)  Generate/Import
 
-> ![](.//media/image42.png)
+> ![](.//media/image40.png)
 
 6)  For name provide \<storage account name\>connectionstring
 
@@ -639,111 +844,347 @@ advantages
 
 8)  Click “Create”
 
-![](.//media/image43.png)
+![](.//media/image41.png)
 
-#### Create Azure Blob Storage Linked Service
+#### Add other credentials to Azure Key Vault
 
-1)  Click new in Linked Service window again
+Follow the same steps in previous task and add the following credentials
+to your Azure Key Vault:
 
-![](.//media/image44.png)
+| **Name**                  | **Value**                    |
+| ------------------------- | ---------------------------- |
+| SmartFoodsRestAPIUsername | adflab                       |
+| SmartFoodsRestAPIPassword | Password.1\!                 |
+| WWISftpPassword           | PROVIDED TO YOU IN CLASSROOM |
 
-2)  Select Azure Blob Storage
+#### Create SFTP Linked Service
 
-3)  For name call it \<your storage account name\>john
+As mentioned in the solution architecture section the WWI input data is
+extracted in Parquet format from the OLTP RDBMS and stored in an SFTP
+server. So, in this step we create a LS to the SFTP server.
 
-4)  Select your IR
+1.  Click new linked services
 
-5)  Change Authentication Mechanism to Key Vault
+2.  Select SFTP
 
-6)  Select the AKV linked Service you created in the previous task
+![](.//media/image42.png)
 
-7)  For Secret name provide \<storage account name\>connectionstring
+3.  Connect Via: \<NAME OF YOUR IR\>
 
-8)  Test connection and click “create”.
+4.  For name enter WWISftp
 
-![](.//media/image45.png)
+5.  Host: adflabsftp.westus2.cloudapp.azure.com
 
-#### Create data sets
+6.  Port: 22
 
-In this step we create a generic data set for WWI full load data in
-Azure Blob Storage which is in Parquet file format. As we are planning
-to parametrize the same Dataset to use for Orders, OrderLines and
-Customers the only part of the dataset that gets hard coded is the
-container the “folder path” and “file name” remains empty.
+7.  Disable SSH host key Validation
+
+8.  Authentication type: Basic
+
+9.  User name: sftpuser
+
+10. Azure Key Vault
+    
+    1.  Secret name: WWISftpPassword
+
+#### Create datasets for WWI SFTP data
+
+In this step we create a parametrized dataset on SFTP Linked Service to
+access the Parquet files on SFTP server.
 
 1)  Click the plus sign on the left top hand of ADF and select Dataset.
 
-![](.//media/image46.png)
+![](.//media/image43.png)
 
-2)  Select Blob Storage
+2)  Select SFTP
 
 3)  Select Parquet for format
 
-4)  From Drop down select the Blob linked service created in previous
+4)  From Drop down select the SFTP linked service created in previous
     task
 
-5)  For name provide “wwifullload”
+5)  For name provide “WWISftpParquet”
 
-6)  Select browse click on wwifullload select
+6)  Leave “Directory” and “File” Blank (We are going to parametrize
+    these)
 
 7)  Change “Import Schema to None”
 
-![](.//media/image47.png)
+8)  Click OK
 
-8)  Go to parameters tab in your dataset and create three parameters as
+![](.//media/image44.png)
+
+![](.//media/image45.png)
+
+9)  Go to parameters tab in your dataset and create three parameters as
     in the screenshot above
 
-> ![](.//media/image48.png)
-
-9)  Go to connection tab and select the directory box once selected
+10) Go to connection tab and select the directory box once selected
     click on “Add dynamic Contents” or hit Alt+P
 
-10) In Expression editor your list of parameters is shown at the bottom
+11) In Expression editor your list of parameters is shown at the bottom
     select folder and inspect the contents in the expression editor box
     and then click “Finish”
 
-![](.//media/image49.png)
+![](.//media/image46.png)
 
-11) Repeat the same steps for file name but instead in the Expression
+12) Repeat the same steps for file name but instead in the Expression
     Editor enter.
 
 <!-- end list -->
 
     @{dataset().filename}.@{dataset().filetype}
 
-Hint: The above expression concatenates the two parameters with a ‘.’ in
-between to make a full file name.
+> Hint: The above expression concatenates the two parameters with a ‘.’
+> in between to make a full file name.
+> 
+> Hint2: Also, we could write the same expression as:
+> @concat(dataset().filename,’.’,dataset().filetype)
 
-Hint2: Also, we could write the same expression as:
-@concat(dataset().filename,’.’,dataset().filetype)
+![](.//media/image47.png)
 
-![](.//media/image50.png)
-
-9)  Click on preview data and fill in the parameters as:
+1)  Click on preview data and fill in the parameters as:
     
-    1.  **Folder**: orderlines
+    1.  **Folder**: WorldWideImporters/orderlines
     
-    2.  **Filename**: orderlines\_2018-12-11
+    2.  **Filename**: orderlines\_2019-09-02
     
     3.  **Filetype**: parquet
+
+![](.//media/image48.png)
 
 If the data set and parameters are created correctly you should see
 something like below:
 
-![](.//media/image51.png)
+![](.//media/image49.png)
 
 This way our dataset can be re-used in different pipelines or the same
 pipeline to access different files.
 
-#### Create a Delimited text data set on the same Blob linked service
+#### Create Azure Blob Storage Linked Service
 
-Follow the same procedure as task 6 and this time instead of parquet
-select delimited text.
+A data factory can have one or more pipelines. A **pipeline** is a
+logical grouping of **activities** that together perform a task.
+a **dataset** is a named view of data that simply points or references
+the data you want to use in your **activities** as inputs and outputs.
 
-For container choose the “SmartFoods” container and setup the Dataset
-with similar parameters “File”, “Folder” and “FileType”
+Before you create a dataset, you must create a **linked service** to
+link your data store to the data factory. Linked services are much like
+connection strings, which define the connection information needed for
+Data Factory to connect to external resources.
 
-Note: Name the dataset as “**SmartFoodsBlobDelText**”
+Now in this task you will create a Linked Service to Azure Blob Storage.
+
+2)  Click new in Linked Service window again
+
+![](.//media/image50.png)
+
+3)  Select Azure Blob Storage
+
+4)  For name call it \<your storage account name\>john
+
+5)  Select your IR
+
+6)  Change Authentication Mechanism to Key Vault
+
+7)  Select the AKV linked Service you created in the previous task
+
+8)  For Secret name provide \<storage account name\>connectionstring
+
+9)  Test connection and click “create”.
+
+![](.//media/image51.png)
+
+#### Create Blob Storage Datasets for WWI Input data
+
+All the input data for WWI is sent in Parquet format from the source, so
+this makes our life easier as we only need a single parametrized parquet
+dataset for all different data domains. The data set will be created on
+the Azure Blob linked service created in previous task.
+
+The datasets are parametrized so the same Dataset can be used for
+writing and reading different files and data domains (i.e. customers or
+orders on any date). The only part of the dataset that gets hardcoded is
+the container; the “folder path” and “file name” remains blank to be
+parametrized.
+
+1)  Click the plus sign on the left top hand of ADF and select Dataset.
+
+![](.//media/image43.png)
+
+2)  Select Blob
+
+3)  Select Parquet for format
+
+4)  From Drop down select the Azure Blob Storage linked service created
+    in previous task
+
+5)  For name provide “WWIStagingBlobParquet”
+
+6)  Click “Browse” and select ***wwistaging*** container (created in
+    previous steps)
+
+7)  Leave “Directory” and “File” Blank (We are going to parametrize
+    these)
+
+8)  Change “Import Schema to None”
+
+9)  Click OK
+
+10) Parametrize the Dataset like the SFTP data set with following
+    parameters:
+    
+    1.  folder
+    
+    2.  filename
+    
+    3.  filetype
+
+#### Create Blob Storage Datasets for SmartFoods customer(JSON) Input data
+
+SmartFoods data is available to an API. Customer data is in JSON format
+and Transactions are in CSV format. As such our solution requires to
+have a separate “dataset” for each data domain.
+
+**- For Transactions CSV**
+
+1)  Click the plus sign on the left top hand of ADF and select Dataset.
+
+![](.//media/image43.png)
+
+2)  Select Blob
+
+3)  Select “Delimited Text” for format
+
+4)  From Drop down select the Azure Blob Storage linked service created
+    in previous task
+
+5)  For name provide “**SmartFoodsDelimitedTextBlob**”
+
+6)  Click “Browse” and select ***smartfoodsstaging*** container (created
+    in previous steps)
+
+7)  Leave “Directory” and “File” Blank (We are going to parametrize
+    these)
+
+8)  Change “Import Schema to None”
+
+9)  Click OK
+
+10) Parametrize the Dataset like the SFTP data set with following
+    parameters:
+    
+    1.  folder
+    
+    2.  filename
+    
+    3.  filetype
+
+<!-- end list -->
+
+  - **For customer JSON**
+
+<!-- end list -->
+
+1)  Click the plus sign on the left top hand of ADF and select Dataset.
+
+![](.//media/image43.png)
+
+2)  Select Blob
+
+3)  Select “JSON” for format
+
+4)  From Drop down select the Azure Blob Storage linked service created
+    in previous task
+
+5)  For name provide “**SmartFoodsJsonBlob**”
+
+6)  Click “Browse” and select ***smartfoodsstaging*** container (created
+    in previous steps)
+
+7)  Leave “Directory” and “File” Blank (We are going to parametrize
+    these)
+
+8)  Change “Import Schema to None”
+
+9)  Click OK
+
+10) Parametrize the Dataset like the SFTP data set with following
+    parameters:
+    
+    1.  folder
+    
+    2.  filename
+    
+    3.  filetype
+
+#### Create Blob Storage Datasets for WWI Data Warehouse output
+
+We are planning to use Parquet file type for storing all output DW files
+and as such for output only a single Parquet file format is enough.
+
+> Note: A question here would be, why can’t we use the Parquet dataset
+> created in previous step for WWI input data?\! The answer is:
+> Technically we can but reusing the same objects in a solution comes
+> with a comes with the extra complexity cost.
+> 
+> **Better Practices Note: How dynamic should the solution
+> be<sup>1</sup>?**  
+> It can be oh-so-tempting to want to build one solution to rule them
+> all. (Especially if you love tech and problem-solving, like me.
+> It’s fun figuring things out\!) But be mindful of how much time you
+> spend on the solution itself. If you start spending more time figuring
+> out how to make your solution work for all sources and all edge-cases,
+> or if you start getting lost in your own framework… stop.
+> 
+> Your solution should be dynamic enough that you save time on
+> development and maintenance, but not so dynamic that it becomes
+> difficult to understand.
+> 
+> …don’t try to make a solution that is generic enough to
+> solve everything :)
+> 
+> Your goal is to **deliver business value**. If you end up looking like
+> this cat, spinning your wheels and working hard (and maybe having lots
+> of fun) but without getting anywhere, you are probably
+> over-engineering your solution.
+> 
+> Alright, now that we’ve got the warnings out the way… Let’s start by
+> looking at parameters :)  
+> 1: Reference:
+> <https://www.cathrinewilhelmsen.net/2019/12/20/parameters-azure-data-factory/>
+
+1)  Click the plus sign on the left top hand of ADF and select Dataset.
+
+![](.//media/image43.png)
+
+2)  Select Blob
+
+3)  Select Parquet for format
+
+4)  From Drop down select the Azure Blob Storage linked service created
+    in previous task
+
+5)  For name provide “WWIDataWarehouseBlobParquet”
+
+6)  Click “Browse” and select **wwidatawarehouse** container (created in
+    previous steps)
+
+7)  Leave “Directory” and “File” Blank (We are going to parametrize
+    these)
+
+8)  Change “Import Schema to None”
+
+9)  Click OK
+
+10) Parametrize the Dataset like the SFTP data set with following
+    parameters:
+    
+    1.  folder
+    
+    2.  filename
+    
+    3.  filetype
 
 #### Create a SQL Database Linked Service and Dataset
 
@@ -751,16 +1192,14 @@ Note: Name the dataset as “**SmartFoodsBlobDelText**”
     procedure as the one you did in task 5 except for Linked Service
     Type select “Azure SQL Database”
 
-<!-- end list -->
-
-  - **Note1:** Like Blob Storage, use Azure Key Vault
-
-  - **Note2:** From Azure portal/SQL Database Get the connection string
-    and store in AKV (Screenshots below)
-
-  - **Note3:** In the connection string make sure you replace the
-    “{your\_password”} with your SQL Database password you chosen in
-    Pre-lab setup.
+> **Note1:** Like Blob Storage, use Azure Key Vault
+> 
+> **Note2:** From Azure portal/SQL Database Get the connection string
+> and store in AKV (Screenshots below)
+> 
+> **Note3:** In the connection string make sure you replace the
+> “{your\_password”} with your SQL Database password you chosen in
+> Pre-lab setup.
 
 ![](.//media/image52.png)
 
@@ -776,9 +1215,11 @@ Create a Dataset similar to Blob storage – User Screenshots as a guide
 
 #### Create an HTTP Linked Service:
 
+Name: SmartFoodsApiLinkedService
+
 Base URL: <https://smartfoods.azurewebsites.net/api/>
 
-Note: Use Screenshot as a guide for other options.
+> Note: Use Screenshot as a guide for other options.
 
 ![](.//media/image57.png)
 
@@ -794,15 +1235,18 @@ source in various formats such as delimited text.
 
 3)  Select Delimited Text as format
 
-4)  Provide a name for the dataset
+4)  Name: SmartFoodsTransactionApiCsv
 
-5)  Leave other options as it is and click “Ok”
+5)  Leave other options **BLANK** as it is and click “Ok”
 
 ![](.//media/image58.png)![](.//media/image59.png)
 
 ![](.//media/image60.png)
 
-6)  Create two parameters as “date” and “authCode” under dataset
+6)  Create a parameter as “authCode” under dataset
+
+> “Note: We are going to use this parameter to pass the Authentication
+> token to the API Service on calling the service.”
 
 ![](.//media/image61.png)
 
@@ -813,117 +1257,450 @@ Here we are creating an HTTP dataset which the query parameters for it
 is parametrized so we can change them at runtime and retrieve different
 data portions from the API
 
-    smartfoods?code=@{dataset().authCode}&trans_date=@{dataset().date}
+    smartfoods?code=@{dataset().authCode}
 
 ![](.//media/image62.png)
 
-## Copy Activity, Parameters, Debug and Publishing:
+#### Create a JSON Dataset on the HTTP Linked Service
 
-#### Create a pipeline to get data from the SmartFoods API for the past one week
+SmartFoods API provides the customer data in JSON format as such we need
+to create a second dataset on top of the same HTTP Linked service but in
+JSON Format
 
-1)  Click on the plus sing and click on Pipeline to add a new pipeline
+Follow the same steps as in previous task, except for data format select
+**JSON**. For name provide “**SmartFoodsCustomerApiJson”**.
 
-2)  Rename the pipeline under “general” tab to something meaningful
+Screenshots below for guidance:
 
 ![](.//media/image63.png)
 
-3)  From the parameters tab create a pipeline parameter and call it
-    “date”
-
 ![](.//media/image64.png)
+
+## Copy Activity, Parameters, Debug and Publishing:
+
+In this exercise you create a pipeline to ingest data from SmartFoods
+web services. Primary learning objectives:
+
+1.  Accessing an OAuth2 API
+
+2.  Setting up copy activity
+
+3.  Setting up parametrized pipelines
+
+4.  Using parametrized datasets in activities
+
+5.  Creating, setting and reading variables
+
+6.  Using Web Activity
+
+#### Create a pipeline and setup authentication to SmartFoods OAuth2 (Token based) API
+
+In order to access the SmartFoods API we need to first call the endpoint
+with username and password as the HTTP POST body to get a time-based
+OAuth token. This token then can be used in further activities to
+authenticate to the API and retrieve data. The best way to perform this
+is to use a “Web” activity within data factory.
+
+The easy way to do this is by adding a web activity to the canvas and
+hardcoding the credentials in it. but this is a serious security breach
+and as explained before every secret used in ADF should be stored in
+AKV.
+
+As a result, we will require to add two more “Web” activities before
+this web activity to first retrieve the credentials from AKV at runtime
+and pass to the third (main) Web Activity to authenticate to the API and
+retrieve the token.
+
+1.  Click on the plus sing and click on Pipeline to add a new pipeline
+
+2.  Rename the pipeline under “general” tab to
+    **SmartFoodCustomerApiToBlob**
 
 ![](.//media/image65.png)
 
-4)  From the activities bar under “Move & transform” drag a “Copy data”
-    activity to the canvas
+3.  From the parameters tab create a pipeline parameter and call it
+    “date”
 
 ![](.//media/image66.png)
 
-5)  Click on the copy activity and under “General tab” rename the
-    activity to something meaningful
-
-6)  Setup the Copy Activity source:
-    
-    1.  From “Source tab” select the CSV API dataset that created
-        previously
-    
-    2.  As this dataset is parametrized the parameters required will
-        show up under “Dataset properties”
-    
-    3.  Click the “Add dynamic content” for data parameter and select
-        the pipeline “data” parameter as the value
-    
-    4.  For “authCode” parameter provide
-
-<!-- end list -->
-
-    b3GP8tWecoK3Z42FqEaX5LfwoZwrqMnIpkUJ1bGUBnByFxgfvkpzVQ==
-
 ![](.//media/image67.png)
 
-7)  Setup Copy activity sink:
-    
-    1.  Select “**SmartFoodsBlobDelText”** as the Sinke Dataset
-    
-    2.  Fill in the parameters as below:
+4.  From the activities bar under “General” drag a “Web” activity to the
+    canvas
 
 ![](.//media/image68.png)
 
-8)  click “Debug” to make sure your pipeline runs correctly
+5.  Rename the activity to AKVUsername
+
+6.  Go to your Azure Key Vault in **Azure Portal** and from secrets
+    select “SmartFoodsApiUsername” (You have created this secret
+    previously)
 
 ![](.//media/image69.png)
 
-9)  As soon as we click Debug it will ask us to supply the pipeline
-    parameter “Date” enter 2020-02-03 and click “Finish”
-
-10) Under “Output” tab you should see the pipeline being in progress
-
-11) Click on the eyeglasses icon to see the progress of the pipeline
+7.  Select the current version
 
 ![](.//media/image70.png)
 
-12) Once the “Debug” run finishes successfully check your Azure Storage
-    account and try to locate the file.
-
-13) **Finally,** when you are satisfied the pipeline is working as
-    expected click “Publish” to save your changes to ADF permanently.
+8.  Copy the “Secret Identifier”
 
 ![](.//media/image71.png)
 
-#### (Optional challenge) – ForEach Loops and Variables
+9.  Paste it in a code editor or Notepad
 
-1)  Under pipeline create an array variable named “dates” and provide
-    default values as:
+10. At the end of the URI add
 
 <!-- end list -->
 
-    ["2020-02-01","2020-02-02","2020-02-03","2020-02-04","2020-02-05"]
+    ?api-version=7.0
 
-2)  Put a “ForEach Loop” activity on the canvas and under “Settings
-    Items” put in the “dates” array that we just created (Hint: Use the
-    expression editor and find the array variable at the bottom of the
-    list)
+So, it will look something like this:
 
-3)  Remove the Copy activity from the Canvas
+    https://adf-mehdi-dev-kv.vault.azure.net/secrets/SmartFoodsApiUsername/a35670dbbf19471eac4f8390e3c31882?api-version=7.0
 
-4)  Remove the **<span class="underline">date parameter of the
-    pipeline</span>**
+11. Repeat the same steps for “SmartFoodsApiPassword” secret
 
-5)  Go inside the “ForEach Loop” activity and re-create the copy
-    activity there
+12. Now back in ADF under the web activity and
+    
+    1.  paste the URI with api version added to it in the URL box
+    
+    2.  Change Authentication to MSI (This indicates we have give this
+        instance of ADF access to out AKV so no other auth is necessary)
+    
+    3.  For resource enter:
 
-6)  For Source (date parameter) and Sink (file parameter) parameters use
-    the @item()
+<!-- end list -->
 
-7)  Run Debug and check the “output” tab
+    https://vault.azure.net
 
 ![](.//media/image72.png)
 
+13. Go back to General tab and tick “Secure Output”
+
+14. Now click “Debug” to test the activity
+
 ![](.//media/image73.png)
+
+15. Under output tab click the output button to see the activity output
 
 ![](.//media/image74.png)
 
+The output should be in form of:
+
+    { "SecureOutput": "**********" }
+
+This is the effect of setting secure output setting
+
+> **Try it:** Try removing the “secure output” tick and re-run debug and
+> see how the output will differ.
+
+16. **Repeat the same steps and add “AKVPassword” Web activity.**
+
 ![](.//media/image75.png)
+
+17. Add another “Web activity” to the canvas. Rename it to
+    “SmartFoodsLogin” and attach the success connectors from the
+    AKVUsername and AKVPassword to it as below:
+
+![](.//media/image76.png)
+
+18. Setup the web activity as below
+
+URL:
+
+    https://smartfoods.azurewebsites.net/api/SmartFoodsOauth
+
+Method: POST
+
+Body:
+
+    @json(concat('{"username":"',activity('AKVUsername').output.value,'","password":"',activity('AKVPassword').output.value,'"'))
+
+> Note1: you need to click on “Add Dynamic Content” to enter the
+> “Expression Editor” before pasting the value
+> 
+> Note2: Expression explanation: For HTTP POST body we need to compose a
+> JSON document and pass the username and password attribute to it. So
+> we use the “Concat” function to add the static and dynamic parts
+> together to compose a JSON document and then pass it to the “JSON”
+> function to format it correctly as a JSON. The resulting JSON will
+> look like below.
+
+    {
+    	“Username”: “<value coming from AKVUsername web activity>”,
+    	“password”: “<value coming from AKVPassword web activity>”
+    }
+
+![](.//media/image77.png)
+
+19. Under general tab tick the “Secure Output” to make sure the tokens
+    are not getting revealed in ADF logs.
+
+20. Debug you pipeline to make sure all activities are successful.
+
+#### Store the access token in a variable
+
+Now we have the token to access the API we need to store the token in a
+variable to be passed to our copy activity in order to access the API
+securely.
+
+1.  Under variables in the pipeline create a new variable “token”
+
+> ![](.//media/image78.png)
+
+2.  Add a “Set Variable” activity to canvas
+
+![](.//media/image79.png)
+
+1.  add “Set variable” activity.
+
+2.  connect to “SmartFoodsLogin” using “Success”.
+
+3.  click on variables.
+
+4.  For “Name” select “token”.
+
+5.  go to Expression Editor for “Value” and set it to:
+
+<!-- end list -->
+
+    @activity('SmartFoodsLogin').output.token
+
+6.  Rename the activity to “SetAccessToken”.
+
+7.  (Optional) Debug to test your pipeline.
+
+#### Retrieve data from API and store in Blob Storage
+
+In Azure Data Factory, you can use the **“Copy”** activity to copy data
+among data stores located on-premises and in the cloud. Also Copy
+activity allows us to change the data format through the copy process.
+For example, here we receive the data in JSON format but store as CSV.
+After you copy the data, you can use other activities to further
+transform and analyze it.
+
+1.  First create a pipeline parameter called “date”
+
+![](.//media/image80.png)
+
+2.  Drag a copy activity to canvas and connect to “SetAccessToken”
+    activity
+
+3.  Rename it to “SmartFoodsCustomersToBlob”
+
+![](.//media/image81.png)
+
+4.  Under source
+    
+    1.  Source dataset: “**SmartFoodsCustomerApiJson**”
+    
+    2.  For “authCode” parameter go to Expression editor and select the
+        “token” variable
+
+![](.//media/image81.png)
+
+3.  Request method: Post
+
+4.  Request body: click on expression editor and enter
+
+<!-- end list -->
+
+    @{json(concat('{"trans_date": "',pipeline().parameters.date,'","dataDomain" : "customers"}'))}
+
+> **Expression explanation**: We are composing a JSON for REST request
+> body with two attributes trans\_date which we use the pipeline
+> parameter as value and dataDomain hard coded to “customers”
+
+![](.//media/image82.png)
+
+5.  For Sink
+    
+    1.  Sink dataset: “SmartFoodsDelimitedTextBlob”
+    
+    2.  Dataset parameters:
+        
+          - Folder: “customers”
+        
+          - File: Enter Expression editor and enter
+
+<!-- end list -->
+
+    smartfoods_customers_@{replace(pipeline().parameters.date,'-','')}
+
+  - Filetype: “csv”
+
+![](.//media/image83.png)
+
+#### Test your pipeline
+
+1.  Click “Debug”
+
+2.  Provide 2020-02-10 as the value for “date” parameter
+
+3.  Go to Azure Storage Explorer -\> find the respective storage
+    account, container and directory -\> Locate the
+    “smartfoods\_customers\_20200201.csv” file and open it to make
+    sure the data is copied correctly.
+
+![](.//media/image84.png)
+
+## Lookup activity, ForEach loop and Execute Pipeline activity
+
+#### Extend the pipeline with Lookup activity and ForEach Loops
+
+The current pipeline works fine for daily loading of the data (single
+day per run) but for initial loading of the data we need to load
+multiple dates automatically.
+
+**Solution Summary:** Azure Data Factory provides multiple ways for
+achieving this goal. One way is to modify the existing pipeline and add
+the ForEach loop to the same pipeline. The downside of this approach
+though is we will then have separate pipelines for daily and initial
+load and that is against the reusability better practice. Instead we
+keep the existing pipeline and create a second pipeline which executes
+this pipeline within a loop.
+
+A *ForEach* loop in Azure Data Factory (like any programming language)
+requires an *array* of items to iterate over. In our case we need an
+array of all the dates that needs to be loaded from the API. To better
+understand the mechanics of loops and arrays in ADF, initially we
+manually create an array and pass it to *ForEach* loop. In the next task
+we modify the pipeline and load the array from a text file using
+*Lookup* activity.
+
+1.  Create a new pipeline and rename it to
+    **InitialLoadSmartFoodCustomerApiToBlob**
+
+2.  Create a variable “dates” of type “Array” and provide the below as
+    “DEFAULT VALUE”
+
+<!-- end list -->
+
+    ["2020-01-01","2020-01-02","2020-01-03","2020-01-04"]
+
+> Note: This is the hardcoded list of dates that the ForEach loop will
+> iterate through and pass our ‘SmartFoodCustomerApiToBlob’ pipeline
+
+![](.//media/image85.png)
+
+3.  Drag a “*ForEach”* loop activity to the canvas and rename it to
+    ***“LoopSmartFoodsDates”***
+
+4.  Under activities click the pencil icon to enter the “ForEach” loop
+    canvas.
+
+![](.//media/image86.png)
+
+5.  Drag a ***“Execute Pipeline”*** activity on the ForEach loop canvas.
+
+![](.//media/image87.png)
+
+6.  Rename it to ***RunSmartFoodCustomerApiToBlob***
+
+7.  Under “Settings”
+    
+    1.  “Invoked Pipeline” select “SmartFoodCustomerApiToBlob” pipeline
+        that you created previously.
+    
+    2.  Expand the “Advanced” part and click on “Auto-fill parameters.
+
+![](.//media/image88.png)
+
+3.  For ***“date”*** parameter, from the expression editor select the
+    “LoopSmartFoodsDates” under ForEach iterator
+
+![](.//media/image89.png)
+
+> Note: To go back to the main canvas (from the Execute pipeline canvas)
+> use the hyperlink on top of the canvas.
+
+![](.//media/image90.png)
+
+#### Expand the pipeline using Lookup activity
+
+Now that we have a pipeline that can iterate over an array of dates and
+invoke the main pipeline we want to expand it further with a
+***Lookup*** activity to read the list of dates from a text file (it can
+be a SQL database as well) and perform the loading automatically.
+
+This is how our pipeline looks like right now:
+
+![](.//media/image91.png)
+
+First, we need to place the file with list of dates on Azure Blob
+Storage so ADF can access it.
+
+1.  On your computer browse to the location that you cloned the GitHub
+    repo. Under Data/SmartFoods/ there is a file ***dates.csv***. Open
+    this file and inspect the contents.
+
+2.  Open Azure Storage Explorer and go to *smartfoodsstaging* container.
+    Create a new folder called *ref\_data* and upload the *dates.csv*
+    file there.
+
+![](.//media/image92.png)
+
+Now lets start developing the pipeline
+
+1.  Drag a ***Lookup*** activity on the canvas and rename it to
+    ***LookupDates***
+
+2.  Connect from **Success** of the Lookup activity to *ForEach*
+    activity.
+
+3.  Under Settings
+    
+    1.  Source dataset: SmartFoodsDelimitedTextBlob
+    
+    2.  Folder: *ref\_data*
+    
+    3.  File: *dates*
+    
+    4.  Filetype: *csv*
+    
+    5.  ***<span class="underline">Untick</span>** First row only*
+    
+    6.  Click Preview data to make sure it is working as expected.
+
+![](.//media/image93.png)
+
+![](.//media/image94.png)
+
+4.  Click on the ForEach under *Settings*
+    
+    1.  For *Items* go to Expression Editor and change it to the below
+        to receive it from the *Lookup* activity instead of the
+        hard-coded variable:
+
+<!-- end list -->
+
+    @activity('LookupDates').output.value
+
+![](.//media/image95.png)
+
+5.  Double click on the ForEach loop to open its canvas and then click
+    on *Execute Pipeline* activity. Under *Settings:*
+    
+    1.  For *date* change the value to below:
+
+<!-- end list -->
+
+    @item().date
+
+![](.//media/image96.png)
+
+#### Test your pipeline
+
+1.  Click *Debug* to start the pipeline
+
+2.  Inspect the output
+
+![](.//media/image97.png)
+
+3.  Once finished successfully go to *Azure Storage Explorer* to make
+    sure all files in the dates.csv are created.
+
+![](.//media/image98.png)
 
 #### How much did this cost?
 
@@ -931,10 +1708,748 @@ Once a debug run is finished, you can examine the “debug run
 consumption” to measure how much resource the pipeline you designed is
 consuming.
 
-The important parts are number of “activity runs” and consumption of
-“DIU-hour” of “Data movement activities”
+> **Note:** The important parts are number of “activity runs” and
+> consumption of “DIU-hour” of “Data movement activities”
+> 
+> **Important Note:** Since we used the **Execute Pipeline,** there is a
+> cost for both the outer pipeline and inner pipeline. The cost showing
+> here is only for the outer pipeline. If you’d like to see the resource
+> consumption of inner pipelines click on output and go to the actual
+> pipeline run of the inner pipeline.
 
-![](.//media/image76.png)
+![](.//media/image99.png)
+
+#### Clone and modify SmartFoods customer pipeline for transactions
+
+A great feature of ADF is the ability to clone different objects, and if
+the underlying objects are sufficiently with minimal modification the
+new pipeline can perform a similar task on a different set of data.
+
+In this task we take advantage of this feature and replicate the
+*SmartFoodCustomerApiToBlob* pipeline and modify it to load SmartFoods
+transactions.
+
+1.  From the left hand list of pipelines click on the three dots next to
+    *SmartFoodCustomerApiToBlob* pipeline and select ***Clone***.
+
+![](.//media/image100.png)
+
+2.  Click on the newly created pipeline (clone creates a pipeline with
+    the same name and \_copy1 extension) and rename it to
+    ***SmartFoodTransactionApiToBlob***
+
+3.  Click on the *copy* activity and rename it to
+    ***SmartFoodsTransactionsToBlob***
+
+4.  Under Source:
+    
+    1.  Source dataset: SmartFoodsTransactionsToBlob
+    
+    2.  authCode:
+
+<!-- end list -->
+
+    @variables('token')
+
+3.  Request Method: Post
+
+4.  Request Body:
+
+<!-- end list -->
+
+    @{json(concat('{"trans_date": "',pipeline().parameters.date,'","dataDomain" : "transactions"}'))}
+
+5.  Under Sink:
+    
+    1.  Folder: transaction
+    
+    2.  File:
+
+<!-- end list -->
+
+    smartfoods_transactions_@{replace(pipeline().parameters.date,'-','')}
+
+3.  File Type: csv
+
+<!-- end list -->
+
+6.  Now Debug to test your pipeline.
+
+#### Add ‘Transaction’ pipeline to the ‘InitialLoad’ pipeline
+
+Now that we have a working single day ‘transactions’ pipeline we need to
+add it to initial load pipeline so both feeds from SmartFoods source
+systems can be loaded from a single pipeline.
+
+1.  Open the *‘**InitialLoadSmartFoodCustomerApiToBlob’*** pipeline and
+    rename it to ‘***InitialLoadSmartFoodAllfeedsApiToBlob***’.
+
+2.  Double click on the ‘ForEach’ loop activity to enter its canvas.
+
+3.  Right click on ‘Execute pipeline’ activity and click copy
+
+4.  Right click anywhere on the canvas and paste it.
+
+![](.//media/image101.png)
+
+![](.//media/image102.png)
+
+5.  Rename the new activity to ***‘RunSmartFoodTransactionApiToBlob’***
+
+![](.//media/image103.png)
+
+6.  Under settings:
+    
+    1.  Invoked pipeline: *SmartFoodTransactionApiToBlob*
+    
+    2.  Date:
+
+<!-- end list -->
+
+    @item().date
+
+7.  Debug to test your pipeline and once completed successfully inspect
+    Azure Blob Storage to make sure all files are copies correctly.
+
+#### Publishing 
+
+Azure data factory provides two ways of saving changes: ADF mode and
+Source Control mode. Since we have not yet setup source control our ADF
+instance is saving in ADF mode. In Data Factory mode changes are not
+permanently save until you click the publish button. So, if we close the
+browser window right now all the progress we made will be discarded.
+Although ADF mode is not recommended for real world environments, if you
+are using Data Factory mode it is better practice to frequently
+‘Validate’ and ‘Publish’ your changes save your work.
+
+![](.//media/image104.png)
+
+## Get Metadata activity, filter activity and complex expressions
+
+#### Load WWI Data
+
+Now that we have setup pipelines to load SmartFoods data from API we
+need to repeat the process and create pipelines to load *customers,
+Orders* and *Orderlines* data from WWI STFP.
+
+**Customers:**
+
+1.  Create a new pipeline
+    
+    1.  Name: ‘*WWICustomersSftpToBlob’*
+
+2.  Create a new parameter called *‘date’*
+
+3.  Drag a ‘Copy’ activity on the canvas
+    
+    1.  Name: *‘CopyWWICustomerSFTPtoBlob’*
+
+4.  Setup ‘Copy’ activity source
+    
+    1.  **source dataset**: *WWISftpParquet*
+    
+    2.  **folder**: *WorldWideImporters/customers*
+    
+    3.  **Filename**: *customers\_@{pipeline().parameters.date}*
+    
+    4.  **Filetype**: *parquet*
+
+5.  Setup ‘Copy’ activity source
+    
+    1.  **source dataset**: *WWISftpParquet*
+    
+    2.  **folder**: *customer*
+    
+    3.  **Filename**: *customers\_@{pipeline().parameters.date}*
+    
+    4.  **Filetype**: *parquet*
+
+6.  Debug the pipeline with ‘date’ parameter as
+    *<span class="underline">‘2019-02-01’</span>*
+
+7.  Inspect Blob Storage to make sure the file has been created.
+
+> **Note1**: With Parquet files unlike delimited text files, you cannot
+> open in with a text editor to inspect the content\!
+> 
+> **Note2**: Take advantage of pipeline cloning feature to save time and
+> reduce error.
+
+**Orders:**
+
+1.  Create a new pipeline
+    
+    1.  Name: ‘*WWICustomersSftpToBlob’*
+
+2.  Create a new parameter called *‘date’*
+
+3.  Drag a ‘Copy’ activity on the canvas
+    
+    1.  Name: *‘CopyWWIOrderSFTPtoBlob’*
+
+4.  Setup ‘Copy’ activity source
+    
+    1.  **source dataset**: *WWISftpParquet*
+    
+    2.  **folder**: *WorldWideImporters/orders*
+    
+    3.  **Filename**: *orders\_@{pipeline().parameters.date}*
+    
+    4.  **Filetype**: *parquet*
+
+5.  Setup ‘Copy’ activity source
+    
+    1.  **source dataset**: *WWISftpParquet*
+    
+    2.  **folder**: *order*
+    
+    3.  **Filename**: *orders\_@{pipeline().parameters.date}*
+    
+    4.  **Filetype**: *parquet*
+
+6.  Debug the pipeline with ‘date’ parameter as
+    *<span class="underline">‘2019-02-01’</span>*
+
+7.  Inspect Blob Storage to make sure the file has been created.
+
+**OrderLines:**
+
+1.  Create a new pipeline
+    
+    1.  Name: ‘*WWIOrderlinesSftpToBlob’*
+
+2.  Create a new parameter called *‘date’*
+
+3.  Drag a ‘Copy’ activity on the canvas
+    
+    1.  Name: *‘CopyWWIOrderlineSFTPtoBlob’*
+
+4.  Setup ‘Copy’ activity source
+    
+    1.  **source dataset**: *WWISftpParquet*
+    
+    2.  **folder**: *WorldWideImporters/orderlines*
+    
+    3.  **Filename**: *orderlines\_@{pipeline().parameters.date}*
+    
+    4.  **Filetype**: *parquet*
+
+5.  Setup ‘Copy’ activity source
+    
+    1.  **source dataset**: *WWISftpParquet*
+    
+    2.  **folder**: *orderline*
+    
+    3.  **Filename**: *orderlines\_@{pipeline().parameters.date}*
+    
+    4.  **Filetype**: *parquet*
+
+6.  Debug the pipeline with ‘date’ parameter as
+    *<span class="underline">‘2019-02-01’</span>*
+
+7.  Inspect Blob Storage to make sure the file has been created.
+
+> **Note3:** Another way of achieving the same result was to use 3 copy
+> activities within a single pipeline. They are both valid methods. The
+> only important thing is consistency. You created two separate
+> pipelines for SmartFoods, so it is consistent to create three separate
+> pipelines for WWI.
+
+#### Setup Initial Load for WWI data
+
+Now that we have individual pipelines for WWI source systems, we need to
+setup an Initial Load pipeline similar to the one you created for
+SmartFoods to iterate over an array and automatically load the data. For
+SmartFoods, since we were accessing an API we needed to provide the list
+of dates but when access a file system like SFTP (or Azure Blob storage,
+local file system or etc.) we can use another type of activity called
+‘***Get Metadata***’. ‘Get Metadata’ activity can perform a lookup
+(list) of a file system and retrieve the list of files available on it.
+In summary the pipeline will look like this:
+
+*Get Metadata(List of files) -\> ForEach loop \[ Execute pipeline \[
+Copy pipeline\] \]*
+
+But if you inspect the files available on the SFTP server you’ll notice
+not all files on the server are correct files to be loaded. Hence our
+pipeline needs to have another type of activity, called ‘*Filter’*
+activity, to filter out incorrect files. So, the pipeline will look like
+this:
+
+*Get Metadata(List of files) -\> Filter(filter files not matching the
+expected patter) -\> ForEach loop \[ Execute pipeline \[ Copy pipeline\]
+\]*
+
+![](.//media/image105.png)
+
+1.  Create a new pipeline and rename it to
+    ‘*InitialLoadWWICustomerSftpToBlob’*
+
+2.  Drag a ‘Get Metadata’ activity to the canvas and rename it to
+    *‘GetWWICustomerFileListSFTP’*
+
+3.  Under Dataset
+    
+    1.  Dateset: WWISftpParquet
+    
+    2.  Folder: WorldWideImporters/customers
+    
+    3.  File: \*
+    
+    4.  Filetype: parquet
+    
+    5.  Field list -\> New -\> Child Items
+
+![](.//media/image106.png)
+
+4.  Click Debug to inspect the output of the activity
+
+> Output format of the Get Metadata activity: Output of Get Metadata
+> activity is a **JSON** document. At the root of the document is
+> **‘childitems’** and for <span class="underline">each file</span>
+> there is a sub-document with **‘name’** and **‘type’** attributes.
+
+![](.//media/image107.png)
+
+![](.//media/image108.png)
+
+5.  Drag a filter activity and rename it to
+    *‘FilterWWISFTPCustomerFileNames’* and connect it to get metadata
+    with success connector.
+
+![](.//media/image109.png)
+
+6.  Under Settings of ‘Filter’ activity
+
+**Items**
+
+> items: Accept an array of items that we want the filter activity to
+> apply to. So, in this case it is the root document ‘childitems’
+
+    @activity('GetWWICustomerFileListSFTP').output.childitems
+
+**Condition**
+
+> Condition: Requires a logical expression to filter the input on and
+> since the array has already been passed in ‘Items’ field we need to
+> use the @item in our expression
+
+    @not(or(contains(item().name,'testing'),contains(item().name,'old')))
+
+This expression is checking if the ‘name’ attribute with in the item has
+“*old*” **<span class="underline">or</span>** “*testing*” words in it
+and then uses ‘or’ function to reverse it.
+
+![](.//media/image110.png)
+
+7.  Debug and inspect the ‘filter’ activity output.
+
+> Output of ‘filter’ activity: The output of filter activity is again a
+> JSON document with ‘Output’ document being the most important part.
+> Within that there is an ‘ItemsCount’ and ‘FilterItemsCount’ and an
+> array called ‘Value’
+
+![](.//media/image111.png)
+
+There were 5 items with ‘testing’ and ‘old’ words in the file name that
+the filter activity removed from the results.
+
+8.  drag ‘ForEach’ loop activity and connect to success of ‘filter’
+    activity and rename it to *‘LoopWWISftpCustomerFiles’*
+    
+    1.  Under ‘settings’ -\> Items:
+
+<!-- end list -->
+
+    @activity('FilterWWISFTPCustomerFileNames').output.Value
+
+![](.//media/image112.png)
+
+![](.//media/image113.png)
+
+9.  Rename ‘Execute Pipeline’ to *‘ExecuteWWICustomersSftpToBlob’*
+
+10. Add and ‘Execute Pipeline’ activity to ‘ForEach’ loop
+    
+    1.  Invoked pipeline: *WWICustomersSftpToBlob*
+    
+    2.  Parameters -\> date :
+
+<!-- end list -->
+
+    @substring(item().name,add(indexof(item().name,'_'),1),10)
+
+> **Expression explanation:** Remember that the pipeline we are invoking
+> is expecting a ‘date’ parameter but the ‘Get Metadata’ and ‘Filter’
+> activities are passing on file names in the form of
+> ‘Customer\_\<date\>.parquet’. In order to retrieve the date part
+> from the file name we need to use a ‘Substring’ function and within
+> that we pass the original string, the starting position and then
+> number of characters. To find the starting position we use the
+> ‘indexof’ function and add 1 to it. Here is the same expression in
+> better formatting:
+
+    @substring(
+    		item().name,
+    		add(
+    			indexof(item().name,'_'),
+    			1
+    		),
+    		10)
+
+11. Finally debug your pipeline and confirm that it copies all 54 files
+    successfully.
+
+12. Publish your changes.
+
+#### Create Initial load pipelines for WWI ‘Orders’ and ‘Orderlines’
+
+Now that we created the pipelines for loading all customer files from
+SFTP, we need to create similar pipelines for WWI Orders and Orderlines
+feeds.
+
+Option 1: Clone the WWI Customer Initial load pipeline and modify it for
+orders and orderlines.
+
+Option 2(Further practice): Create pipelines from scratch following the
+same instructions as above.
+
+> Once you finish this task this is the pipelines you should have
+> created in your ADF
+
+![](.//media/image114.png)
+
+## Self-hosted Integration Runtime, decompress files and Delete activity
+
+> **Note:** This exercise requires a MS Windows workstation. You can use
+> your own machine if you are working from a PC, alternatively you can
+> deploy a small VM in Azure.
+
+The integration runtime (IR) is the compute infrastructure that Azure
+Data Factory uses to provide data-integration capabilities across
+different network environments.
+
+A self-hosted integration runtime can run copy activities between a
+cloud data store and a data store in a private network. It also can
+dispatch transform activities against compute resources in an
+on-premises network or an Azure virtual network. The installation of a
+self-hosted integration runtime needs an on-premises machine or a
+virtual machine inside a private network.
+
+If you want to learn more on how to create and configure a self-hosted
+IR check [This
+article](https://docs.microsoft.com/en-us/azure/data-factory/create-self-hosted-integration-runtime).
+
+#### Create a self-hosted IR to access SmartFoods reference data from local file system.
+
+1.  Go to connections tab of ADF
+
+![](.//media/image115.png)
+
+2.  Under ‘Integration runtimes’ click ‘New’
+
+![](.//media/image116.png)
+
+3.  Select ‘Azure, Self-Hosted’
+
+![](.//media/image117.png)
+
+4.  Choose Self-Hosted
+
+![](.//media/image118.png)
+
+5.  For name enter ‘*OnPremisesIR’*
+
+6.  click ‘Create’
+
+Now to install the IR engine you have two options
+
+1.  Express Setup: With this option you can download a pre-configured
+    executable file (exe) and after finishing installation the IR engine
+    is configured and connected to your ADF instance.
+
+2.  Manual Setup: You can download the generic version of Azure IR and
+    install on a MS Windows machine and then you need to register it to
+    your instance of ADF using the on screen provided keys.
+
+<!-- end list -->
+
+7.  Choose your preferred installation method and install the IR on your
+    Windows machine.
+
+> **Note1**: Azure data factory allows clustering self-hosted (SH) IR
+> for availability and DR. Refer to the linked document above for
+> further details on clustering and nodes.
+> 
+> **Note2:** You can enable/disable auto update of the SHIR (default
+> enabled) or set time window for it from them ‘Auto Update’ tab
+> 
+> **Note3**: A single installation of SHIR can be shared with multiple
+> ADF instances using ‘Linked Self-Hosted IR’ option.
+> 
+> **Note4**: One of the main capabilities of SHIR is to access on-prem
+> systems behind firewall and as such the IR needs to be installed on a
+> machine that is located within the firewall of the data system you
+> intend to access. This could be an on-prem SQL Server, on-prem SFTP or
+> on-prem local file system (or NAS storage).
+
+8.  Once installation completes and the IR starts successfully the
+    ‘*OnPremisesIR*’ status on the list changes to ‘*Running’*
+
+![](.//media/image119.png)
+
+Now that we have a running On-prem IR we can go ahead and create
+LinkedServices and datasets to access on-prem files.
+
+#### Prepare the local machine
+
+For the SH IR to access the local machine securely we need to create a
+local user on the machine and copy the data from the GitHub repo to a
+directory this user can access:
+
+1.  On the Windows machine go to Settings -\> Accounts -\> Other users
+    -\> ‘Add someone else to this PC’
+
+2.  Click ‘I don’t have this person’s sing-in information’
+
+3.  Click ‘Add a user without a Microsoft account’
+
+4.  For username enter ‘adf\_ir’
+
+5.  Enter a password
+
+6.  Answer the security questions
+
+7.  Go to C:\\Users and create a directory called ‘adf\_ir’
+
+8.  Browse to the location that you clone the GitHub repo on your
+    machine and under \\Data\\SmartFoods copy the file
+    SmartFoodsRefData.zip to C:\\Users\\adf\_ir
+
+#### Create local file system Linked Service
+
+1.  In ADF start creating a new Linked Service
+
+2.  For Data Store select “File System”
+
+![](.//media/image120.png)
+
+3.  Now configure the new Linked service:
+    
+    1.  Name: *SmartFoodsLocalFileSystem*
+    
+    2.  Connect via: **<span class="underline">OnPremisesIR</span>**
+    
+    3.  Host: C:\\Users\\adf\_ir
+    
+    4.  Username: adf\_ir
+    
+    5.  Password: \<The password you created the adf\_ir account with\>
+    
+    6.  Click “Test connection”
+    
+    7.  If successful click “Create”
+
+![](.//media/image121.png)
+
+#### Create Dataset for file system
+
+1.  Create a new dataset
+
+2.  For data store choose : *File System*
+
+3.  For Format choose: *Delimited Text*
+
+4.  name: *SmartFoodsRefDataLocalFileSystem*
+
+5.  Linked Service: *SmartFoodsLocalFileSystem*
+
+6.  “First Row as header” ticked
+
+7.  Leave directory and file blank
+
+8.  Import Schema: None
+
+![](.//media/image122.png)
+
+#### (Challenge Task) Parametrize the dataset with 
+
+> Configure the dataset (Use below figure as reference and if you need a
+> refresher on how to create datasets go back to first part of the lab)
+
+![](.//media/image123.png)
+
+Click “Preview data” to make sure the dataset is working correctly.
+
+File: SmartFoodsRefData
+
+Filetype: zip
+
+![](.//media/image124.png)
+
+![](.//media/image125.png)
+
+> Note: The zip file contains 3 CSV files. The preview randomly shows
+> part of one of the files within the compressed file.
+
+Don’t forget to **<span class="underline">Publish</span>** your
+changes\!
+
+#### Copy the data from on-prem to cloud
+
+Now that we have a working linked service and dataset for SmartFoods
+reference data we need to create a pipeline to copy the data from the
+local file system to the cloud.
+
+The pipeline will like SFTP pipeline with two modifications. First there
+is no need for a filter activity and second since the files are not
+dated, we will need to delete the file from source once copy completes
+successfully.
+
+*Get metadata* (list files) -\> *Copy activity* (from local FS to Blob
+Storage) -\> *Delete activity* (Remove copied files from local file
+system)
+
+1.  Create a pipeline and rename it to
+    *“SmartFoodsRefDataLocalFStoBlob”*
+
+2.  Add a “Get Metadata” activity and rename it to
+    “*GetSmartFoodsRefDataFileListLocalFS*”
+
+3.  Configure the Get Metadata using the below figure as reference:
+
+![](.//media/image126.png)
+
+4.  Add a “ForEach” activity and rename it to
+    “*LoopSmartFoodsLocalFileSystemRefDataFiles*”
+
+5.  Configure the “ForEach” activity with items:
+
+<!-- end list -->
+
+    @activity('GetSmartFoodsRefDataFileListLocalFS').output.childItems
+
+![](.//media/image127.png)
+
+6.  Go inside “ForEach” activity canvas and add a “Copy” activity and
+    rename it to “*CopySmartFoodsRefDataLocalFStoBlob*”
+
+7.  Setup source
+    
+    1.  Source dataset: *SmartFoodsRefDataLocalFileSystem*
+    
+    2.  File*: @first(split(item().name,'.'))*
+    
+    3.  Filetype: *@last(split(item().name,'.'))*
+
+![](.//media/image128.png)
+
+Now we need to setup ‘sink’ for this copy activity and since data
+belongs to SmartFoods source system we could use the
+‘SmartFoodsDelimitedTextBlob’ dataset (If you recall this dataset
+writes to ‘*smartfoodsstaging*’ container and is parametrized with
+‘*folder*’, ‘*file*’ and ‘*filetype*’. Except since the Zip file
+contains multiple files if set the parameters, once unzipped they will
+overwrite each other\! This problem arises since ADF does NOT support
+optional parameters.
+
+> Azure Data Factory Does NOT support OPTIONAL parameters\!
+
+The only solution left is to create a copy of this dataset and remove
+the *‘file’* and *‘filetype’* parameters.
+
+8.  Clone the ‘*SmartFoodsDelimitedTextBlob*’ dataset and rename it to
+    ‘*SmartFoodsDelimitedTextBlobOnlyFolderPram*’. Then remove
+    ‘*file’* and ‘*filetype’* parameters from it. (Use below figure
+    as reference)
+
+![](.//media/image129.png)
+
+9.  Go back to copy activity and setup sink
+    
+    1.  Sink dataset: *SmartFoodsDelimitedTextBlobOnlyFolderPram*
+    
+    2.  Folder: Ref\_data
+    
+    3.  Copy behavior: Preserve Hierarchy
+
+![](.//media/image130.png)
+
+> **Note:** We are changing ‘Copy behavior’ to ‘Preserve Hierarchy’ as
+> we want to make sure the copy process will retain the original file
+> names within the compressed file. But this will result in a creating a
+> sub directory with in ‘ref\_data and name it as
+> ‘SmartFoodsRefData.zip’
+
+![](.//media/image131.png)
+
+#### Delete the zip file from local file system
+
+Azure Data Factory also offers a ‘delete’ activity to remove the files
+from any file system.
+
+1.  After the ‘Copy’ activity add a ‘Delete’ activity (in activities
+    list under General) and connect to success of the Copy activity.
+
+2.  Rename it to ‘DeleteSmartFoodsRefDataLocalFS’
+
+3.  For source set it up exactly same as the source of ‘Copy’ activity
+
+> ![](.//media/image132.png)
+
+4.  Debug your pipeline to make sure it is working correctly.
+
+> **Note:** Delete activity may run successfully but if you check the
+> directory the file may still be in there. The primary reason for this
+> would access/security settings applied to the file. (if adf\_ir user
+> has the right access to perform deleting the file or not)
+
+## Part 1 Learning Summary:
+
+**Congratulations\!** You have reached the end of first part of Azure
+Data Factory Hands-On Lab. Here is a summary of all learning objectives
+that was covered so far.
+
+1.  Creating and renaming pipelines.
+
+2.  Adding activities and chaining them.
+
+3.  Look up activity using a Text file.
+
+4.  Web activity.
+
+5.  Accessing Oauth2 APIs using HTTP activity (composing request body
+    JSON).
+
+6.  Linked Services and setting them up using Azure Key Vault.
+
+7.  Datasets and parameterization.
+
+8.  Variables and using Set Variable activity.
+
+9.  Pipeline and Dataset parameters.
+
+10. Copy activity (Source and Sink Dataset).
+
+11. ForEach loop activity.
+
+12. Execute pipeline activity.
+
+13. Get Metadata activity for listing files.
+
+14. Filter activity.
+
+15. Cloning pipelines.
+
+16. ADF publishing (saving changes).
+
+17. Setting up a self-hosted integration runtime
+
+18. Accessing local file system using SHIR
+
+19. Copying activity with compression/decompression
+
+20. Delete activity
 
 ## ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer dimensions
 
@@ -951,22 +2466,22 @@ Similar to the task 6 in Exercise 2 create a **Parquet** Dataset on
 “wwidatawarhouse” container (we created previously) and make sure you
 parametrized the “file” and “directory” fields as before.
 
-![](.//media/image77.png)
+![](.//media/image133.png)
 
-![](.//media/image78.png)
+![](.//media/image134.png)
 
 #### Create SQL Database Dataset
 
 Create a SQL Database Dataset using the Linked Service created
 previously and parametrize the schema name and table name as below:
 
-![](.//media/image79.png)Pre-Task C: Create and Schema in your SQL DB
+![](.//media/image135.png)Pre-Task C: Create and Schema in your SQL DB
 
 Either using Query Editor in Azure Portal or using SSMS connect to your
 Azure SQL DB and create and schema for SmartFoods and a table for items
 
-**Note:** You may need to add your Client IP Address to your SQL DB
-through “Set Firewall” page.
+> **Note:** You may need to add your Client IP Address to your SQL DB
+> through “Set Firewall” page.
 
     CREATE SCHEMA smartfoods;
     GO
@@ -992,16 +2507,16 @@ We would like to create a dimension table for this data source as below:
 | ------- | --------------- | ----------------- | --------------- | ----------- |
 | ItemKey | SourceSKUCode\* | ItemDescription\* | ItemFoodGroup\* | RecInsertDt |
 
-Note: The columns marked with \* exists within the data source but the
-rest needs to be generated by the ELT process.
+> Note: The columns marked with \* exists within the data source but the
+> rest needs to be generated by the ELT process.
 
 1.  Create a mapping Dataflow by clicking on new Data flow button
 
-![](.//media/image80.png)
+![](.//media/image136.png)
 
 2.  At the top of the page turn on the “data flow debug”
 
-![](.//media/image81.png)
+![](.//media/image137.png)
 
 3.  Click “Add Source” on canvas
 
@@ -1030,41 +2545,41 @@ rest needs to be generated by the ELT process.
 9.  Add a derived column transformation by clicking the plus sing on the
     bottom right hand of the source transformation
 
-![](.//media/image82.png)
+![](.//media/image138.png)
 
-![](.//media/image83.png)
+![](.//media/image139.png)
 
 10. For Column name use “RecInsertDt” and go into expression editor and
     find “currentDate()
 
-![](.//media/image84.png)
+![](.//media/image140.png)
 
-.![](.//media/image85.png)**Note:** Inside the expression editor click
-the “Refresh” button to get the result of the expression instantly
+> *Note: Inside the expression editor click the “Refresh” button to get
+> the result of the expression instantly*
 
 11. Next add a “surrogate key” transformation and configure it as below:
 
-![](.//media/image86.png)
+![](.//media/image141.png)
 
 12. Add a “Select” transformation and configure it as below. (Pay
     attention that we are renaming and re-ordering columns\!)
 
-![](.//media/image87.png)
+![](.//media/image142.png)
 
 13. Add a “Sink” transformation and select the SQL DB Dataset you
     created in the pre-tasks as the sink dataset.
 
 14. Set the settings for the sink transformation as:
 
-![](.//media/image88.png)
+![](.//media/image143.png)
 
-Note: For brevity in this exercise we are setting up our pipeline to
-truncate the table on every load but in real world scenarios we commonly
-don not do this\!
+> Note: For brevity in this exercise we are setting up our pipeline to
+> truncate the table on every load but in real world scenarios we
+> commonly do not do this\!
 
 The finale Data flow:
 
-![](.//media/image89.png)
+![](.//media/image144.png)
 
 15. Create a pipeline place
     
@@ -1085,12 +2600,12 @@ We would like to create a dimension table for this data source as below:
 | ----------- | ---------- | --------- | -------- | ---- | ----- | ------------ | ----------- | --- | ----------- |
 | CustomerKey | LoyaltyNum | Firstname | Lastname | City | State | EmailAddress | MemberSince | Dob | RecInsertDt |
 
-Note 1: The source is providing “name” field, which is full name, but we
-need to separate first name and last name
-
-Note 2: We know some of the email addresses of customers are NOT the
-right format (<abc@xyz.com>) and we need to replace these with NULL
-instead
+> Note 1: The source is providing “name” field, which is full name, but
+> we need to separate first name and last name
+> 
+> Note 2: We know some of the email addresses of customers are NOT the
+> right format (<abc@xyz.com>) and we need to replace these with NULL
+> instead
 
 **Optional Extra challenge:** WWI also likes to calculate the age of the
 customer as well and store in “Age” column can you used Mapping Data
@@ -1115,7 +2630,7 @@ flows Expression Language to calculate it?
 
 **<span class="underline">Final Data Flow:</span>**
 
-![](.//media/image90.png)
+![](.//media/image145.png)
 
 **If you are stuck or want to double check your answer the solution for
 Expression Language and Select transformation is in the next page.  
@@ -1123,11 +2638,11 @@ Expression Language and Select transformation is in the next page.
 
 **<span class="underline">Derived column expressions solution:</span>**
 
-![](.//media/image91.png)
+![](.//media/image146.png)
 
 **<span class="underline">Select transformation:</span>**
 
-![](.//media/image92.png)
+![](.//media/image147.png)
 
 #### Create SmartFoods Invoice fact tables
 
@@ -1137,7 +2652,7 @@ invoice data has an invoice header and an invoice item lines but for the
 case of SmartFoods the API is only capable of providing the data in form
 of line items with repeated invoice header information.
 
-![](.//media/image93.png)
+![](.//media/image148.png)
 
 The requirement is to create two separate tables in following form:
 
@@ -1155,19 +2670,19 @@ InvoiceLine
 
 1.  **For Invoice Table Overall Data flow looks:**
 
-![](.//media/image94.png)
+![](.//media/image149.png)
 
 Aggregate transformation:
 
-![](.//media/image95.png)
+![](.//media/image150.png)
 
 Join transformation:
 
-![](.//media/image96.png)
+![](.//media/image151.png)
 
 Select Transformation:
 
-![](.//media/image97.png)
+![](.//media/image152.png)
 
 2.  **For Invoice Lines:**
 
@@ -1175,23 +2690,23 @@ In the **same** data flow after your source CSV add a new branch
 transformation. This will branch the same data source to two different
 pathes
 
-![](.//media/image98.png)
+![](.//media/image153.png)
 
 **Final Data flow for invoice and invoice line:**
 
-![](.//media/image99.png)
+![](.//media/image154.png)
 
 **Derived Column Transformation:**
 
-![](.//media/image100.png)
+![](.//media/image155.png)
 
 **Join transformation:**
 
-![](.//media/image101.png)
+![](.//media/image156.png)
 
 **Select Transformation:**
 
-![](.//media/image102.png)
+![](.//media/image157.png)
 
 **DDLS for InvoiceLine table:**
 
