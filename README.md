@@ -312,9 +312,6 @@ solution as you are working on the various components.
 
 ![](.//media/image2.png)
 
-**  
-**
-
 **Data sources:**
 
 1.  SmartFoods Rest API:
