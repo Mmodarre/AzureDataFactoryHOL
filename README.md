@@ -65,7 +65,8 @@ are property of their respective owners.
 
 [Requirements 3](#requirements)
 
-[Before the hands-on lab Exercise 4](#before-the-hands-on-lab-exercise)
+[Before the hands-on lab (Prepare the environment)
+4](#before-the-hands-on-lab-prepare-the-environment)
 
 [Task 1: Install Azure Storage Explorer
 4](#install-azure-storage-explorer)
@@ -211,21 +212,18 @@ from local file system.
 [Part 1 Learning Summary: 109](#part-1-learning-summary)
 
 [ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer
-dimensions
-111](#elt-with-mapping-dataflows-smartfoods-itemsfoods-and-customer-dimensions)
+dimensions 111](#_Toc37759888)
 
 [Task 1: Create a Parquet dataset to write SmartFoods DW Blob container
-111](#create-a-parquet-dataset-to-write-smartfoods-dw-blob-container)
+111](#_Toc37759889)
 
-[Task 2: Create SQL Database Dataset 112](#create-sql-database-dataset)
+[Task 2: Create SQL Database Dataset 112](#_Toc37759890)
 
-[Task 3: Create Foods Dimension 113](#create-foods-dimension)
+[Task 3: Create Foods Dimension 113](#_Toc37759891)
 
-[Task 4: (Challenge Task) Create customer dimension
-117](#challenge-task-create-customer-dimension)
+[Task 4: (Challenge Task) Create customer dimension 117](#_Toc37759892)
 
-[Task 5: Create SmartFoods Invoice fact tables
-120](#create-smartfoods-invoice-fact-tables)
+[Task 5: Create SmartFoods Invoice fact tables 120](#_Toc37759893)
 
 # Azure Data Factory hands-on lab
 
@@ -247,16 +245,19 @@ Azure data factory ELT pipeline. In addition, you will learn to:
 
   - Create Blob Storage and Azure SQLDB Linked Services.
 
-  - Create Azure Key Vault and Linked Services in ADF
+  - Create Azure Key Vault and Linked Services in ADF.
 
   - Create ADF parameterized pipeline.
 
-  - Perform code-free Spark ELT using Azure Data Factory Mapping
-    Dataflows.
+  - Install Azure Data Factory self-hosted integration runtime to ingest
+    from on-premises data systems.
 
-  - Source control ADF pipelines.
+  - (In progress) Perform code-free Spark ELT using Azure Data Factory
+    Mapping Dataflows.
 
-  - CI/CD ADF pipelines and your ELT code.
+  - (To do) Source control ADF pipelines.
+
+  - (To do) CI/CD ADF pipelines and your ELT code.
 
 This hands-on lab is designed to provide exposure to many of Microsoft’s
 transformative line of business applications built using Microsoft data
@@ -298,7 +299,7 @@ program which customer can accumulate points on their purchases. WWI CIO
 is hopping to use the loyalty program information and the food nutrients
 database of SmartFoods to provide customers with a HealthSmart portal.
 The portal will be showing aggregated information on customers important
-food nutrients (Carbs, Saturated fats and etc.) to promote healthy and
+food nutrients (Carbs, Saturated fats etc.) to promote healthy and
 SmartFood shopping.
 
 In this hands-on lab, attendees will build an end-to-end solution to
@@ -307,8 +308,8 @@ build a data warehouse using data lake methodology.
 ## Solution architecture
 
 Below is a diagram of the solution architecture you will build in this
-lab. Please study this carefully so you understand the whole of the
-solution as you are working on the various components.
+lab. Please study this carefully so you understand the solution as
+whole, before building various components.
 
 ![](.//media/image2.png)
 
@@ -424,9 +425,9 @@ solution as you are working on the various components.
 
 3.  Azure Storage Explorer
 
-## Before the hands-on lab Exercise
+## Before the hands-on lab (Prepare the environment)
 
-Duration: 20 minutes
+Duration: 60 minutes
 
 In this exercise, you will set up your environment for use in the rest
 of the hands-on lab. You should follow all the steps provided in the
@@ -674,7 +675,7 @@ Repeat the steps above and create a container called
 
 ## Linked Services, Datasets and Integration Runtimes: 
 
-Duration: 40 minutes
+Duration: 90 minutes
 
 In this exercise, attendees will create multiple Azure data factory
 pipelines and related component including ADF IR, LinkedServices and
@@ -1234,6 +1235,8 @@ Screenshots below for guidance:
 
 ## Copy Activity, Parameters, Debug and Publishing:
 
+Duration: 30 minutes
+
 In this exercise you create a pipeline to ingest data from SmartFoods
 web services. Primary learning objectives:
 
@@ -1501,6 +1504,8 @@ transform and analyze it.
 ![](.//media/image84.png)
 
 ## Lookup activity, ForEach loop and Execute Pipeline activity
+
+Duration: 60 minutes
 
 #### Extend the pipeline with Lookup activity and ForEach Loops
 
@@ -1781,6 +1786,8 @@ are using Data Factory mode it is better practice to frequently
 ![](.//media/image104.png)
 
 ## Get Metadata activity, filter activity and complex expressions
+
+Duration: 60 minutes
 
 #### Load WWI Data
 
@@ -2077,6 +2084,8 @@ same instructions as above.
 
 ## Self-hosted Integration Runtime, decompress files and Delete activity
 
+Duration: 60 minutes
+
 > **Note:** This exercise requires a MS Windows workstation. You can use
 > your own machine if you are working from a PC, alternatively you can
 > deploy a small VM in Azure.
@@ -2355,7 +2364,7 @@ from any file system.
 
 4.  Debug your pipeline to make sure it is working correctly.
 
-> **Note:** Delete activity may run successfully but if you check the
+> **Note:** Delete activity runs successfully but if you check the
 > directory the file may still be in there. The primary reason for this
 > would access/security settings applied to the file. (if adf\_ir user
 > has the right access to perform deleting the file or not)
@@ -2406,273 +2415,3 @@ that was covered so far.
 19. Copying activity with compression/decompression
 
 20. Delete activity
-
-## ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer dimensions
-
-Data Flow is a new feature of Azure Data Factory that allows you to
-build data transformations in a visual user interface.
-
-In the Blob container we copied for SmartFoods there are multiple CSV
-files which represents SmartFood’s reference data for the transactions
-that comes through the HTTP API.
-
-#### Create a Parquet dataset to write SmartFoods DW Blob container
-
-Similar to the task 6 in Exercise 2 create a **Parquet** Dataset on
-“wwidatawarhouse” container (we created previously) and make sure you
-parametrized the “file” and “directory” fields as before.
-
-![](.//media/image133.png)
-
-![](.//media/image134.png)
-
-#### Create SQL Database Dataset
-
-Create a SQL Database Dataset using the Linked Service created
-previously and parametrize the schema name and table name as below:
-
-![](.//media/image135.png)Pre-Task C: Create and Schema in your SQL DB
-
-Either using Query Editor in Azure Portal or using SSMS connect to your
-Azure SQL DB and create and schema for SmartFoods and a table for items
-
-> **Note:** You may need to add your Client IP Address to your SQL DB
-> through “Set Firewall” page.
-
-    CREATE SCHEMA smartfoods;
-    GO
-    
-    CREATE TABLE [smartfoods].[item](
-    	[ItemKey] [bigint] NULL,
-    	[SourceSKUCode] [int] NULL,
-    	[ItemDescription] [nvarchar](max) NULL,
-    	[ItemFoodGroup] [nvarchar](max) NULL,
-    	[RecInsertDt] [date] NULL
-    );
-    GO
-
-#### Create Foods Dimension
-
-In the SmartFoods Blob container that we copied previously there was a
-file named “food.csv” which contains the foods (transaction items)
-reference data.
-
-We would like to create a dimension table for this data source as below:
-
-|         |                 |                   |                 |             |
-| ------- | --------------- | ----------------- | --------------- | ----------- |
-| ItemKey | SourceSKUCode\* | ItemDescription\* | ItemFoodGroup\* | RecInsertDt |
-
-> Note: The columns marked with \* exists within the data source but the
-> rest needs to be generated by the ELT process.
-
-1.  Create a mapping Dataflow by clicking on new Data flow button
-
-![](.//media/image136.png)
-
-2.  At the top of the page turn on the “data flow debug”
-
-![](.//media/image137.png)
-
-3.  Click “Add Source” on canvas
-
-4.  Select the SmartFood Blob storage CSV dataset (This dataset was
-    previously used as a sink for HTTP copy activity)
-
-5.  Click “Debug Settings”
-
-6.  Under parameters provide
-    
-      - “file” = food
-    
-      - “folder” = /
-    
-      - “fileType” = csv
-
-7.  Go to “projection tab”
-    
-    1.  click “import Schema
-    
-    2.  **Change the data type for “sku” column to “integer”**
-
-8.  Now go to “Data Preview” tab and refresh it to get a preview of the
-    dataset
-
-9.  Add a derived column transformation by clicking the plus sing on the
-    bottom right hand of the source transformation
-
-![](.//media/image138.png)
-
-![](.//media/image139.png)
-
-10. For Column name use “RecInsertDt” and go into expression editor and
-    find “currentDate()
-
-![](.//media/image140.png)
-
-> *Note: Inside the expression editor click the “Refresh” button to get
-> the result of the expression instantly*
-
-11. Next add a “surrogate key” transformation and configure it as below:
-
-![](.//media/image141.png)
-
-12. Add a “Select” transformation and configure it as below. (Pay
-    attention that we are renaming and re-ordering columns\!)
-
-![](.//media/image142.png)
-
-13. Add a “Sink” transformation and select the SQL DB Dataset you
-    created in the pre-tasks as the sink dataset.
-
-14. Set the settings for the sink transformation as:
-
-![](.//media/image143.png)
-
-> Note: For brevity in this exercise we are setting up our pipeline to
-> truncate the table on every load but in real world scenarios we
-> commonly do not do this\!
-
-The finale Data flow:
-
-![](.//media/image144.png)
-
-15. Create a pipeline place
-    
-    1.  place a mapping dataflow activity on canvas
-    
-    2.  select your DF
-
-16. Debug the pipeline (You will need to provide the parameters)
-
-#### (Challenge Task) Create customer dimension
-
-In the SmartFoods Blob container that we copied previously there was a
-file named “customer.csv” which contains the customers’ reference data.
-
-We would like to create a dimension table for this data source as below:
-
-|             |            |           |          |      |       |              |             |     |             |
-| ----------- | ---------- | --------- | -------- | ---- | ----- | ------------ | ----------- | --- | ----------- |
-| CustomerKey | LoyaltyNum | Firstname | Lastname | City | State | EmailAddress | MemberSince | Dob | RecInsertDt |
-
-> Note 1: The source is providing “name” field, which is full name, but
-> we need to separate first name and last name
-> 
-> Note 2: We know some of the email addresses of customers are NOT the
-> right format (<abc@xyz.com>) and we need to replace these with NULL
-> instead
-
-**Optional Extra challenge:** WWI also likes to calculate the age of the
-customer as well and store in “Age” column can you used Mapping Data
-flows Expression Language to calculate it?
-
-**<span class="underline">Table DDL:</span>**
-
-    CREATE TABLE [smartfoods].[customer](
-    	[CustomerKey] [bigint] NULL,
-    	[LoyaltyNum] [nvarchar](max) NULL,
-    	[FirstName] [nvarchar](max) NULL,
-    	[LastName] [nvarchar](max) NULL,
-    	[City] [nvarchar](max) NULL,
-    	[State] [nvarchar](max) NULL,
-    	[Email] [nvarchar](max) NULL,
-    	[MemberSince] [date] NULL,
-    	[Dob] [date] NULL,
-    	[Age] [int] NULL,
-    	[RecInsertDt] [date] NULL
-    ) ;
-    GO
-
-**<span class="underline">Final Data Flow:</span>**
-
-![](.//media/image145.png)
-
-**If you are stuck or want to double check your answer the solution for
-Expression Language and Select transformation is in the next page.  
-**
-
-**<span class="underline">Derived column expressions solution:</span>**
-
-![](.//media/image146.png)
-
-**<span class="underline">Select transformation:</span>**
-
-![](.//media/image147.png)
-
-#### Create SmartFoods Invoice fact tables
-
-The Data that we retrieved in the previous exercise from SmartFoods
-Transaction API seems to be in an uncommon format for invoices. Usually
-invoice data has an invoice header and an invoice item lines but for the
-case of SmartFoods the API is only capable of providing the data in form
-of line items with repeated invoice header information.
-
-![](.//media/image148.png)
-
-The requirement is to create two separate tables in following form:
-
-Invoice
-
-|               |             |       |             |              |     |              |             |
-| ------------- | ----------- | ----- | ----------- | ------------ | --- | ------------ | ----------- |
-| InvoiceNumber | CustomerKey | Store | InvoiceDtts | InvoiceTotal | Gst | NumLineItems | RecInsertDt |
-
-InvoiceLine
-
-|               |         |                 |           |     |     |             |
-| ------------- | ------- | --------------- | --------- | --- | --- | ----------- |
-| InvoiceNumber | ItemKey | ItemDescription | UnitPrice | Qty | Gst | RecInsertDt |
-
-1.  **For Invoice Table Overall Data flow looks:**
-
-![](.//media/image149.png)
-
-Aggregate transformation:
-
-![](.//media/image150.png)
-
-Join transformation:
-
-![](.//media/image151.png)
-
-Select Transformation:
-
-![](.//media/image152.png)
-
-2.  **For Invoice Lines:**
-
-In the **same** data flow after your source CSV add a new branch
-transformation. This will branch the same data source to two different
-pathes
-
-![](.//media/image153.png)
-
-**Final Data flow for invoice and invoice line:**
-
-![](.//media/image154.png)
-
-**Derived Column Transformation:**
-
-![](.//media/image155.png)
-
-**Join transformation:**
-
-![](.//media/image156.png)
-
-**Select Transformation:**
-
-![](.//media/image157.png)
-
-**DDLS for InvoiceLine table:**
-
-    CREATE TABLE [smartfoods].[invoiceline](
-    	[invoiceNumber] [nvarchar](max) NULL,
-    	[ItemKey] [bigint] NULL,
-    	[ItemDescription] [nvarchar](max) NULL,
-    	[UnitPrice] [float] NULL,
-    	[qty] [int] NULL,
-    	[Gst] [float] NULL,
-    	[RecInsertDt] [date] NULL
-    );
-    GO
