@@ -211,20 +211,6 @@ from local file system.
 
 [Part 1 Learning Summary: 109](#part-1-learning-summary)
 
-[ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer
-dimensions 111](#_Toc37759888)
-
-[Task 1: Create a Parquet dataset to write SmartFoods DW Blob container
-111](#_Toc37759889)
-
-[Task 2: Create SQL Database Dataset 112](#_Toc37759890)
-
-[Task 3: Create Foods Dimension 113](#_Toc37759891)
-
-[Task 4: (Challenge Task) Create customer dimension 117](#_Toc37759892)
-
-[Task 5: Create SmartFoods Invoice fact tables 120](#_Toc37759893)
-
 # Azure Data Factory hands-on lab
 
 ## Abstract and learning objectives 
