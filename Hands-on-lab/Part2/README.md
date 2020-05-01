@@ -418,7 +418,7 @@ The ultimate table will look like below:
 
 <!-- end list -->
 
-    split(name," ")[]
+    split(name," ")[2]
 
 ![](.//media/image16.png)
 
