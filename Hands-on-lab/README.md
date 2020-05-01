@@ -1441,18 +1441,18 @@ For example, here we receive the data in JSON format but store as CSV.
 After you copy the data, you can use other activities to further
 transform and analyze it.
 
-1.  First create a pipeline parameter called “date”
+  - First create a pipeline parameter called “date”
 
 ![](.//media/image80.png)
 
-2.  Drag a copy activity to canvas and connect to “SetAccessToken”
+  - Drag a copy activity to canvas and connect to “SetAccessToken”
     activity
 
-3.  Rename it to “SmartFoodsCustomersToBlob”
+  - Rename it to “SmartFoodsCustomersToBlob”
 
 ![](.//media/image81.png)
 
-4.  Under source
+  - Under source
     
     1.  Source dataset: “**SmartFoodsCustomerApiJson**”
     
@@ -1475,7 +1475,7 @@ transform and analyze it.
 
 ![](.//media/image82.png)
 
-5.  For Sink
+  - For Sink
     
     1.  Sink dataset: “SmartFoodsDelimitedTextBlob”
     
@@ -2422,13 +2422,74 @@ that was covered so far.
 ## ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer dimensions
 
 Mapping Data Flows is a new feature of Azure Data Factory that allows
-you to build data transformations in a visual user interface.
+you to build data transformations in a visual user interface(code-free
+or very low amount coding).
+
+ADF translates the flow built in the visual interface to Apache Spark
+code which will run on serverless Spark cluster than we can configure in
+terms of count and type of worker nodes.
+
+> **Serverless Spark cluster**: The Apache Spark cluster will be
+> deployed on Azure Integration Runtime and like Azure IR, which is
+> serverless, the cluster is fully managed by Azure and charged per
+> number of seconds the job takes to run.
+> 
+> **Mapping DF on SH-IR?** ADF Spark clusters are only deployable on
+> Azure and currently there is no option for deploying on-prem.
+
+**Solution requirements:**
+
+In previous exercise you ingested *customer*, *orders* and *orderlines*
+data from WWI to blob storage. Also, you ingested *Customer*,
+*Transactions* and *reference* data from SmartFoods systems to Blob
+storage. In this exercise you will use ADF Mapping DF to cleans,
+transform, enrich and store this data to be served using PowerBI to
+business users. Plus, data needs to be prepared for SmartFoods customer
+facing application to which displays accumulated loyalty points and
+comprehensive nutritional information and suggestions.
+
+***Analytics Reporting:***
+
+Since WWI business users are keen to setup a self-serve reporting
+environment, it means the serving layer storage solution should support
+the following requirements:
+
+  - Role based access control plus row and column level security so data
+    can be made available to all users and controlled at group level
+    which rows and columns will be made available to each user group.
+
+  - Dynamic Data Masking, certain PII information can be masked for
+    certain user groups while they still have access to the rest of the
+    data.
+
+With the above requirements and considering this is only a POC, they
+decided to use *Azure SQL Database* for serving layer storage solution.
+The team acknowledges that after successful POC they will move this part
+of the solution to *Azure Synapse Analytics*.
+
+***Data Science:***
+
+In addition, the data science team decided to use *Azure ML services* to
+build ML/AI applications, particularly to support the nutritional
+suggestions based on the SmartFoods data. Hence, to avoid the need to
+export the cleansed data from SQL DB they requested the data to be
+stored in *Blob storage* as well if possible, at loading time. After
+considering all this requirement it was decided to use *Parquet files*
+on Azure Blob Storage (after POC to be replaced with Azure Data Lake
+Storage Gen2)
+
+***SmartFoods App:***
+
+Finally, the SmartFoods application (Web and Mobile) will need to access
+the data through an API and their primary requirements are performance,
+scalability and availability. After considering all this requirement it
+was decided to use *Azure CosmosDB* for application data storage.
 
 In the Blob container we copied for SmartFoods there are multiple CSV
 files which represents SmartFood’s reference data for the transactions
 that comes through the HTTP API.
 
-#### Create a Parquet dataset to write SmartFoods DW Blob container
+#### Create a Parquet dataset to write SmartFood’s DW Blob container
 
 Similar to the task 6 in Exercise 2 create a **Parquet** Dataset on
 “wwidatawarhouse” container (we created previously) and make sure you
