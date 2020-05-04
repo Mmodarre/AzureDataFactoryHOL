@@ -391,12 +391,31 @@ The ultimate table will look like below:
 > Debug Cluster: We need “Debug” mode running for 1. Importing data
 > projection (schema) 2. Running preview task.
 
+#### Add a parameter to Mapping Dataflow
+
+Like ADF pipelines and datasets, Mapping dataflows also provide the
+option to create parameters. Dataflow parameters can be used within the
+dataflow itself (more on this later) and can be filled in by an ADF
+pipeline (more on this later). For now, let’s create two parameters.
+
+1.  Click on any white space of the DF canvas
+
+2.  Click on parameters tab
+
+3.  And create two parameters
+    
+    1.  MaxCustomerKey -- integer
+    
+    2.  BatchDt -- string
+
+![](.//media/image14.png)
+
 #### Break the Name field to firstName and lastName fields
 
 1.  Click the plus sign on the lower right-hand side of source
     transformation to add the next transformation.
 
-![](.//media/image14.png)
+![](.//media/image15.png)
 
 2.  Select “Derived column” transformation
 
@@ -412,7 +431,7 @@ The ultimate table will look like below:
 
     split(name," ")[1]
 
-![](.//media/image15.png)
+![](.//media/image16.png)
 
 6.  Create another column for “LastName” using below expression
 
@@ -420,7 +439,7 @@ The ultimate table will look like below:
 
     split(name," ")[2]
 
-![](.//media/image16.png)
+![](.//media/image17.png)
 
 #### Remove extra columns and Rename columns using “Select” transformation
 
@@ -434,11 +453,11 @@ The ultimate table will look like below:
 
 3.  Set it up as below screenshot
 
-![](.//media/image17.png)
+![](.//media/image18.png)
 
 4.  Preview the output of this transformation
 
-![](.//media/image18.png)
+![](.//media/image19.png)
 
 #### Calculate MD5 Hash of all non-key columns
 
@@ -483,11 +502,11 @@ record from source and if they do not match it is considered a change.
 > concatenate them together. Finally use the md5 method to calculate the
 > hash of the whole concatenated string.
 
-![](.//media/image19.png)
+![](.//media/image20.png)
 
 5.  Preview the output
 
-![](.//media/image20.png)
+![](.//media/image21.png)
 
 #### Add DW table source
 
@@ -505,11 +524,11 @@ the table is empty, hence every row will be determined as new).
 
 4.  Go to “Debug Settings” and provide the below parameters:
 
-![](.//media/image21.png)
+![](.//media/image22.png)
 
 5.  Go to Projection tab and import the dataset projection
 
-![](.//media/image22.png)
+![](.//media/image23.png)
 
 6.  Add a filter transformation after the DW source
 
@@ -524,7 +543,7 @@ the table is empty, hence every row will be determined as new).
 
     isNull(RecEndDt)
 
-![](.//media/image23.png)
+![](.//media/image24.png)
 
 #### Compare staging records with DW records to identify updates and inserts
 
@@ -549,7 +568,7 @@ join” the sudo code for the join is:
 
 5.  Join conditions: iLoyaltyNum == LoyaltyNum
 
-![](.//media/image24.png)
+![](.//media/image25.png)
 
 > **Note:** Since we renamed the staging columns with an ‘i’ in front of
 > them it is quite easy to find the right column for joins here.
@@ -579,7 +598,7 @@ Here we need to find out
 
 3.  For Split on option set it to “First matching condition”
 
-> Split On: If we set this to “First matching condition” the first
+> **Split On**: If we set this to “First matching condition” the first
 > condition a record fits with will be pushed to that stream and
 > condition(s) after that will not be tested on the record. First. This
 > option is more efficient in processing but has two implications: 1.
@@ -589,7 +608,91 @@ Here we need to find out
 > get passed into multiple output streams choose “All matching
 > conditions”
 
-4.  
+4.  Split Condition
+
+<!-- end list -->
+
+  - New:
+
+<!-- end list -->
+
+    isNull(LoyaltyNum)
+
+  - Changed:
+
+<!-- end list -->
+
+    !(isNull(LoyaltyNum)) && (iRecMd5Hash !=RecMd5Hash)
+
+  - Unchanged:
+
+<!-- end list -->
+
+    !(isNull(LoyaltyNum)) && (iRecMd5Hash == RecMd5Hash)
+
+![](.//media/image26.png)
+
+So far this is how your dataflow should look like. (Conditional split
+added 3 streams to our flow which we need to manipulate the output from
+– We will refer to these transformation as New, Changed and Unchanged)
+
+![](.//media/image27.png)
+
+#### Handling New records (New stream)
+
+First stream out of condition split is “New”. For every new records we
+need to only insert a new record to the table.
+
+1.  Add a “Select” transformation after “New” stream.
+
+> **Note:** This select is going to perform two tasks: 1. Select the
+> columns coming from Staging and remove all other columns (Join
+> transform added column from both staging and DW to our dataset). 2.
+> Remove the extra ‘i’ we added to the front of the staging columns to
+> identify them easier.
+
+2.  Rename it to “*SelectNewInsert*”
+
+3.  Use the below screenshot as guide on setting the “Select”
+    transformation.
+
+> **Note:** Total Number of columns select is **11.** Only columns with
+> a leading ‘i’ will be selected and the output name will not have a
+> leading ‘i’
+
+![](.//media/image28.png)
+
+#### Handling Changed records (Changed stream)
+
+Second stream out of condition split is “Changed”. For Changed records
+we need to insert a new record and update an existing record. So, we
+need to add a “**New branch”** transformation after “Changed”.
+
+> **New Branch:** allows us to replicate the output of a transformation
+> to two streams. Essentially a “New branch” is not a transformation but
+> only duplicating the output of a stream.
+
+This is how our flow will look like:
+
+![](.//media/image29.png)
+
+1.  After the first “Changed” stream add a “Select” transform and rename
+    it to “SelectChangedUpdate”
+
+> This stream is going to perform updated for records.
+
+2.  We will select a total of 14 columns in this select as below. Here
+    we select the columns WITHOUT the leading ‘i’ as we want the column
+    values from DW. The only columns we are updating on these records
+    are 1. RecEndDate 2. RecCurrInd
+
+![](.//media/image30.png)
+
+3.  After this add a “Derived Column” Transform to finally add the two
+    columns we are updating.
+
+![](.//media/image31.png)
+
 *  
 *
 
@@ -639,7 +742,7 @@ flows Expression Language to calculate it?
 
 **<span class="underline">Final Data Flow:</span>**
 
-![](.//media/image25.png)
+![](.//media/image32.png)
 
 **If you are stuck or want to double check your answer the solution for
 Expression Language and Select transformation is in the next page.  
@@ -647,11 +750,11 @@ Expression Language and Select transformation is in the next page.
 
 **<span class="underline">Derived column expressions solution:</span>**
 
-![](.//media/image26.png)
+![](.//media/image33.png)
 
 **<span class="underline">Select transformation:</span>**
 
-![](.//media/image27.png)
+![](.//media/image34.png)
 
 #### Create SmartFoods Invoice fact tables
 
@@ -661,7 +764,7 @@ invoice data has an invoice header and an invoice item lines but for the
 case of SmartFoods the API is only capable of providing the data in form
 of line items with repeated invoice header information.
 
-![](.//media/image28.png)
+![](.//media/image35.png)
 
 The requirement is to create two separate tables in following form:
 
@@ -679,19 +782,19 @@ InvoiceLine
 
 1.  **For Invoice Table Overall Data flow looks:**
 
-![](.//media/image29.png)
+![](.//media/image36.png)
 
 Aggregate transformation:
 
-![](.//media/image30.png)
+![](.//media/image37.png)
 
 Join transformation:
 
-![](.//media/image31.png)
+![](.//media/image38.png)
 
 Select Transformation:
 
-![](.//media/image32.png)
+![](.//media/image39.png)
 
 2.  **For Invoice Lines:**
 
@@ -699,23 +802,23 @@ In the **same** data flow after your source CSV add a new branch
 transformation. This will branch the same data source to two different
 pathes
 
-![](.//media/image33.png)
+![](.//media/image40.png)
 
 **Final Data flow for invoice and invoice line:**
 
-![](.//media/image34.png)
+![](.//media/image41.png)
 
 **Derived Column Transformation:**
 
-![](.//media/image35.png)
+![](.//media/image42.png)
 
 **Join transformation:**
 
-![](.//media/image36.png)
+![](.//media/image43.png)
 
 **Select Transformation:**
 
-![](.//media/image37.png)
+![](.//media/image44.png)
 
 **DDLS for InvoiceLine table:**
 
