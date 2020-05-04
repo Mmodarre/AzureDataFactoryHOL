@@ -554,6 +554,22 @@ join” the sudo code for the join is:
 > **Note:** Since we renamed the staging columns with an ‘i’ in front of
 > them it is quite easy to find the right column for joins here.
 
+#### Identify Updates/Inserts using “Conditional Split” transformation
+
+A “Conditional Split” transformation allows us to split an incoming
+dataset into multiple outgoing datasets based on some logical criteria.
+
+Here we need to find out
+
+  - If a record is new (if the right-hand side \[records from DW\] of
+    left outer join is null)
+
+  - If a record has Changed (if the primary key existed within both
+    staging and DW datasets but MD5hashes are not matching).
+
+  - If a record has Not Changed (if the primary key existed within both
+    staging and DW datasets and MD5hashes are matching).
+
 *  
 *
 
