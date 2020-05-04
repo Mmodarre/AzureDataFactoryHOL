@@ -656,9 +656,9 @@ need to only insert a new record to the table.
 3.  Use the below screenshot as guide on setting the “Select”
     transformation.
 
-> **Note:** Total Number of columns select is **11.** Only columns with
-> a leading ‘i’ will be selected and the output name will not have a
-> leading ‘i’
+> **Note:** Total Number of columns selected is **11.** Only columns
+> with a leading ‘i’ will be selected and the output name will not have
+> a leading ‘i’
 
 ![](.//media/image28.png)
 
@@ -676,6 +676,8 @@ This is how our flow will look like:
 
 ![](.//media/image29.png)
 
+**Updating existing changed records (Closing old records)**
+
 1.  After the first “Changed” stream add a “Select” transform and rename
     it to “SelectChangedUpdate”
 
@@ -691,7 +693,177 @@ This is how our flow will look like:
 3.  After this add a “Derived Column” Transform to finally add the two
     columns we are updating.
 
+4.  Rename it to “*UpdateRecsBatchColumns*”
+
 ![](.//media/image31.png)
+
+5.  Add “RecEndDt” column:
+
+<!-- end list -->
+
+    toDate($BatchDt, 'yyyy-MM-dd')
+
+> **Expression explanation**: Here we are using the “BatchDt” parameter
+> (In Dataflow expression a ‘$’ is used to plant a parameter in an
+> expression). You created this pram in the beginning of the exercise.
+> Also the parameter is of type ‘String’ so we pass it to ‘toDate’
+> function to transform it to a date
+> 
+> **Why $BatchDt and not just use ‘currentDate()’ function instead?**
+> The answer is there is no guarantee the batch always runs on the same
+> date that the record change has happened. Specially on initial loading
+> of the data, we would process multiple days on the same day to catchup
+> with the current date.
+
+6.  Add RecCurrInd column:
+
+<!-- end list -->
+
+    false()
+
+![](.//media/image32.png)
+
+**Adding new version of the changed records**
+
+7.  After the second “Changed” stream add a “Select” transform and
+    rename it to “*SelectChangedInsert*”
+
+8.  We will select a total of 11 columns in this select as below. Here
+    we select the columns WITH the leading ‘i’ as we want the column
+    values from staging source.
+
+![](.//media/image33.png)
+
+For the “*Unchanged*” stream we leave it without any transformation
+after it.
+
+![](.//media/image34.png)
+
+#### Putting together all inserts “New” and “Changed” together
+
+Out of stream “New” (marked 1 in above figure) and stream “Changed”
+(marked 3 in above figure) we have two sets of records which needs to be
+inserted in to the DW table. The next logical step is to merge the two
+set into one using a “Union” transformation.
+
+1.  After “*SelectNewInsert*” transform add a “Union” transformation and
+    rename it to “*ALLInserts*”
+
+![](.//media/image35.png)
+
+2.  Select Union by: Name
+
+3.  Union With: SelectChangedInsert
+
+> **Union transformation options:** Union transformation allows merging
+> two data sets either by matching column names (Union by name) or merge
+> columns from two datasets in the order of columns they are. And “Union
+> With” is where we select the other dataflow stream(s) that we want to
+> union with the current stream. You can add multiple streams by using
+> the Plus sign to add more streams.
+
+4.  Preview the output of the transform.
+
+#### Generate Surrogate Keys 
+
+For all the records to be inserted in the DW table we need to generate a
+surrogate key (more information
+[here](https://en.wikipedia.org/wiki/Surrogate_key)).
+
+> Surrogate key transformation essentially is a sequential number
+> generator. The “Key Column” sets the name of the column in the output
+> dataset for surrogate key and the “Start Value” designates the integer
+> number that the sequential number starts at.
+
+1.  After “AllInserts” transform add a “SurrogateKey” transromation
+
+2.  Rename it to “SurrogateKey”
+
+3.  Key column: CustomerKey
+
+4.  Start value: 1
+
+> **The Surrogate key issue**: With the above settings every time the
+> dataflow runs, a number will be generated for each record which passes
+> through the “surrogate key” transform, starting at 1. So, if we leave
+> things as is the surrogate key generated will be worthless as it will
+> duplicated without any relation to existing records in the DW table.
+> 
+> **The solution:** To solve this problem we need to know the maximum
+> value of surrogate key in the DB and add it to the generated number.
+
+#### Fix surrogate key value
+
+At the beginning of this exercise, you created a parameter named
+“*MaxCustomerKey*”. The purpose of this parameter is to hold the
+biggest surrogate key currently in the DW table and add it to the
+generated number.
+
+The parameter gets filled in by the ADF pipeline that dataflow runs in
+it. Once dataflow is ready to be place in pipeline we will precede it
+with a “lookup” activity which retrieves the maximum of “CustomerKey” in
+the table and pass it on to the DF through the parameter (More on this
+later)
+
+1.  After the “SurrogateKey” transromation add a “Derived Column”
+    transformation
+
+2.  Rename it to “AddMaxCustomerKey”
+
+3.  Set it like the screenshot
+
+![](.//media/image36.png)
+
+CustomerKey:
+
+    CustomerKey+$MaxCustomerKey
+
+> This transformation takes the generated surrogate key sequential
+> number and add the maximum surrogate key value to it.
+
+#### Add Batch columns to our “Insert” dataset
+
+Our “Insert” dataset is still missing the following 4 columns. In this
+task a “Derived Column” activity is used to generate them and add them
+to the dataset.
+
+| RecInsertDt date   | Actual ELT running date                 | Generated by ELT |
+| ------------------ | --------------------------------------- | ---------------- |
+| RecStartDt date    | Record validity start date = batch date | Generated by ELT |
+| RecEndDt date      | Record validity end date = batch date   | Generated by ELT |
+| RecCurrInd Boolean | Record validity indicator               | Generated by ELT |
+
+1.  Add a “Derived Column” transformation
+
+2.  Rename it to InsertRecsBatchColumns
+
+3.  Columns:
+
+<!-- end list -->
+
+  - RecInsertDt:
+
+<!-- end list -->
+
+    currentDate()
+
+  - RecCurrInd
+
+<!-- end list -->
+
+    true()
+
+  - RecStartDt
+
+<!-- end list -->
+
+    toDate($BatchDt,'yyyy-MM-dd')
+
+  - RecEnddt
+
+<!-- end list -->
+
+    toDate(toString(null()))
 
 *  
 *
@@ -742,7 +914,7 @@ flows Expression Language to calculate it?
 
 **<span class="underline">Final Data Flow:</span>**
 
-![](.//media/image32.png)
+![](.//media/image37.png)
 
 **If you are stuck or want to double check your answer the solution for
 Expression Language and Select transformation is in the next page.  
@@ -750,11 +922,11 @@ Expression Language and Select transformation is in the next page.
 
 **<span class="underline">Derived column expressions solution:</span>**
 
-![](.//media/image33.png)
+![](.//media/image38.png)
 
 **<span class="underline">Select transformation:</span>**
 
-![](.//media/image34.png)
+![](.//media/image39.png)
 
 #### Create SmartFoods Invoice fact tables
 
@@ -764,7 +936,7 @@ invoice data has an invoice header and an invoice item lines but for the
 case of SmartFoods the API is only capable of providing the data in form
 of line items with repeated invoice header information.
 
-![](.//media/image35.png)
+![](.//media/image40.png)
 
 The requirement is to create two separate tables in following form:
 
@@ -782,19 +954,19 @@ InvoiceLine
 
 1.  **For Invoice Table Overall Data flow looks:**
 
-![](.//media/image36.png)
+![](.//media/image41.png)
 
 Aggregate transformation:
 
-![](.//media/image37.png)
+![](.//media/image42.png)
 
 Join transformation:
 
-![](.//media/image38.png)
+![](.//media/image43.png)
 
 Select Transformation:
 
-![](.//media/image39.png)
+![](.//media/image44.png)
 
 2.  **For Invoice Lines:**
 
@@ -802,23 +974,23 @@ In the **same** data flow after your source CSV add a new branch
 transformation. This will branch the same data source to two different
 pathes
 
-![](.//media/image40.png)
+![](.//media/image45.png)
 
 **Final Data flow for invoice and invoice line:**
 
-![](.//media/image41.png)
+![](.//media/image46.png)
 
 **Derived Column Transformation:**
 
-![](.//media/image42.png)
+![](.//media/image47.png)
 
 **Join transformation:**
 
-![](.//media/image43.png)
+![](.//media/image48.png)
 
 **Select Transformation:**
 
-![](.//media/image44.png)
+![](.//media/image49.png)
 
 **DDLS for InvoiceLine table:**
 
