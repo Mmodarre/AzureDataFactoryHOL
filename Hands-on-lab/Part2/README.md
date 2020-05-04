@@ -570,6 +570,26 @@ Here we need to find out
   - If a record has Not Changed (if the primary key existed within both
     staging and DW datasets and MD5hashes are matching).
 
+<!-- end list -->
+
+1.  Add a “Conditional split” transformation after “JoinStagingToDWDim”
+    transformation.
+
+2.  Rename it to “SDC2Split”
+
+3.  For Split on option set it to “First matching condition”
+
+> Split On: If we set this to “First matching condition” the first
+> condition a record fits with will be pushed to that stream and
+> condition(s) after that will not be tested on the record. First. This
+> option is more efficient in processing but has two implications: 1.
+> The order of conditions becomes important (stricter conditions should
+> be placed above less strict ones) 2. Every record only gets passed
+> into a single stream. If your workflow logic requires input records to
+> get passed into multiple output streams choose “All matching
+> conditions”
+
+4.  
 *  
 *
 
