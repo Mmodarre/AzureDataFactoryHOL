@@ -865,8 +865,32 @@ to the dataset.
 
     toDate(toString(null()))
 
-*  
-*
+![](.//media/image37.png)
+
+#### Put Insert and Update records together
+
+Now we need to merge the insert stream and update stream together in to
+a single stream in preparation for pushing it to the destination.
+
+1.  Add a “Union” transform
+
+2.  Rename it to “*UnionInsertUpdates*”
+
+3.  Union with: “*UpdateRecsBatchColumns*”
+
+![](.//media/image38.png)
+
+So far, your Dataflow should look like below
+
+![](.//media/image39.png)
+
+> **Note:** If you hover over any transformation it tells you how many
+> output columns are coming out of that transformation. To double check
+> you work the last transformation should have **16** columns
+
+![](.//media/image40.png)
+
+#### Prepare the dataset for sink (Alter row transformation)
 
 #### (Challenge Task) Create customer dimension
 
@@ -914,7 +938,7 @@ flows Expression Language to calculate it?
 
 **<span class="underline">Final Data Flow:</span>**
 
-![](.//media/image37.png)
+![](.//media/image41.png)
 
 **If you are stuck or want to double check your answer the solution for
 Expression Language and Select transformation is in the next page.  
@@ -922,11 +946,11 @@ Expression Language and Select transformation is in the next page.
 
 **<span class="underline">Derived column expressions solution:</span>**
 
-![](.//media/image38.png)
+![](.//media/image42.png)
 
 **<span class="underline">Select transformation:</span>**
 
-![](.//media/image39.png)
+![](.//media/image43.png)
 
 #### Create SmartFoods Invoice fact tables
 
@@ -936,7 +960,7 @@ invoice data has an invoice header and an invoice item lines but for the
 case of SmartFoods the API is only capable of providing the data in form
 of line items with repeated invoice header information.
 
-![](.//media/image40.png)
+![](.//media/image44.png)
 
 The requirement is to create two separate tables in following form:
 
@@ -954,19 +978,19 @@ InvoiceLine
 
 1.  **For Invoice Table Overall Data flow looks:**
 
-![](.//media/image41.png)
+![](.//media/image45.png)
 
 Aggregate transformation:
 
-![](.//media/image42.png)
+![](.//media/image46.png)
 
 Join transformation:
 
-![](.//media/image43.png)
+![](.//media/image47.png)
 
 Select Transformation:
 
-![](.//media/image44.png)
+![](.//media/image48.png)
 
 2.  **For Invoice Lines:**
 
@@ -974,23 +998,23 @@ In the **same** data flow after your source CSV add a new branch
 transformation. This will branch the same data source to two different
 pathes
 
-![](.//media/image45.png)
+![](.//media/image49.png)
 
 **Final Data flow for invoice and invoice line:**
 
-![](.//media/image46.png)
+![](.//media/image50.png)
 
 **Derived Column Transformation:**
 
-![](.//media/image47.png)
+![](.//media/image51.png)
 
 **Join transformation:**
 
-![](.//media/image48.png)
+![](.//media/image52.png)
 
 **Select Transformation:**
 
-![](.//media/image49.png)
+![](.//media/image53.png)
 
 **DDLS for InvoiceLine table:**
 
