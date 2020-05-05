@@ -1099,5 +1099,141 @@ ribbon.
 
 #### Building the pipeline for the dataflow
 
-Now that the dataflow is published the next task to create a pipeline
-and add it to the pipeline.
+Now that the dataflow is published the next task is to create a pipeline
+and add the dataflow to it.
+
+1.  Create a pipeline
+
+2.  Rename it to “SmartFoodsCustomerELTBlobToSql”
+
+3.  Under “Move & Transfrom” drag a “Data flow” activity to the
+    pipeline.
+
+4.  Select “SmartFoodsTransactionELT” from list of Dataflows
+
+5.  The setting tab of the DF activity should look like below figure.
+    All the dataset parameters surfaced on the “Settings” tab and
+    dataflow’s parameters are under “parameters” tab
+
+![](.//media/image54.png)
+
+![](.//media/image55.png)
+
+#### Debug the pipeline manually
+
+As a first step, we will debug the pipeline and enter the parameters
+manually. Then we modify the pipeline to a more production ready state.
+
+1.  From parameters tab click on “MaxCustomerKey” value and select
+    pipeline expression
+
+2.  Fill in the dataset parameters as:
+
+![](.//media/image56.png)
+
+3.  Fill in dataflows patamers as:
+
+![](.//media/image57.png)
+
+4.  Click “Debug”.
+
+5.  Examine the dataflow monitoring by click the “eye glass” icon –
+    (More on Dataflow monitoring later)
+
+![](.//media/image58.png)
+
+6.  Once the debug finishes successfully examine the table contents
+    either through SQLDB “Query editor” or using SSMS.
+
+![](.//media/image59.png)
+
+#### Enhance the pipeline
+
+Once we debugged the pipeline with manual parameters successfully next
+step is to automate those parameters filling like what we have done for
+pipelines loading data from the source.
+
+1.  Add a lookup activity before the dataflow activity to retrieve the
+    maximum Customerkey
+
+2.  Rename it to “*MaxCustomerKey*”
+
+![](.//media/image60.png)
+
+3.  Set up the lookup as below:
+
+![](.//media/image61.png)
+
+Query:
+
+    select coalesce(max(CustomerKey),0) maxSK from SmartFoodsDW.customerdim
+
+4.  Create a pipeline parameter as BatchDt
+
+![](.//media/image62.png)
+
+5.  Go to DF activity and setup dataset parameters as
+
+<!-- end list -->
+
+  - Folder: customer
+
+  - File:
+
+<!-- end list -->
+
+    smartfoods_customers_@{replace(pipeline().parameters.BatchDt,'-','')}
+
+  - Filetype: csv
+
+  - Schema: SmartFoodsDW
+
+  - tableName: customerDim
+
+  - Schema: SmartFoodsDW
+
+  - tableName: customerDim
+
+![](.//media/image63.png)
+
+6.  Under parameters tab setup dataflow parameters as:
+
+<!-- end list -->
+
+  - MaxCustomerKey -\> pipeline expression
+
+<!-- end list -->
+
+    @activity('MaxCustomerKey').output.firstRow.maxSK
+
+  - BatchDt -\> pipeline expression
+
+<!-- end list -->
+
+    @pipeline().parameters.BatchDt
+
+![](.//media/image64.png)
+
+7.  Now try debugging this pipeline and the only parameter that needs to
+    be passed is “BatchDt” pipeline parameter.
+
+#### (Challenge Task) Create an initial load pipeline for this DF
+
+Create another pipeline to run multiple dates of the Customer ELT
+pipeline in a loop
+
+Hint1: create an array variable with values:
+
+    ["2020-01-01","2020-01-02","2020-01-03","2020-01-04","2020-01-05","2020-01-06"]
+
+Hint2: Use ForEach Loop.
+
+Hint3: ForEach loop must run sequentially not in parallel. (why?)
+
+Hint4: Inside the loop use execute pipeline activity.
+
+Hint5: If you needed extra help check the screenshots below.
+
+![](.//media/image65.png)
+
+![](.//media/image66.png)
