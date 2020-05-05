@@ -133,9 +133,12 @@ transformation
 [Task 21: Building the pipeline for the dataflow
 41](#building-the-pipeline-for-the-dataflow)
 
-[Task 22: (Challenge Task) Create customer dimension 41](#_Toc39576783)
+[Task 22: Debug the pipeline manually 43](#debug-the-pipeline-manually)
 
-[Task 23: Create SmartFoods Invoice fact tables 44](#_Toc39576784)
+[Task 23: Enhance the pipeline 44](#enhance-the-pipeline)
+
+[Task 24: (Challenge Task) Create an initial load pipeline for this DF
+48](#challenge-task-create-an-initial-load-pipeline-for-this-df)
 
 # Azure Data Factory hands-on lab  
 
