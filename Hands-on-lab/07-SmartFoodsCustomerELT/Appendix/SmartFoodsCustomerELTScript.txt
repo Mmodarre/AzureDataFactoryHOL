@@ -1,0 +1,95 @@
+###########################################################################################
+How to use this code:
+1. Create a Dataflow
+2. Rename it to "SmartFoodsCustomerELT"
+3. Make sure all the datasets used in this script exists in your ADF instance. 
+    It is very important that the name of datasets, types and etc matches exactly as explained in the tutorial.
+4. From Dataflow GUI click on "Code" button on the top right hand side.
+5. Copy and Paste everything after ### marks 
+
+###########################################################################################
+
+{
+    "name": "SmartFoodsCustomerELT",
+    "properties": {
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "SmartFoodsDelimitedTextBlob",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SmartFoodsCustomerStagingBlob"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "AzureSqlTable1",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SmartFoodsCustomerSQLDW"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "AzureSqlTable1",
+                        "type": "DatasetReference"
+                    },
+                    "name": "DBSink"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "AddFirstNameLastName"
+                },
+                {
+                    "name": "FixColumnNamesRemoveName"
+                },
+                {
+                    "name": "MD5Hash"
+                },
+                {
+                    "name": "JoinStagingToDWDim"
+                },
+                {
+                    "name": "SDC2Split"
+                },
+                {
+                    "name": "SelectNewInsert"
+                },
+                {
+                    "name": "SelectChangedInsert"
+                },
+                {
+                    "name": "SelectChangedUpdate"
+                },
+                {
+                    "name": "SurrogateKey"
+                },
+                {
+                    "name": "AddMaxCustomerKey"
+                },
+                {
+                    "name": "AllInserts"
+                },
+                {
+                    "name": "UpdateRecsBatchColumns"
+                },
+                {
+                    "name": "InsertRecsBatchColumns"
+                },
+                {
+                    "name": "UnionInsertUpdates"
+                },
+                {
+                    "name": "MarkRow"
+                },
+                {
+                    "name": "CurrentRecsOnly"
+                }
+            ],
+            "script": "parameters{\n\tMaxCustomerKey as integer (2),\n\tBatchDt as string\n}\nsource(output(\n\t\tloyalty_num as string,\n\t\tname as string,\n\t\temail as string,\n\t\tdob as date,\n\t\taddress as string,\n\t\tcity as string,\n\t\tstate as string,\n\t\tpostCode as string,\n\t\tmembersince as date\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\trowUrlColumn: 'sourceLineage ') ~> SmartFoodsCustomerStagingBlob\nsource(output(\n\t\tCustomerKey as long,\n\t\tLoyaltyNum as string,\n\t\tFirstName as string,\n\t\tLastName as string,\n\t\tCity as string,\n\t\tState as string,\n\t\tEmail as string,\n\t\tAddress as string,\n\t\tPostCode as string,\n\t\tMemberSince as date,\n\t\tDob as date,\n\t\tRecInsertDt as date,\n\t\tRecStartDt as date,\n\t\tRecEndDt as date,\n\t\tRecCurrInd as boolean,\n\t\tsourceLineage as string,\n\t\tRecMd5Hash as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_COMMITTED',\n\tformat: 'table') ~> SmartFoodsCustomerSQLDW\nSmartFoodsCustomerStagingBlob derive(FirstName = split(name,\" \")[1],\n\t\tLastName = split(name,\" \")[2]) ~> AddFirstNameLastName\nAddFirstNameLastName select(mapColumn(\n\t\tiLoyaltyNum = loyalty_num,\n\t\tiEmail = email,\n\t\tiDob = dob,\n\t\tiAddress = address,\n\t\tiCity = city,\n\t\tiState = state,\n\t\tiPostCode = postCode,\n\t\tiMemberSince = membersince,\n\t\tiFirstName = FirstName,\n\t\tiLastName = LastName,\n\t\tisourceLineage = {sourceLineage }\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> FixColumnNamesRemoveName\nFixColumnNamesRemoveName derive(iRecMd5Hash = md5( iif(isNull(iEmail),'',toString(iEmail))+ \niif(isNull(iDob),'',toString(iDob))+ \niif(isNull(iAddress),'',toString(iAddress))+ \niif(isNull(iCity),'',toString(iCity))+ \niif(isNull(iState),'',toString(iState))+ \niif(isNull(iPostCode),'',toString(iPostCode))+ \niif(isNull(iMemberSince),'',toString(iMemberSince))+ \niif(isNull(iFirstName),'',toString(iFirstName))+ \niif(isNull(iLastName),'',toString(iLastName)))) ~> MD5Hash\nMD5Hash, CurrentRecsOnly join(iLoyaltyNum == LoyaltyNum,\n\tjoinType:'left',\n\tbroadcast: 'auto')~> JoinStagingToDWDim\nJoinStagingToDWDim split(isNull(LoyaltyNum),\n\t!(isNull(LoyaltyNum)) && (iRecMd5Hash !=RecMd5Hash),\n\t!(isNull(LoyaltyNum)) && (iRecMd5Hash == RecMd5Hash),\n\tdisjoint: false) ~> SDC2Split@(New, Changed, Unchanged)\nSDC2Split@New select(mapColumn(\n\t\tLoyaltyNum = iLoyaltyNum,\n\t\tEmail = iEmail,\n\t\tDob = iDob,\n\t\tAddress = iAddress,\n\t\tCity = iCity,\n\t\tState = iState,\n\t\tPostCode = iPostCode,\n\t\tMemberSince = iMemberSince,\n\t\tLastName = iLastName,\n\t\tFirstName = iFirstName,\n\t\tRecMd5Hash = iRecMd5Hash,\n\t\tsourceLineage = isourceLineage\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: true) ~> SelectNewInsert\nSDC2Split@Changed select(mapColumn(\n\t\tLoyaltyNum = iLoyaltyNum,\n\t\tEmail = iEmail,\n\t\tDob = iDob,\n\t\tAddress = iAddress,\n\t\tCity = iCity,\n\t\tState = iState,\n\t\tPostCode = iPostCode,\n\t\tMemberSince = iMemberSince,\n\t\tFirstName = iFirstName,\n\t\tLastName = iLastName,\n\t\tRecMd5Hash = iRecMd5Hash,\n\t\tsourceLineage = isourceLineage\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectChangedInsert\nSDC2Split@Changed select(mapColumn(\n\t\tCustomerKey,\n\t\tLoyaltyNum,\n\t\tFirstName,\n\t\tLastName,\n\t\tCity,\n\t\tState,\n\t\tEmail,\n\t\tAddress,\n\t\tPostCode,\n\t\tMemberSince,\n\t\tDob,\n\t\tRecInsertDt,\n\t\tRecStartDt,\n\t\tRecMd5Hash,\n\t\tsourceLineage\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectChangedUpdate\nAllInserts keyGenerate(output(CustomerKey as long),\n\tstartAt: 1L) ~> SurrogateKey\nSurrogateKey derive(CustomerKey = CustomerKey+$MaxCustomerKey) ~> AddMaxCustomerKey\nSelectNewInsert, SelectChangedInsert union(byName: true)~> AllInserts\nSelectChangedUpdate derive(RecEndDt = toDate($BatchDt, 'yyyy-MM-dd'),\n\t\tRecCurrInd = false()) ~> UpdateRecsBatchColumns\nAddMaxCustomerKey derive(RecInsertDt = currentDate(),\n\t\tRecCurrInd = true(),\n\t\tRecStartDt = toDate($BatchDt,'yyyy-MM-dd'),\n\t\tRecEndDt = toDate(toString(null()))) ~> InsertRecsBatchColumns\nInsertRecsBatchColumns, UpdateRecsBatchColumns union(byName: true)~> UnionInsertUpdates\nUnionInsertUpdates alterRow(updateIf(!isNull(RecEndDt)),\n\tinsertIf(isNull(RecEndDt))) ~> MarkRow\nSmartFoodsCustomerSQLDW filter(isNull(RecEndDt)) ~> CurrentRecsOnly\nMarkRow sink(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['CustomerKey'],\n\tformat: 'table',\n\tdateFormat:'yyyy-MM-dd',\n\ttimestampFormat:'yyyy.MM.dd HH:mm:ss',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> DBSink"
+        }
+    }
+}
