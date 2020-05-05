@@ -1100,6 +1100,11 @@ ribbon.
 
 ![](.//media/image53.png)
 
+> **Note:** In the Github repo under
+> AzureDataFactoryHOL/Hands-on-lab/Part2/Appendix there is a file named
+> “SmartFoodsCustomerELTScript.txt” with the complete solution script.
+> There are instructions inside the file on how to use it.
+
 #### Building the pipeline for the dataflow
 
 Now that the dataflow is published the next task is to create a pipeline
