@@ -1,148 +1,93 @@
 ![](.//media/image1.png)
 
-**ELT with Azure Data Factory**
-
-**And**
-
-**Mapping Data Flows**
-
-Hands-on lab step-by-step
-
-Feb 2020
-
-Information in this document, including URL and other Internet Web site
-references, is subject to change without notice. Unless otherwise noted,
-the example companies, organizations, products, domain names, e-mail
-addresses, logos, people, places, and events depicted herein are
-fictitious, and no association with any real company, organization,
-product, domain name, e-mail address, logo, person, place or event is
-intended or should be inferred. Complying with all applicable copyright
-laws is the responsibility of the user. Without limiting the rights
-under copyright, no part of this document may be reproduced, stored in
-or introduced into a retrieval system, or transmitted in any form or by
-any means (electronic, mechanical, photocopying, recording, or
-otherwise), or for any purpose, without the express written permission
-of Microsoft Corporation.
-
-Microsoft may have patents, patent applications, trademarks, copyrights,
-or other intellectual property rights covering subject matter in this
-document. Except as expressly provided in any written license agreement
-from Microsoft, the furnishing of this document does not give you any
-license to these patents, trademarks, copyrights, or other intellectual
-property.
-
-The names of manufacturers, products, or URLs are provided for
-informational purposes only and Microsoft makes no representations and
-warranties, either expressed, implied, or statutory, regarding these
-manufacturers or the use of the products with any Microsoft
-technologies. The inclusion of a manufacturer or product does not imply
-endorsement of Microsoft of the manufacturer or product. Links may be
-provided to third party sites. Such sites are not under the control of
-Microsoft and Microsoft is not responsible for the contents of any
-linked site or any link contained in a linked site, or any changes or
-updates to such sites. Microsoft is not responsible for webcasting or
-any other form of transmission received from any linked site. Microsoft
-is providing these links to you only as a convenience, and the inclusion
-of any link does not imply endorsement of Microsoft of the site or the
-products contained therein.
-
-© 2018 Microsoft Corporation. All rights reserved.
-
-Microsoft and the trademarks listed at
-<https://www.microsoft.com/en-us/legal/intellectualproperty/Trademarks/Usage/General.aspx>
-are trademarks of the Microsoft group of companies. All other trademarks
-are property of their respective owners.
+ELT with Mapping Dataflows
 
 # Contents
 
-[Azure Data Factory hands-on lab 1](#azure-data-factory-hands-on-lab)
+[ELT with Mapping Dataflows 1](#elt-with-mapping-dataflows)
 
-[ELT with Mapping Dataflows 2](#elt-with-mapping-dataflows)
-
-[Task 1: Solution overview 2](#solution-overview)
+[Task 1: Solution overview 1](#solution-overview)
 
 [Task 2: Create Data warehouse tables for SmartFoods in Azure SQLDB
 2](#create-data-warehouse-tables-for-smartfoods-in-azure-sqldb)
 
 [Task 3: Introduction to Mapping Data Flows
-6](#introduction-to-mapping-data-flows)
+5](#introduction-to-mapping-data-flows)
 
 [Slowly changing dimension type 2 withMapping dataflow (customerDim)
-9](#slowly-changing-dimension-type-2-withmapping-dataflow-customerdim)
+8](#slowly-changing-dimension-type-2-withmapping-dataflow-customerdim)
 
 [Task 1: Create a new Mapping Dataflow and add source dataset
-9](#create-a-new-mapping-dataflow-and-add-source-dataset)
+8](#create-a-new-mapping-dataflow-and-add-source-dataset)
 
 [Task 2: Add a parameter to Mapping Dataflow
-13](#add-a-parameter-to-mapping-dataflow)
+12](#add-a-parameter-to-mapping-dataflow)
 
 [Task 3: Break the Name field to firstName and lastName fields
-14](#break-the-name-field-to-firstname-and-lastname-fields)
+13](#break-the-name-field-to-firstname-and-lastname-fields)
 
 [Task 4: How to save (Publish) your Dataflow?
-15](#how-to-save-publish-your-dataflow)
+14](#how-to-save-publish-your-dataflow)
 
 [Task 5: Remove extra columns and Rename columns using “Select”
 transformation
-18](#remove-extra-columns-and-rename-columns-using-select-transformation)
+17](#remove-extra-columns-and-rename-columns-using-select-transformation)
 
 [Task 6: Calculate MD5 Hash of all non-key columns
-19](#calculate-md5-hash-of-all-non-key-columns)
+18](#calculate-md5-hash-of-all-non-key-columns)
 
-[Task 7: Add DW table source 21](#add-dw-table-source)
+[Task 7: Add DW table source 20](#add-dw-table-source)
 
 [Task 8: Compare staging records with DW records to identify updates and
 inserts
-23](#compare-staging-records-with-dw-records-to-identify-updates-and-inserts)
+22](#compare-staging-records-with-dw-records-to-identify-updates-and-inserts)
 
 [Task 9: Identify Updates/Inserts using “Conditional Split”
 transformation
-24](#identify-updatesinserts-using-conditional-split-transformation)
+23](#identify-updatesinserts-using-conditional-split-transformation)
 
 [Task 10: Handling New records (New stream)
-25](#handling-new-records-new-stream)
+24](#handling-new-records-new-stream)
 
 [Task 11: Handling Changed records (Changed stream)
-26](#handling-changed-records-changed-stream)
+25](#handling-changed-records-changed-stream)
 
 [Task 12: Putting together all inserts “New” and “Changed” together
-30](#putting-together-all-inserts-new-and-changed-together)
+29](#putting-together-all-inserts-new-and-changed-together)
 
-[Task 13: Generate Surrogate Keys 31](#generate-surrogate-keys)
+[Task 13: Generate Surrogate Keys 30](#generate-surrogate-keys)
 
-[Task 14: Fix surrogate key value 32](#fix-surrogate-key-value)
+[Task 14: Fix surrogate key value 31](#fix-surrogate-key-value)
 
 [Task 15: Add Batch columns to our “Insert” dataset
-32](#add-batch-columns-to-our-insert-dataset)
+31](#add-batch-columns-to-our-insert-dataset)
 
 [Task 16: Put Insert and Update records together
-33](#put-insert-and-update-records-together)
+32](#put-insert-and-update-records-together)
 
 [Task 17: Prepare the dataset for sink (Alter row transformation)
-34](#prepare-the-dataset-for-sink-alter-row-transformation)
+33](#prepare-the-dataset-for-sink-alter-row-transformation)
 
 [Task 18: Writing to destination DW table
-36](#writing-to-destination-dw-table)
+35](#writing-to-destination-dw-table)
 
 [Task 19: Preview the final dataset (Debug)
-37](#preview-the-final-dataset-debug)
+36](#preview-the-final-dataset-debug)
 
 [Task 20: Inspect the Dataflow “Script”
-40](#inspect-the-dataflow-script)
+39](#inspect-the-dataflow-script)
 
 [Task 21: Building the pipeline for the dataflow
-41](#building-the-pipeline-for-the-dataflow)
+40](#building-the-pipeline-for-the-dataflow)
 
-[Task 22: Debug the pipeline manually 43](#debug-the-pipeline-manually)
+[Task 22: Debug the pipeline manually 42](#debug-the-pipeline-manually)
 
-[Task 23: Enhance the pipeline 44](#enhance-the-pipeline)
+[Task 23: Enhance the pipeline 43](#enhance-the-pipeline)
 
 [Task 24: (Challenge Task) Create an initial load pipeline for this DF
-48](#challenge-task-create-an-initial-load-pipeline-for-this-df)
+47](#challenge-task-create-an-initial-load-pipeline-for-this-df)
 
-# Azure Data Factory hands-on lab  
-
-## ELT with Mapping Dataflows
+# ELT with Mapping Dataflows
 
 #### Solution overview
 
@@ -1100,10 +1045,10 @@ ribbon.
 
 ![](.//media/image53.png)
 
-> **Note:** In the Github repo under
-> AzureDataFactoryHOL/Hands-on-lab/Part2/Appendix there is a file named
-> “SmartFoodsCustomerELTScript.txt” with the complete solution script.
-> There are instructions inside the file on how to use it.
+> **Note:** In the Github repo under ./Hands-on-lab/Part2/Appendix there
+> is a file named “SmartFoodsCustomerELTScript.txt” with the complete
+> solution script. There are instructions inside the file on how to use
+> it.
 
 #### Building the pipeline for the dataflow
 
