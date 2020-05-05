@@ -57,22 +57,85 @@ are property of their respective owners.
 
 [Azure Data Factory hands-on lab 1](#azure-data-factory-hands-on-lab)
 
-[ELT with Mapping Dataflows, SmartFood’s “Items(foods)” and Customer
-dimensions 2](#elt-with-mapping-dataflows)
+[ELT with Mapping Dataflows 2](#elt-with-mapping-dataflows)
 
-[Task 1: Create a Parquet dataset to write SmartFood’s DW Blob container
-3](#_Toc38620489)
+[Task 1: Solution overview 2](#solution-overview)
 
-[Task 2: Create SQL Database Dataset 3](#_Toc38620490)
+[Task 2: Create Data warehouse tables for SmartFoods in Azure SQLDB
+2](#create-data-warehouse-tables-for-smartfoods-in-azure-sqldb)
 
-[Task 3: Create Foods Dimension
-5](#slowly-changing-dimension-type-2-withmapping-dataflow-customerdim)
+[Task 3: Introduction to Mapping Data Flows
+6](#introduction-to-mapping-data-flows)
 
-[Task 4: (Challenge Task) Create customer dimension
-9](#challenge-task-create-customer-dimension)
+[Slowly changing dimension type 2 withMapping dataflow (customerDim)
+9](#slowly-changing-dimension-type-2-withmapping-dataflow-customerdim)
 
-[Task 5: Create SmartFoods Invoice fact tables
-12](#create-smartfoods-invoice-fact-tables)
+[Task 1: Create a new Mapping Dataflow and add source dataset
+9](#create-a-new-mapping-dataflow-and-add-source-dataset)
+
+[Task 2: Add a parameter to Mapping Dataflow
+13](#add-a-parameter-to-mapping-dataflow)
+
+[Task 3: Break the Name field to firstName and lastName fields
+14](#break-the-name-field-to-firstname-and-lastname-fields)
+
+[Task 4: How to save (Publish) your Dataflow?
+15](#how-to-save-publish-your-dataflow)
+
+[Task 5: Remove extra columns and Rename columns using “Select”
+transformation
+18](#remove-extra-columns-and-rename-columns-using-select-transformation)
+
+[Task 6: Calculate MD5 Hash of all non-key columns
+19](#calculate-md5-hash-of-all-non-key-columns)
+
+[Task 7: Add DW table source 21](#add-dw-table-source)
+
+[Task 8: Compare staging records with DW records to identify updates and
+inserts
+23](#compare-staging-records-with-dw-records-to-identify-updates-and-inserts)
+
+[Task 9: Identify Updates/Inserts using “Conditional Split”
+transformation
+24](#identify-updatesinserts-using-conditional-split-transformation)
+
+[Task 10: Handling New records (New stream)
+25](#handling-new-records-new-stream)
+
+[Task 11: Handling Changed records (Changed stream)
+26](#handling-changed-records-changed-stream)
+
+[Task 12: Putting together all inserts “New” and “Changed” together
+30](#putting-together-all-inserts-new-and-changed-together)
+
+[Task 13: Generate Surrogate Keys 31](#generate-surrogate-keys)
+
+[Task 14: Fix surrogate key value 32](#fix-surrogate-key-value)
+
+[Task 15: Add Batch columns to our “Insert” dataset
+32](#add-batch-columns-to-our-insert-dataset)
+
+[Task 16: Put Insert and Update records together
+33](#put-insert-and-update-records-together)
+
+[Task 17: Prepare the dataset for sink (Alter row transformation)
+34](#prepare-the-dataset-for-sink-alter-row-transformation)
+
+[Task 18: Writing to destination DW table
+36](#writing-to-destination-dw-table)
+
+[Task 19: Preview the final dataset (Debug)
+37](#preview-the-final-dataset-debug)
+
+[Task 20: Inspect the Dataflow “Script”
+40](#inspect-the-dataflow-script)
+
+[Task 21: Building the pipeline for the dataflow
+41](#building-the-pipeline-for-the-dataflow)
+
+[Task 22: (Challenge Task) Create customer dimension 41](#_Toc39576783)
+
+[Task 23: Create SmartFoods Invoice fact tables 44](#_Toc39576784)
 
 # Azure Data Factory hands-on lab  
 
@@ -441,6 +504,41 @@ pipeline (more on this later). For now, let’s create two parameters.
 
 ![](.//media/image17.png)
 
+#### How to save (Publish) your Dataflow?
+
+At this stage if you try validating or publishing a dataflow you will
+get an error like below
+
+![](.//media/image18.png)
+
+ADF mapping Dataflows does not allow publishing a DF that is still not
+complete, and every dataflow must have at least a “Sink” transformation
+to be considered complete.
+
+To get around this issue and be able to save your work progress you can
+add a dummy “Sink” transformation to the end of you flow, publish your
+work and then remove it to continue building the flow until you reach a
+point that you add the actual “Sink” transform.
+
+1.  After the “Source” Transform add a “New branch” transform
+
+![](.//media/image19.png)
+
+2.  Add a “sink” transform after the “New branch”
+
+![](.//media/image20.png)
+
+3.  Set up the sink as below:
+
+![](.//media/image21.png)
+
+> **Note1:** As this AzureSqlTable1 dataset is parameterized, it will
+> add two new parameters to debug settings. Just fill those prams with
+> any random string (it will not affect your dataflow)
+> 
+> **Note2: DO NOT forget to Remove the “New Branch” and dummy “Sink”
+> transforms once you have the final actual “Sink” transform.**
+
 #### Remove extra columns and Rename columns using “Select” transformation
 
 1.  Add a “Select” transformation after the previous transformation to
@@ -453,11 +551,11 @@ pipeline (more on this later). For now, let’s create two parameters.
 
 3.  Set it up as below screenshot
 
-![](.//media/image18.png)
+![](.//media/image22.png)
 
 4.  Preview the output of this transformation
 
-![](.//media/image19.png)
+![](.//media/image23.png)
 
 #### Calculate MD5 Hash of all non-key columns
 
@@ -502,11 +600,11 @@ record from source and if they do not match it is considered a change.
 > concatenate them together. Finally use the md5 method to calculate the
 > hash of the whole concatenated string.
 
-![](.//media/image20.png)
+![](.//media/image24.png)
 
 5.  Preview the output
 
-![](.//media/image21.png)
+![](.//media/image25.png)
 
 #### Add DW table source
 
@@ -524,11 +622,11 @@ the table is empty, hence every row will be determined as new).
 
 4.  Go to “Debug Settings” and provide the below parameters:
 
-![](.//media/image22.png)
+![](.//media/image26.png)
 
 5.  Go to Projection tab and import the dataset projection
 
-![](.//media/image23.png)
+![](.//media/image27.png)
 
 6.  Add a filter transformation after the DW source
 
@@ -543,7 +641,7 @@ the table is empty, hence every row will be determined as new).
 
     isNull(RecEndDt)
 
-![](.//media/image24.png)
+![](.//media/image28.png)
 
 #### Compare staging records with DW records to identify updates and inserts
 
@@ -568,7 +666,7 @@ join” the sudo code for the join is:
 
 5.  Join conditions: iLoyaltyNum == LoyaltyNum
 
-![](.//media/image25.png)
+![](.//media/image29.png)
 
 > **Note:** Since we renamed the staging columns with an ‘i’ in front of
 > them it is quite easy to find the right column for joins here.
@@ -630,13 +728,13 @@ Here we need to find out
 
     !(isNull(LoyaltyNum)) && (iRecMd5Hash == RecMd5Hash)
 
-![](.//media/image26.png)
+![](.//media/image30.png)
 
 So far this is how your dataflow should look like. (Conditional split
 added 3 streams to our flow which we need to manipulate the output from
 – We will refer to these transformation as New, Changed and Unchanged)
 
-![](.//media/image27.png)
+![](.//media/image31.png)
 
 #### Handling New records (New stream)
 
@@ -656,11 +754,11 @@ need to only insert a new record to the table.
 3.  Use the below screenshot as guide on setting the “Select”
     transformation.
 
-> **Note:** Total Number of columns selected is **11.** Only columns
+> **Note:** Total Number of columns selected is **12.** Only columns
 > with a leading ‘i’ will be selected and the output name will not have
 > a leading ‘i’
 
-![](.//media/image28.png)
+![](.//media/image32.png)
 
 #### Handling Changed records (Changed stream)
 
@@ -674,7 +772,7 @@ need to add a “**New branch”** transformation after “Changed”.
 
 This is how our flow will look like:
 
-![](.//media/image29.png)
+![](.//media/image33.png)
 
 **Updating existing changed records (Closing old records)**
 
@@ -688,14 +786,14 @@ This is how our flow will look like:
     values from DW. The only columns we are updating on these records
     are 1. RecEndDate 2. RecCurrInd
 
-![](.//media/image30.png)
+![](.//media/image34.png)
 
 3.  After this add a “Derived Column” Transform to finally add the two
     columns we are updating.
 
 4.  Rename it to “*UpdateRecsBatchColumns*”
 
-![](.//media/image31.png)
+![](.//media/image35.png)
 
 5.  Add “RecEndDt” column:
 
@@ -721,23 +819,23 @@ This is how our flow will look like:
 
     false()
 
-![](.//media/image32.png)
+![](.//media/image36.png)
 
 **Adding new version of the changed records**
 
 7.  After the second “Changed” stream add a “Select” transform and
     rename it to “*SelectChangedInsert*”
 
-8.  We will select a total of 11 columns in this select as below. Here
+8.  We will select a total of 12 columns in this select as below. Here
     we select the columns WITH the leading ‘i’ as we want the column
     values from staging source.
 
-![](.//media/image33.png)
+![](.//media/image37.png)
 
 For the “*Unchanged*” stream we leave it without any transformation
 after it.
 
-![](.//media/image34.png)
+![](.//media/image38.png)
 
 #### Putting together all inserts “New” and “Changed” together
 
@@ -749,7 +847,7 @@ set into one using a “Union” transformation.
 1.  After “*SelectNewInsert*” transform add a “Union” transformation and
     rename it to “*ALLInserts*”
 
-![](.//media/image35.png)
+![](.//media/image39.png)
 
 2.  Select Union by: Name
 
@@ -812,7 +910,7 @@ later)
 
 3.  Set it like the screenshot
 
-![](.//media/image36.png)
+![](.//media/image40.png)
 
 CustomerKey:
 
@@ -865,7 +963,7 @@ to the dataset.
 
     toDate(toString(null()))
 
-![](.//media/image37.png)
+![](.//media/image41.png)
 
 #### Put Insert and Update records together
 
@@ -878,153 +976,128 @@ a single stream in preparation for pushing it to the destination.
 
 3.  Union with: “*UpdateRecsBatchColumns*”
 
-![](.//media/image38.png)
+![](.//media/image42.png)
 
 So far, your Dataflow should look like below
 
-![](.//media/image39.png)
+![](.//media/image43.png)
 
 > **Note:** If you hover over any transformation it tells you how many
 > output columns are coming out of that transformation. To double check
 > you work the last transformation should have **16** columns
 
-![](.//media/image40.png)
+![](.//media/image44.png)
 
 #### Prepare the dataset for sink (Alter row transformation)
 
-#### (Challenge Task) Create customer dimension
-
-In the SmartFoods Blob container that we copied previously there was a
-file named “customer.csv” which contains the customers’ reference data.
-
-We would like to create a dimension table for this data source as below:
-
-|             |            |           |          |      |       |              |             |     |             |
-| ----------- | ---------- | --------- | -------- | ---- | ----- | ------------ | ----------- | --- | ----------- |
-| CustomerKey | LoyaltyNum | Firstname | Lastname | City | State | EmailAddress | MemberSince | Dob | RecInsertDt |
-
-> Note 1: The source is providing “name” field, which is full name, but
-> we need to separate first name and last name
-> 
-> Note 2: We know some of the email addresses of customers are NOT the
-> right format (<abc@xyz.com>) and we need to replace these with NULL
-> instead
-
-**Optional Extra challenge:** WWI also likes to calculate the age of the
-customer as well and store in “Age” column can you used Mapping Data
-flows Expression Language to calculate it?
-
-**<span class="underline">Table DDL:</span>**
-
-    CREATE TABLE [SmartFoodsDW].[customer](
-    	[CustomerKey] [bigint] NULL,
-    	[LoyaltyNum] [nvarchar](max) NULL,
-    	[FirstName] [nvarchar](max) NULL,
-    	[LastName] [nvarchar](max) NULL,
-    	[City] [nvarchar](max) NULL,
-    	[State] [nvarchar](max) NULL,
-    	[Email] [nvarchar](max) NULL,
-    [Address] [nvarchar](max),
-    [PostCode] [nvarchar](max),
-    	[MemberSince] [date] NULL,
-    	[Dob] [date] NULL,
-    	[RecInsertDt] [date],
-    	[RecStartDt] [date],
-    	[RecEndDt] [date] NULL,
-    	[RecCurrentInd] [bit],
-    	[RecMd5Hash] [nvarchar](max)
-    ) ;
-    GO
-
-**<span class="underline">Final Data Flow:</span>**
-
-![](.//media/image41.png)
-
-**If you are stuck or want to double check your answer the solution for
-Expression Language and Select transformation is in the next page.  
-**
-
-**<span class="underline">Derived column expressions solution:</span>**
-
-![](.//media/image42.png)
-
-**<span class="underline">Select transformation:</span>**
-
-![](.//media/image43.png)
-
-#### Create SmartFoods Invoice fact tables
-
-The Data that we retrieved in the previous exercise from SmartFoods
-Transaction API seems to be in an uncommon format for invoices. Usually
-invoice data has an invoice header and an invoice item lines but for the
-case of SmartFoods the API is only capable of providing the data in form
-of line items with repeated invoice header information.
-
-![](.//media/image44.png)
-
-The requirement is to create two separate tables in following form:
-
-Invoice
-
-|               |             |       |             |              |     |              |             |
-| ------------- | ----------- | ----- | ----------- | ------------ | --- | ------------ | ----------- |
-| InvoiceNumber | CustomerKey | Store | InvoiceDtts | InvoiceTotal | Gst | NumLineItems | RecInsertDt |
-
-InvoiceLine
-
-|               |         |                 |           |     |     |             |
-| ------------- | ------- | --------------- | --------- | --- | --- | ----------- |
-| InvoiceNumber | ItemKey | ItemDescription | UnitPrice | Qty | Gst | RecInsertDt |
-
-1.  **For Invoice Table Overall Data flow looks:**
+Now that our dataset is ready to be written to the DW table. Next
+logical step is to add a “Sink” transform and complete the data flow.
+let’s see what happens if we go ahead and add sink transform
 
 ![](.//media/image45.png)
 
-Aggregate transformation:
+> A sink transformation that is writing to a Database (or DW) and
+> requires to perform anything other than insert (update, upsert or
+> delete) on the destination table, requires an additional
+> transformation to mark each row with the type of operation “Sink”
+> transform is expected to perform. That transformation is called “Alter
+> Row”.
+> 
+> **Alter row:** Alter row transformation is used when sink is an RDBMS
+> (DB or DW) and is expected to perform Update, Upsert or Delete.
+
+1.  After “*UnionInsertUpdates”* transform add an “Alter row” transform
+
+2.  Rename it to “*MarkRow*”
+
+3.  Add two Alter row conditions:
+
+<!-- end list -->
+
+  - Update if
+
+<!-- end list -->
+
+    !isNull(RecEndDt)
+
+  - Insert if
+
+<!-- end list -->
+
+    isNull(RecEndDt)
 
 ![](.//media/image46.png)
 
-Join transformation:
+> **Update if**: this is a new record (RecEndDt IS NOT Null)  
+> **Insert if**: This is an existing record being closed (RecEndDt IS
+> Null)
+
+#### Writing to destination DW table
+
+Now the dataflow is ready to add the Sink Transformation and write to
+destination table.
+
+1.  After “*MarkRow”* transform ad a “Sink” transform
+
+2.  Rename it to “DBSink”
+
+3.  Dataset: AzureSqlTable1
 
 ![](.//media/image47.png)
 
-Select Transformation:
+4.  Go to “Settings” Tab
+
+5.  Tick “Allow Insert”
+
+6.  Tick “Allow Update”
+
+7.  Key Columns: “CustomerKey”
 
 ![](.//media/image48.png)
 
-2.  **For Invoice Lines:**
+> **Reminder:** Delete the “New Branch” and dummy “Sink” transforms\!
 
-In the **same** data flow after your source CSV add a new branch
-transformation. This will branch the same data source to two different
-pathes
+#### Preview the final dataset (Debug)
+
+The final task before publishing the dataflow is to have a look at the
+final dataset through “Data preview” in the “Sink” transform.
+
+1.  Go to “Debug Settings” and make sure your parameters matches below
+    screenshots.
 
 ![](.//media/image49.png)
 
-**Final Data flow for invoice and invoice line:**
-
 ![](.//media/image50.png)
 
-**Derived Column Transformation:**
+2.  In “DBSink” Under “Data Preview” click “Refresh”
 
 ![](.//media/image51.png)
 
-**Join transformation:**
+> In the figure above number 3 shows the total number of rows that going
+> to go through this transformation. In “Debug” mode this number is
+> capped at either the “Row Limit” or the actual maximum number of rows
+> in the source. Here our “Row limit” is 10,000 and the file has 5,000
+> rows in it. Also Number 4 indicates what type of action is being
+> perform on each of the preview rows, the green plus sign indicates an
+> “insert”.
+> 
+> **Note:** Running “Data preview” on “Sink” transform WILL NOT actually
+> write anything to the destination. It only previews what the write
+> would look like. ADF Mapping DF “Debug” will not perform any action on
+> “Sink” transformation until the DF is placed in an ADF pipeline and
+> debugged from there.
+
+#### Inspect the Dataflow “Script”
+
+ADF mapping DF, generates a script for the GUI changes we make. You can
+access and update this script by clicking the “Script” button on the top
+ribbon.
 
 ![](.//media/image52.png)
 
-**Select Transformation:**
-
 ![](.//media/image53.png)
 
-**DDLS for InvoiceLine table:**
+#### Building the pipeline for the dataflow
 
-    CREATE TABLE [smartfoods].[invoiceline](
-    	[invoiceNumber] [nvarchar](max) NULL,
-    	[ItemKey] [bigint] NULL,
-    	[ItemDescription] [nvarchar](max) NULL,
-    	[UnitPrice] [float] NULL,
-    	[qty] [int] NULL,
-    	[Gst] [float] NULL,
-    	[RecInsertDt] [date] NULL
-    );
-    GO
+Now that the dataflow is published the next task to create a pipeline
+and add it to the pipeline.
