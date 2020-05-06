@@ -255,7 +255,7 @@ whole, before building various components.
 
 ## Getting Started
 
-Hands on lab documents are located under Hands-on-lab directory. Here is
+Hands on lab documents are located under Lab-guide directory. Here is
 the list labs available:
 
 **Azure Data Factory:**
