@@ -1,0 +1,75 @@
+###########################################################################################
+How to use this code:
+1. Create a Dataflow
+2. Rename it to SmartFoodFoodNutritionELT
+3. Make sure all the datasets used in this script exists in your ADF instance. 
+    It is very important that the name of datasets, types and etc matches exactly as explained in the tutorial.
+4. From Dataflow GUI click on "Code" button on the top right hand side.
+5. Copy and Paste everything after ### marks 
+
+###########################################################################################
+
+{
+    "name": "SmartFoodFoodNutritionELT",
+    "properties": {
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "SmartFoodsDelimitedTextBlob",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SmartFoodsFoodNutrientsStagingBlob"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "AzureSqlTable1",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SmartFoodsFoodSQLDW"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "SmartFoodsDelimitedTextBlob",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SmartFoodsNutrientsStaging"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "AzureSqlTable1",
+                        "type": "DatasetReference"
+                    },
+                    "name": "DBSink"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "FixColumnNames"
+                },
+                {
+                    "name": "JoinStagingToDWDim"
+                },
+                {
+                    "name": "InsertRecsBatchColumns"
+                },
+                {
+                    "name": "JoinNutrients"
+                },
+                {
+                    "name": "removeExtraCols"
+                },
+                {
+                    "name": "FilterZeroNutrients"
+                },
+                {
+                    "name": "CurrentRecsOnly"
+                }
+            ],
+            "script": "parameters{\n\tBatchDt as string\n}\nsource(output(\n\t\titem_id as string,\n\t\tnut_id as string,\n\t\tnutritionValue as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> SmartFoodsFoodNutrientsStagingBlob\nsource(output(\n\t\tsku as string,\n\t\tfoodKey as long,\n\t\tdesc as string,\n\t\tfoodGroup as string,\n\t\tRecInsertDt as date,\n\t\tRecStartDt as date,\n\t\tRecEndDt as date,\n\t\tRecCurrInd as boolean,\n\t\tRecMd5Hash as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_COMMITTED',\n\tformat: 'table') ~> SmartFoodsFoodSQLDW\nsource(output(\n\t\tnut_id as string,\n\t\tnut_description as string,\n\t\tnut_units as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> SmartFoodsNutrientsStaging\nFilterZeroNutrients select(mapColumn(\n\t\tisku = item_id,\n\t\tnutrientId = nut_id,\n\t\tnutritionValue\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> FixColumnNames\nFixColumnNames, CurrentRecsOnly join(isku == sku,\n\tjoinType:'left',\n\tbroadcast: 'right')~> JoinStagingToDWDim\nremoveExtraCols derive(RecInsertDt = toDate($BatchDt,'yyyy-MM-dd')) ~> InsertRecsBatchColumns\nJoinStagingToDWDim, SmartFoodsNutrientsStaging join(nutrientId == nut_id,\n\tjoinType:'inner',\n\tbroadcast: 'right')~> JoinNutrients\nJoinNutrients select(mapColumn(\n\t\tfoodKey,\n\t\tnutrientId,\n\t\tnutritionValue,\n\t\tdesc = nut_description,\n\t\tnutUnit = nut_units\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> removeExtraCols\nSmartFoodsFoodNutrientsStagingBlob filter(nutritionValue!=0) ~> FilterZeroNutrients\nSmartFoodsFoodSQLDW filter(isNull(RecEndDt)) ~> CurrentRecsOnly\nInsertRecsBatchColumns sink(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\ttruncate:true,\n\tformat: 'table',\n\tdateFormat:'yyyy-MM-dd',\n\ttimestampFormat:'yyyy.MM.dd HH:mm:ss',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> DBSink"
+        }
+    }
+}
