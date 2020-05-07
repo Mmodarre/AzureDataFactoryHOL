@@ -1,0 +1,92 @@
+###########################################################################################
+How to use this code:
+1. Create a Dataflow
+2. Rename it to "SmartFoodFoodELT"
+3. Make sure all the datasets used in this script exists in your ADF instance. 
+    It is very important that the name of datasets, types and etc matches exactly as explained in the tutorial.
+4. From Dataflow GUI click on "Code" button on the top right hand side.
+5. Copy and Paste everything after ### marks 
+
+###########################################################################################
+
+{
+    "name": "SmartFoodFoodELT",
+    "properties": {
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "SmartFoodsDelimitedTextBlob",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SmartFoodsFoodStagingBlob"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "AzureSqlTable1",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SmartFoodsFoodSQLDW"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "AzureSqlTable1",
+                        "type": "DatasetReference"
+                    },
+                    "name": "FoodDim"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "FixColumnNames"
+                },
+                {
+                    "name": "MD5Hash"
+                },
+                {
+                    "name": "JoinStagingToDWDim"
+                },
+                {
+                    "name": "SDC2Split"
+                },
+                {
+                    "name": "SelectNewInsert"
+                },
+                {
+                    "name": "SelectChangedInsert"
+                },
+                {
+                    "name": "SelectChangedUpdate"
+                },
+                {
+                    "name": "SurrogateKey"
+                },
+                {
+                    "name": "AddMaxFoodKey"
+                },
+                {
+                    "name": "AllInserts"
+                },
+                {
+                    "name": "UpdateRecsBatchColumns"
+                },
+                {
+                    "name": "InsertRecsBatchColumns"
+                },
+                {
+                    "name": "UnionInsertUpdates"
+                },
+                {
+                    "name": "MarkRow"
+                },
+                {
+                    "name": "FilterCurrentRows"
+                }
+            ],
+            "script": "parameters{\n\tMaxSurrogateKey as integer (2),\n\tBatchDt as string (\"2020-01-01\")\n}\nsource(output(\n\t\tsku as string,\n\t\tdesc as string,\n\t\tfoodGroup as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\trowUrlColumn: 'sourceLineage') ~> SmartFoodsFoodStagingBlob\nsource(output(\n\t\tsku as string,\n\t\tfoodKey as long,\n\t\tdesc as string,\n\t\tfoodGroup as string,\n\t\tRecInsertDt as date,\n\t\tRecStartDt as date,\n\t\tRecEndDt as date,\n\t\tRecCurrInd as boolean,\n\t\tsourceLineage as string,\n\t\tRecMd5Hash as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_COMMITTED',\n\tformat: 'table') ~> SmartFoodsFoodSQLDW\nSmartFoodsFoodStagingBlob select(mapColumn(\n\t\tisku = sku,\n\t\tidesc = desc,\n\t\tifoodGroup = foodGroup,\n\t\tisourceLineage = sourceLineage\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> FixColumnNames\nFixColumnNames derive(iRecMd5Hash = md5( iif(isNull(idesc),'',toString(idesc))+ \niif(isNull(ifoodGroup),'',toString(ifoodGroup)))) ~> MD5Hash\nMD5Hash, FilterCurrentRows@CurrentRecsOnly join(isku == sku,\n\tjoinType:'left',\n\tbroadcast: 'auto')~> JoinStagingToDWDim\nJoinStagingToDWDim split(isNull(sku),\n\t!(isNull(sku)) && (iRecMd5Hash !=RecMd5Hash),\n\tdisjoint: false) ~> SDC2Split@(New, Changed)\nSDC2Split@New select(mapColumn(\n\t\tsku = isku,\n\t\tdesc = idesc,\n\t\tfoodGroup = ifoodGroup,\n\t\tRecMd5Hash = iRecMd5Hash,\n\t\tsourceLineage = isourceLineage\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: true) ~> SelectNewInsert\nSDC2Split@Changed select(mapColumn(\n\t\tsku,\n\t\tdesc = idesc,\n\t\tfoodGroup = ifoodGroup,\n\t\tRecMd5Hash = iRecMd5Hash,\n\t\tsourceLineage = isourceLineage\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectChangedInsert\nSDC2Split@Changed select(mapColumn(\n\t\tsku,\n\t\tfoodKey,\n\t\tdesc,\n\t\tfoodGroup,\n\t\tRecInsertDt,\n\t\tRecStartDt,\n\t\tRecMd5Hash,\n\t\tsourceLineage\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectChangedUpdate\nAllInserts keyGenerate(output(foodKey as long),\n\tstartAt: 1L) ~> SurrogateKey\nSurrogateKey derive(foodKey = foodKey+$MaxSurrogateKey) ~> AddMaxFoodKey\nSelectNewInsert, SelectChangedInsert union(byName: true)~> AllInserts\nSelectChangedUpdate derive(RecEndDt = toDate($BatchDt, 'yyyy-MM-dd'),\n\t\tRecCurrInd = false()) ~> UpdateRecsBatchColumns\nAddMaxFoodKey derive(RecInsertDt = currentDate(),\n\t\tRecCurrInd = true(),\n\t\tRecStartDt = toDate($BatchDt,'yyyy-MM-dd'),\n\t\tRecEndDt = toDate(toString(null()))) ~> InsertRecsBatchColumns\nInsertRecsBatchColumns, UpdateRecsBatchColumns union(byName: true)~> UnionInsertUpdates\nUnionInsertUpdates alterRow(updateIf(!isNull(RecEndDt)),\n\tinsertIf(isNull(RecEndDt))) ~> MarkRow\nSmartFoodsFoodSQLDW split(isNull(RecEndDt),\n\tdisjoint: false) ~> FilterCurrentRows@(CurrentRecsOnly)\nMarkRow sink(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['foodKey'],\n\tformat: 'table',\n\tdateFormat:'yyyy-MM-dd',\n\ttimestampFormat:'yyyy.MM.dd HH:mm:ss',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> FoodDim"
+        }
+    }
+}
