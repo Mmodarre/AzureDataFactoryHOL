@@ -222,11 +222,11 @@ advantages
 Follow the same steps in previous task and add the following credentials
 to your Azure Key Vault:
 
-| **Name**                  | **Value**                    |
-| ------------------------- | ---------------------------- |
-| SmartFoodsRestAPIUsername | adflab                       |
-| SmartFoodsRestAPIPassword | Password.1\!                 |
-| WWISftpPassword           | PROVIDED TO YOU IN CLASSROOM |
+| **Name**                  | **Value**    |
+| ------------------------- | ------------ |
+| SmartFoodsRestAPIUsername | adflab       |
+| SmartFoodsRestAPIPassword | Password.1\! |
+| WWISftpPassword           | adflab       |
 
 #### Create SFTP Linked Service
 
