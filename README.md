@@ -260,18 +260,20 @@ the list labs available:
 
 **Azure Data Factory:**
 
-1.  Before\_the\_hands-on\_lab\_(Prepare\_the\_environment)
+1.  [Before\_the\_hands-on\_lab\_(Prepare\_the\_environment)](Lab-guide/01-Before_the_hands-on_lab_\(Prepare_the_environment\)/README.md)
 
-2.  Linked\_Services\_Datasets\_and\_Integration\_Runtimes
+2.  [Linked\_Services\_Datasets\_and\_Integration\_Runtimes](Lab-guide/02-Linked_Services_Datasets_and_Integration_Runtimes/README.md)
 
-3.  Copy\_Activity\_Parameters\_Debug\_and\_Publishing
+3.  [Copy\_Activity\_Parameters\_Debug\_and\_Publishing](Lab-guide/03-Copy_Activity_Parameters_Debug_and_Publishing/README.md)
 
-4.  Lookup\_activity\_ForEach\_loop\_and\_Execute\_Pipeline\_activity
+4.  [Lookup\_activity\_ForEach\_loop\_and\_Execute\_Pipeline\_activity](Lab-guide/04-Lookup_activity__ForEach_loop_and_Execute_Pipeline_activity/README.md)
 
-5.  Get\_Metadata\_activity\_filter\_activity\_and\_complex\_expressions
+5.  [Get\_Metadata\_activity\_filter\_activity\_and\_complex\_expressions](Lab-guide/05-Get_Metadata_activity_filter_activity_and_complex_expressions/README.md)
 
-6.  Self-hosted\_Integration\_Runtime\_\_decompress\_files\_and\_Delete\_activity
+6.  [Self-hosted\_Integration\_Runtime\_\_decompress\_files\_and\_Delete\_activity](Lab-guide/06-Self-hosted_Integration_Runtime__decompress_files_and_Delete_activity/README.md)
 
 **Azure Data Factory Mapping Data Flows:**
 
-7.  SmartFoodsCustomerELT
+7.  [SmartFoodsCustomerELT](Lab-guide/07-SmartFoodsCustomerELT/README.md)
+
+8.  [ELT\_with\_Mapping\_Dataflows–Practice\_excercises](Lab-guide/08-ELT_with_Mapping_Dataflows–Practice_excercises/README.md)
