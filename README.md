@@ -1,5 +1,5 @@
 ![](.//media/image1.png)
-
+### Note: This is a work in progress and any feedback and collaboration is really appreciated. New excercises will be added soon.
 **ELT with Azure Data Factory**
 
 **And**
