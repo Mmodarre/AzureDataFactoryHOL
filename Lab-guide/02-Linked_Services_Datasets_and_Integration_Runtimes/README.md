@@ -115,6 +115,24 @@ Give your new IR a name and Choose the preferred region
 
 ![](.//media/image7.png)
 
+#### Provisioning access to resources
+This lab uses various services (Azure & non-Azure) referenced via Linked Services.
+In order to use those services, access needs to be granted to them. 
+
+The approach demonstrated in further steps is as follows:
+  - All credentials are stored in Azure Key Vault (AKV) 
+  - Azure Data Factory accesses AKV via the data factory's Managed Identity, to reference the above credentials
+
+As ADF is a trusted Azure service [(link)](https://techcommunity.microsoft.com/t5/azure-data-factory/data-factory-is-now-a-trusted-service-in-azure-storage-and-azure/ba-p/964993), 
+a data factory's system-assigned Managed Identity can be used to provision access 
+to other Azure services such as Azure Storage, Azure SQL, and Azure Key Vault. 
+Below are some links for various services depicting usage of Managed Identities to access other Azure services:
+  - [Azure Blob Storage](https://docs.microsoft.com/en-us/azure/data-factory/connector-azure-blob-storage)
+  - [ADLS Gen2](https://docs.microsoft.com/en-us/azure/data-factory/connector-azure-data-lake-storage)
+  - [Azure SQL](https://docs.microsoft.com/en-us/azure/data-factory/connector-azure-sql-database)
+
+
+
 #### Create a new ADF Key Vault Linked Service
 
 Process summary: For ADF to be able to access different services it will
